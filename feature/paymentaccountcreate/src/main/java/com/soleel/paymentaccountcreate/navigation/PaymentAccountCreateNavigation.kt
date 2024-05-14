@@ -38,8 +38,9 @@ fun NavController.navigateToPaymentAccountAmountRoute(navOptions: NavOptions? = 
 
 fun NavGraphBuilder.paymentAccountCreateGraph(
     navController: NavHostController,
-    onShowBottomBar: () -> Unit,
-    onShowAddFloating: () -> Unit,
+    showBottomBar: () -> Unit,
+    showFloatingAddMenu: () -> Unit,
+    hideExtendAddMenu: () -> Unit,
     onCancelClick: () -> Unit,
     onBackClick: () -> Unit,
     onSaveClick: () -> Unit,
@@ -50,21 +51,22 @@ fun NavGraphBuilder.paymentAccountCreateGraph(
         startDestination = paymentAccountTypeRoute,
         route = paymentAccountCreateGraph,
         builder = {
-            paymentAccountTypeScreen(
+            paymentAccountTypeRoute(
                 navController = navController,
                 onCancelClick = onCancelClick,
                 fromTypeToName = fromTypeToName
             )
-            paymentAccountNameScreen(
+            paymentAccountNameRoute(
                 navController = navController,
                 onCancelClick = onCancelClick,
                 onBackClick = onBackClick,
                 fromNameToAmount = fromNameToAmount
             )
-            paymentAccountAmountScreen(
+            paymentAccountAmountRoute(
                 navController = navController,
-                onShowBottomBar = onShowBottomBar,
-                onShowAddFloating = onShowAddFloating,
+                showBottomBar = showBottomBar,
+                showFloatingAddMenu = showFloatingAddMenu,
+                hideExtendAddMenu = hideExtendAddMenu,
                 onCancelClick = onCancelClick,
                 onBackClick = onBackClick,
                 onSaveClick = onSaveClick
@@ -73,7 +75,7 @@ fun NavGraphBuilder.paymentAccountCreateGraph(
     )
 }
 
-fun NavGraphBuilder.paymentAccountTypeScreen(
+fun NavGraphBuilder.paymentAccountTypeRoute(
     navController: NavHostController,
     onCancelClick: () -> Unit,
     fromTypeToName: () -> Unit
@@ -102,7 +104,7 @@ fun NavGraphBuilder.paymentAccountTypeScreen(
     )
 }
 
-fun NavGraphBuilder.paymentAccountNameScreen(
+fun NavGraphBuilder.paymentAccountNameRoute(
     navController: NavHostController,
     onCancelClick: () -> Unit,
     onBackClick: () -> Unit,
@@ -133,10 +135,11 @@ fun NavGraphBuilder.paymentAccountNameScreen(
     )
 }
 
-fun NavGraphBuilder.paymentAccountAmountScreen(
+fun NavGraphBuilder.paymentAccountAmountRoute(
     navController: NavHostController,
-    onShowBottomBar: () -> Unit,
-    onShowAddFloating: () -> Unit,
+    showBottomBar: () -> Unit,
+    showFloatingAddMenu: () -> Unit,
+    hideExtendAddMenu: () -> Unit,
     onCancelClick: () -> Unit,
     onBackClick: () -> Unit,
     onSaveClick: () -> Unit
@@ -157,8 +160,9 @@ fun NavGraphBuilder.paymentAccountAmountScreen(
             )
 
             PaymentAccountAmountRoute(
-                onShowBottomBar = onShowBottomBar,
-                onShowAddFloating = onShowAddFloating,
+                showBottomBar = showBottomBar,
+                showFloatingAddMenu = showFloatingAddMenu,
+                hideExtendAddMenu = hideExtendAddMenu,
                 onCancelClick = onCancelClick,
                 onBackClick = onBackClick,
                 onSaveClick = onSaveClick,

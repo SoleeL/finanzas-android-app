@@ -44,8 +44,9 @@ import com.soleel.validation.validator.TransactionAmountValidator
 @Composable
 internal fun PaymentAccountAmountRoute(
     modifier: Modifier = Modifier,
-    onShowBottomBar: () -> Unit,
-    onShowAddFloating: () -> Unit,
+    showBottomBar: () -> Unit,
+    showFloatingAddMenu: () -> Unit,
+    hideExtendAddMenu: () -> Unit,
     onCancelClick: () -> Unit,
     onBackClick: () -> Unit,
     onSaveClick: () -> Unit,
@@ -56,8 +57,9 @@ internal fun PaymentAccountAmountRoute(
     PaymentAccountAmountScreen(
         modifier = modifier,
 
-        onShowBottomBar = onShowBottomBar,
-        onShowAddFloating = onShowAddFloating,
+        showBottomBar = showBottomBar,
+        showFloatingAddMenu = showFloatingAddMenu,
+        hideExtendAddMenu = hideExtendAddMenu,
 
         onBackClick = onBackClick,
         onCancelClick = onCancelClick,
@@ -74,8 +76,9 @@ fun PaymentAccountAmountScreenPreview() {
     PaymentAccountAmountScreen(
         modifier = Modifier,
         onBackClick = {},
-        onShowBottomBar = {},
-        onShowAddFloating = {},
+        showBottomBar = {},
+        showFloatingAddMenu = {},
+        hideExtendAddMenu = {},
         onCancelClick = {},
         onSaveClick = {},
         paymentAccountCreateUi = PaymentAccountUiCreate(
@@ -91,8 +94,9 @@ fun PaymentAccountAmountScreenPreview() {
 internal fun PaymentAccountAmountScreen(
     modifier: Modifier,
     onBackClick: () -> Unit,
-    onShowBottomBar: () -> Unit,
-    onShowAddFloating: () -> Unit,
+    showBottomBar: () -> Unit,
+    showFloatingAddMenu: () -> Unit,
+    hideExtendAddMenu: () -> Unit,
     onCancelClick: () -> Unit,
     onSaveClick: () -> Unit,
     paymentAccountCreateUi: PaymentAccountUiCreate,
@@ -104,8 +108,9 @@ internal fun PaymentAccountAmountScreen(
     )
 
     if (paymentAccountCreateUi.isPaymentAccountSaved) {
-        onShowBottomBar()
-        onShowAddFloating()
+        showBottomBar()
+        showFloatingAddMenu()
+        hideExtendAddMenu()
         onSaveClick()
     }
 

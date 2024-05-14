@@ -30,8 +30,8 @@ import com.soleel.ui.template.TransactionCreateTopAppBar
 @Composable
 internal fun TransactionCreateRoute(
     modifier: Modifier = Modifier,
-    onShowBottomBar: () -> Unit,
-    onShowAddFloating: () -> Unit,
+    showBottomBar: () -> Unit,
+    showFloatingAddMenu: () -> Unit,
     onBackClick: () -> Unit,
     fromInitToPaymentAccount: () -> Unit,
     viewModel: TransactionCreateViewModel = hiltViewModel()
@@ -40,8 +40,8 @@ internal fun TransactionCreateRoute(
 
     TransactionCreateScreen(
         modifier = modifier,
-        onShowBottomBar = onShowBottomBar,
-        onShowAddFloating = onShowAddFloating,
+        showBottomBar = showBottomBar,
+        showFloatingAddMenu = showFloatingAddMenu,
         onBackClick = onBackClick,
         fromInitToPaymentAccount = fromInitToPaymentAccount,
         paymentAccountsUiState = paymentAccountsUiState,
@@ -53,8 +53,8 @@ internal fun TransactionCreateRoute(
 @Composable
 private fun TransactionCreateScreen(
     modifier: Modifier,
-    onShowBottomBar: () -> Unit,
-    onShowAddFloating: () -> Unit,
+    showBottomBar: () -> Unit,
+    showFloatingAddMenu: () -> Unit,
     onBackClick: () -> Unit,
     fromInitToPaymentAccount: () -> Unit,
     paymentAccountsUiState: PaymentAccountsUiState,
@@ -64,8 +64,8 @@ private fun TransactionCreateScreen(
     BackHandler(
         enabled = true,
         onBack = {
-            onShowBottomBar()
-            onShowAddFloating()
+            showBottomBar()
+            showFloatingAddMenu()
             onBackClick()
         }
     )
@@ -74,8 +74,8 @@ private fun TransactionCreateScreen(
         topBar = {
             TransactionCreateTopAppBar(
                 onClick = {
-                    onShowBottomBar()
-                    onShowAddFloating()
+                    showBottomBar()
+                    showFloatingAddMenu()
                     onBackClick()
                 }
             )
