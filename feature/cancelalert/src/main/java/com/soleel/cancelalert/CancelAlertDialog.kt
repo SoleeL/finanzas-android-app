@@ -9,10 +9,11 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Preview
 @Composable
-fun ExampleCancelAlertDialog() {
+fun CancelAlertDialogPreview() {
     CancelAlertDialog(
-        onShowBottomBar = {},
-        onShowAddFloating = {},
+        showBottomBar = {},
+        showFloatingAddMenu = {},
+        hideExtendAddMenu = {},
         onDismissRequest = {},
         onConfirmation = {},
         dialogTitle = "¿Quieres volver al inicio?",
@@ -22,8 +23,9 @@ fun ExampleCancelAlertDialog() {
 
 @Composable
 fun CancelAlertDialog(
-    onShowBottomBar: () -> Unit,
-    onShowAddFloating: () -> Unit,
+    showBottomBar: () -> Unit,
+    showFloatingAddMenu: () -> Unit,
+    hideExtendAddMenu: () -> Unit,
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
     dialogTitle: String,
@@ -36,8 +38,9 @@ fun CancelAlertDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    onShowBottomBar()
-                    onShowAddFloating()
+                    showBottomBar()
+                    showFloatingAddMenu()
+                    hideExtendAddMenu()
                     onConfirmation()
                     onDismissRequest()
                 }

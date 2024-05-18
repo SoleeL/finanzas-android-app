@@ -3,5 +3,5 @@ plugins {
 }
 
 android {
-    namespace = "com.soleel.addmodal"
+    namespace = "com.soleel.add"
 }

@@ -48,8 +48,9 @@ import com.soleel.validation.validator.TransactionAmountValidator
 
 @Composable
 internal fun TransactionAmountRoute(
-    onShowBottomBar: () -> Unit,
-    onShowAddFloating: () -> Unit,
+    showBottomBar: () -> Unit,
+    showFloatingAddMenu: () -> Unit,
+    hideExtendAddMenu: () -> Unit,
     onCancelClick: () -> Unit,
     onBackClick: () -> Unit,
     onSaveClick: () -> Unit,
@@ -59,8 +60,9 @@ internal fun TransactionAmountRoute(
 
     TransactionAmountScreen(
         modifier = Modifier,
-        onShowBottomBar = onShowBottomBar,
-        onShowAddFloating = onShowAddFloating,
+        showBottomBar = showBottomBar,
+        showFloatingAddMenu = showFloatingAddMenu,
+        hideExtendAddMenu = hideExtendAddMenu,
         onCancelClick = onCancelClick,
         onBackClick = onBackClick,
         onSaveClick = onSaveClick,
@@ -74,8 +76,9 @@ internal fun TransactionAmountRoute(
 fun TransactionAmountScreenPreview() {
     TransactionAmountScreen(
         modifier = Modifier,
-        onShowBottomBar = {},
-        onShowAddFloating = {},
+        showBottomBar = {},
+        showFloatingAddMenu = {},
+        hideExtendAddMenu = {},
         onCancelClick = {},
         onBackClick = {},
         onSaveClick = {},
@@ -100,8 +103,9 @@ fun TransactionAmountScreenPreview() {
 @Composable
 fun TransactionAmountScreen(
     modifier: Modifier,
-    onShowBottomBar: () -> Unit,
-    onShowAddFloating: () -> Unit,
+    showBottomBar: () -> Unit,
+    showFloatingAddMenu: () -> Unit,
+    hideExtendAddMenu: () -> Unit,
     onCancelClick: () -> Unit,
     onBackClick: () -> Unit,
     onSaveClick: () -> Unit,
@@ -114,8 +118,9 @@ fun TransactionAmountScreen(
     )
 
     if (transactionUiCreate.isTransactionSaved) {
-        onShowBottomBar()
-        onShowAddFloating()
+        showBottomBar()
+        showFloatingAddMenu()
+        hideExtendAddMenu()
         onSaveClick()
     }
 

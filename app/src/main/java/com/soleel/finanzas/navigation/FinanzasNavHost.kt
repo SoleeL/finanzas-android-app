@@ -44,8 +44,9 @@ fun FinanzasNavHost(
 
             paymentAccountCreateGraph(
                 navController = navController,
-                onShowBottomBar = appState::showBottomBar,
-                onShowAddFloating = appState::showAddFloating,
+                showBottomBar = appState::showBottomBar,
+                showFloatingAddMenu = appState::showFloatingAddMenu,
+                hideExtendAddMenu = appState::hideExtendAddMenu,
                 onBackClick = navController::popBackStack,
                 onCancelClick = appState::showCancelAlert,
                 onSaveClick = appState::backToHome,
@@ -55,8 +56,9 @@ fun FinanzasNavHost(
 
             transactionCreateGraph(
                 navController = navController,
-                onShowBottomBar = appState::showBottomBar,
-                onShowAddFloating = appState::showAddFloating,
+                showBottomBar = appState::showBottomBar,
+                showFloatingAddMenu = appState::showFloatingAddMenu,
+                hideExtendAddMenu = appState::hideExtendAddMenu,
                 onBackClick = navController::popBackStack,
                 onCancelClick = appState::showCancelAlert,
                 onSaveClick = appState::backToHome,

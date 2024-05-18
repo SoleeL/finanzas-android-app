@@ -1,23 +1,24 @@
 package com.soleel.finanzas.ui
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
-import com.soleel.add.AddModalBottomSheet
+import com.soleel.add.AddMenuFAB
 import com.soleel.cancelalert.CancelAlertDialog
 import com.soleel.finanzas.navigation.FinanzasNavHost
 import com.soleel.finanzas.navigation.TopLevelDestination
@@ -29,7 +30,7 @@ import com.soleel.finanzas.navigation.TopLevelDestination
 fun FinanzasApp(
     appState: FinanzasAppState = rememberFinanzasAppState()
 ) {
-    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+//    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     Scaffold(
         modifier = Modifier,
@@ -39,29 +40,44 @@ fun FinanzasApp(
                     destinations = appState.topLevelDestinations(),
                     onNavigateToDestination = appState::navigateToTopLevelDestination,
                     currentDestination = appState.getCurrentDestination(),
+                    hideExtendAddMenu = appState::hideExtendAddMenu,
                 )
             }
         },
         floatingActionButton = {
-            if (appState.shouldShowAddFloating())
-                AddFloatingActionButton(onClick = { appState.showAddModal() })
+            if (appState.shouldShowFloatingAddMenu()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .pointerInput(Unit) {
+                            detectTapGestures(onTap = {
+                                if (appState.shouldShowExtendAddMenu()) {
+                                    appState.hideExtendAddMenu()
+                                }
+                            })
+                        },
+                    contentAlignment = Alignment.BottomEnd,
+                    content = {
+                        AddMenuFAB(
+                            hideFloatingAddMenu = appState::hideFloatingAddMenu,
+                            shouldShowExtendAddMenu = appState.shouldShowExtendAddMenu(),
+                            showExtendAddMenu = appState::showExtendAddMenu,
+                            hideExtendAddMenu = appState::hideExtendAddMenu,
+                            hideBottomBar = appState::hideBottomBar,
+                            toCreatePaymentAccount = appState::navigateToCreatePaymentAccount,
+                            toCreateTransaction = appState::navigateToCreateTransaction
+                        )
+                    }
+                )
+
+            }
         },
         content = {
-            if (appState.shouldShowAddModal()) {
-                AddModalBottomSheet(
-                    onCreatePaymentAccount = appState::navigateToCreatePaymentAccount,
-                    onCreateTransaction = appState::navigateToCreateTransaction,
-                    onHideBottomBar = appState::hideBottomBar,
-                    onHideAddFloating = appState::hideAddFloating,
-                    onDismiss = appState::hideAddModal,
-                    sheetState = bottomSheetState
-                )
-            }
-
             if (appState.shouldShowCancelAlert()) {
                 CancelAlertDialog(
-                    onShowBottomBar = appState::showBottomBar,
-                    onShowAddFloating = appState::showAddFloating,
+                    showBottomBar = appState::showBottomBar,
+                    showFloatingAddMenu = appState::showFloatingAddMenu,
+                    hideExtendAddMenu = appState::hideExtendAddMenu,
                     onConfirmation = appState::backToHome,
                     onDismissRequest = appState::hideCancelAlert,
                     dialogTitle = "¿Quieres volver al inicio?",
@@ -74,15 +90,6 @@ fun FinanzasApp(
     )
 }
 
-@Composable
-private fun AddFloatingActionButton(onClick: () -> Unit) {
-    FloatingActionButton(
-        onClick = { onClick() },
-        content = {
-            Icon(Icons.Filled.Add, "Add button.")
-        }
-    )
-}
 
 @Composable
 private fun FinanzasBottomBar(
@@ -90,6 +97,7 @@ private fun FinanzasBottomBar(
     onNavigateToDestination: (TopLevelDestination) -> Unit,
     currentDestination: NavDestination?,
     modifier: Modifier = Modifier,
+    hideExtendAddMenu: () -> Unit,
 ) {
     NavigationBar(
         modifier = modifier.fillMaxWidth(),
@@ -100,7 +108,10 @@ private fun FinanzasBottomBar(
 
                     NavigationBarItem(
                         selected = selected,
-                        onClick = { onNavigateToDestination(destination) },
+                        onClick = {
+                            hideExtendAddMenu()
+                            onNavigateToDestination(destination)
+                        },
                         icon = {
                             Icon(
                                 painter = painterResource(id = destination.unselectedIcon),

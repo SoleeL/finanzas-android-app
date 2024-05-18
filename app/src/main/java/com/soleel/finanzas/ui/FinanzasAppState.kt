@@ -32,8 +32,8 @@ fun rememberFinanzasAppState(
     navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     showBottomBar: MutableState<Boolean> = remember { mutableStateOf(true) },
-    showAddFloating: MutableState<Boolean> = remember { mutableStateOf(true) },
-    showAddModal: MutableState<Boolean> = remember { mutableStateOf(false) },
+    showFloatingAddMenu: MutableState<Boolean> = remember { mutableStateOf(true) },
+    showExtendAddMenu: MutableState<Boolean> = remember { mutableStateOf(false) },
     showCancelAlert: MutableState<Boolean> = remember { mutableStateOf(false) }
 ): FinanzasAppState {
 
@@ -46,8 +46,8 @@ fun rememberFinanzasAppState(
                 navController = navController,
                 coroutineScope = coroutineScope,
                 showBottomBar = showBottomBar,
-                showAddFloating = showAddFloating,
-                showAddModal = showAddModal,
+                showFloatingAddMenu = showFloatingAddMenu,
+                showExtendAddMenu = showExtendAddMenu,
                 showCancelAlert = showCancelAlert
             )
         }
@@ -58,16 +58,16 @@ private fun createAppState(
     navController: NavHostController,
     coroutineScope: CoroutineScope,
     showBottomBar: MutableState<Boolean>,
-    showAddFloating: MutableState<Boolean>,
-    showAddModal: MutableState<Boolean>,
+    showFloatingAddMenu: MutableState<Boolean>,
+    showExtendAddMenu: MutableState<Boolean>,
     showCancelAlert: MutableState<Boolean>
 ): FinanzasAppState {
     return FinanzasAppState(
         navController = navController,
         coroutineScope = coroutineScope,
         showBottomBar = showBottomBar,
-        showAddFloating = showAddFloating,
-        showAddModal = showAddModal,
+        showFloatingAddMenu = showFloatingAddMenu,
+        showExtendAddMenu = showExtendAddMenu,
         showCancelAlert = showCancelAlert
     )
 }
@@ -76,8 +76,8 @@ class FinanzasAppState(
     val navController: NavHostController,
     val coroutineScope: CoroutineScope,
     val showBottomBar: MutableState<Boolean>,
-    val showAddFloating: MutableState<Boolean>,
-    val showAddModal: MutableState<Boolean>,
+    val showFloatingAddMenu: MutableState<Boolean>,
+    val showExtendAddMenu: MutableState<Boolean>,
     val showCancelAlert: MutableState<Boolean>,
 ) {
 
@@ -150,28 +150,28 @@ class FinanzasAppState(
         this.showBottomBar.value = false
     }
 
-    fun shouldShowAddFloating(): Boolean {
-        return this.showAddFloating.value
+    fun shouldShowFloatingAddMenu(): Boolean {
+        return this.showFloatingAddMenu.value
     }
 
-    fun showAddFloating() {
-        this.showAddFloating.value = true
+    fun showFloatingAddMenu() {
+        this.showFloatingAddMenu.value = true
     }
 
-    fun hideAddFloating() {
-        this.showAddFloating.value = false
+    fun hideFloatingAddMenu() {
+        this.showFloatingAddMenu.value = false
     }
 
-    fun shouldShowAddModal(): Boolean {
-        return this.showAddModal.value
+    fun shouldShowExtendAddMenu(): Boolean {
+        return this.showExtendAddMenu.value
     }
 
-    fun showAddModal() {
-        this.showAddModal.value = true
+    fun showExtendAddMenu() {
+        this.showExtendAddMenu.value = true
     }
 
-    fun hideAddModal() {
-        this.showAddModal.value = false
+    fun hideExtendAddMenu() {
+        this.showExtendAddMenu.value = false
     }
 
     fun shouldShowCancelAlert(): Boolean {

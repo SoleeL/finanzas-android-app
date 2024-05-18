@@ -52,8 +52,9 @@ fun NavController.navigateToTransactionAmountRoute(navOptions: NavOptions? = nul
 
 fun NavGraphBuilder.transactionCreateGraph(
     navController: NavHostController,
-    onShowBottomBar: () -> Unit,
-    onShowAddFloating: () -> Unit,
+    showBottomBar: () -> Unit,
+    showFloatingAddMenu: () -> Unit,
+    hideExtendAddMenu: () -> Unit,
     onBackClick: () -> Unit,
     onCancelClick: () -> Unit,
     onSaveClick: () -> Unit,
@@ -67,10 +68,12 @@ fun NavGraphBuilder.transactionCreateGraph(
         startDestination = transactionCreateRoute,
         route = transactionCreateGraph,
         builder = {
+            // README: Es la ruta de carga de los datos, si esto falla, entonces no es necesario
+            //  mostrar le modal de cancelar la creacion de la transaccion.
             transactionCreateRoute(
                 navController = navController,
-                onShowBottomBar = onShowBottomBar,
-                onShowAddFloating = onShowAddFloating,
+                showBottomBar = showBottomBar,
+                showFloatingAddMenu = showFloatingAddMenu,
                 onBackClick = onBackClick,
                 fromInitToPaymentAccount = fromInitToPaymentAccount
             )
@@ -99,8 +102,9 @@ fun NavGraphBuilder.transactionCreateGraph(
             )
             transactionAmountRoute(
                 navController = navController,
-                onShowBottomBar = onShowBottomBar,
-                onShowAddFloating = onShowAddFloating,
+                showBottomBar = showBottomBar,
+                showFloatingAddMenu = showFloatingAddMenu,
+                hideExtendAddMenu = hideExtendAddMenu,
                 onCancelClick = onCancelClick,
                 onBackClick = onBackClick,
                 onSaveClick = onSaveClick
@@ -111,8 +115,8 @@ fun NavGraphBuilder.transactionCreateGraph(
 
 fun NavGraphBuilder.transactionCreateRoute(
     navController: NavHostController,
-    onShowBottomBar: () -> Unit,
-    onShowAddFloating: () -> Unit,
+    showBottomBar: () -> Unit,
+    showFloatingAddMenu: () -> Unit,
     onBackClick: () -> Unit,
     fromInitToPaymentAccount: () -> Unit
 ) {
@@ -132,8 +136,8 @@ fun NavGraphBuilder.transactionCreateRoute(
             )
 
             TransactionCreateRoute(
-                onShowBottomBar = onShowBottomBar,
-                onShowAddFloating = onShowAddFloating,
+                showBottomBar = showBottomBar,
+                showFloatingAddMenu = showFloatingAddMenu,
                 onBackClick = onBackClick,
                 fromInitToPaymentAccount = fromInitToPaymentAccount,
                 viewModel = viewModel
@@ -267,8 +271,9 @@ fun NavGraphBuilder.transactionNameRoute(
 
 fun NavGraphBuilder.transactionAmountRoute(
     navController: NavHostController,
-    onShowBottomBar: () -> Unit,
-    onShowAddFloating: () -> Unit,
+    showBottomBar: () -> Unit,
+    showFloatingAddMenu: () -> Unit,
+    hideExtendAddMenu: () -> Unit,
     onCancelClick: () -> Unit,
     onBackClick: () -> Unit,
     onSaveClick: () -> Unit,
@@ -289,8 +294,9 @@ fun NavGraphBuilder.transactionAmountRoute(
             )
 
             TransactionAmountRoute(
-                onShowBottomBar = onShowBottomBar,
-                onShowAddFloating = onShowAddFloating,
+                showBottomBar = showBottomBar,
+                showFloatingAddMenu = showFloatingAddMenu,
+                hideExtendAddMenu = hideExtendAddMenu,
                 onCancelClick = onCancelClick,
                 onBackClick = onBackClick,
                 onSaveClick = onSaveClick,

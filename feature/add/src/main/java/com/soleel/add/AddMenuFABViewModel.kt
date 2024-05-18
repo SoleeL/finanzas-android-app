@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
-
 data class AddUiState(
     val itemsPaymentAccount: List<PaymentAccount> = emptyList(),
     val userMessage: String? = null,
@@ -21,14 +20,14 @@ data class AddUiState(
 )
 
 @HiltViewModel
-class AddModalViewModel @Inject constructor(
-    private val repositoryLocalPaymentAccount: IPaymentAccountLocalDataSource
+open class AddMenuFABViewModel @Inject constructor(
+    val repositoryLocalPaymentAccount: IPaymentAccountLocalDataSource
 ) : ViewModel() {
 
 //    private val homeFlow: Flow<AddUiState> =
 //        repositoryLocalPaymentAccount.getPaymentAccounts().map(transform = this::getData)
 
-    val addUiState: StateFlow<AddUiState> = repositoryLocalPaymentAccount
+    open val addUiState: StateFlow<AddUiState> = repositoryLocalPaymentAccount
         .getPaymentAccounts()
         .map(transform = this::getData)
         .stateIn(
@@ -39,7 +38,7 @@ class AddModalViewModel @Inject constructor(
             )
         )
 
-    private fun getData(
+    fun getData(
         itemsPaymentAccount: List<PaymentAccount>
     ): AddUiState {
         return AddUiState(
