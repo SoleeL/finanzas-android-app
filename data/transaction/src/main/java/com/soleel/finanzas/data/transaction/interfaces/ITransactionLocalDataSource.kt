@@ -1,6 +1,6 @@
-package com.soleel.transaction.interfaces
+package com.soleel.finanzas.data.transaction.interfaces
 
-import com.soleel.transaction.model.Transaction
+import com.soleel.finanzas.data.transaction.model.Transaction
 import kotlinx.coroutines.flow.Flow
 
 interface ITransactionLocalDataSource {

@@ -1,7 +1,7 @@
-package com.soleel.transaction.di
+package com.soleel.finanzas.data.transaction.di
 
-import com.soleel.transaction.TransactionRepository
-import com.soleel.transaction.interfaces.ITransactionLocalDataSource
+import com.soleel.finanzas.data.transaction.TransactionRepository
+import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

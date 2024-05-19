@@ -2,10 +2,10 @@ package com.soleel.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.soleel.paymentaccount.interfaces.IPaymentAccountLocalDataSource
-import com.soleel.paymentaccount.model.PaymentAccount
-import com.soleel.transaction.interfaces.ITransactionLocalDataSource
-import com.soleel.transaction.model.Transaction
+import com.soleel.finanzas.data.paymentaccount.interfaces.IPaymentAccountLocalDataSource
+import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
+import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
+import com.soleel.finanzas.data.transaction.model.Transaction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted

@@ -1,11 +1,11 @@
-package com.soleel.transaction
+package com.soleel.finanzas.data.transaction
 
 import com.soleel.finanzas.core.database.daos.TransactionDAO
 import com.soleel.finanzas.core.database.entities.TransactionEntity
-import com.soleel.transaction.di.DefaultDispatcher
-import com.soleel.transaction.interfaces.ITransactionLocalDataSource
-import com.soleel.transaction.model.Transaction
-import com.soleel.transaction.model.TransactionDbModel
+import com.soleel.finanzas.data.transaction.di.DefaultDispatcher
+import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
+import com.soleel.finanzas.data.transaction.model.Transaction
+import com.soleel.finanzas.data.transaction.model.TransactionDbModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

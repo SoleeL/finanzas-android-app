@@ -17,7 +17,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import com.soleel.finanzas.core.common.constants.PaymentAccountTypeConstant
 import com.soleel.finanzas.core.common.constants.TransactionTypeConstant
-import com.soleel.paymentaccount.model.PaymentAccount
+import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
 import com.soleel.transactioncreate.TransactionCreateViewModel
 import com.soleel.transactioncreate.TransactionUiCreate
 import com.soleel.transactioncreate.TransactionUiEvent

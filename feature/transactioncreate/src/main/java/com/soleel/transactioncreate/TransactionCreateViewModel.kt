@@ -10,9 +10,9 @@ import com.soleel.finanzas.core.common.result.Result
 import com.soleel.finanzas.core.common.result.asResult
 import com.soleel.finanzas.core.common.retryflow.RetryableFlowTrigger
 import com.soleel.finanzas.core.common.retryflow.retryableFlow
-import com.soleel.paymentaccount.interfaces.IPaymentAccountLocalDataSource
-import com.soleel.paymentaccount.model.PaymentAccount
-import com.soleel.transaction.interfaces.ITransactionLocalDataSource
+import com.soleel.finanzas.data.paymentaccount.interfaces.IPaymentAccountLocalDataSource
+import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
+import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
 import com.soleel.validation.validator.NameValidator
 import com.soleel.validation.validator.PaymentAccountTypeValidator
 import com.soleel.validation.validator.TransactionAmountValidator

@@ -1,4 +1,4 @@
-package com.soleel.paymentaccount.model
+package com.soleel.finanzas.data.paymentaccount.model
 
 import com.soleel.finanzas.core.database.entities.PaymentAccountEntity
 import com.soleel.finanzas.core.database.extras.PaymentAccountEntityWithTotalAmount
@@ -17,7 +17,7 @@ class PaymentAccountDbModel {
         }
 
         fun asExternalModelList(paymentAccountEntities: List<PaymentAccountEntity>): List<PaymentAccount> {
-            return paymentAccountEntities.map(transform = ::asExternalModel)
+            return paymentAccountEntities.map(transform = Companion::asExternalModel)
         }
 
         fun asExternalModelWithTotalAmount(paymentAccountEntityWithTotalAmount: PaymentAccountEntityWithTotalAmount): PaymentAccount {
@@ -32,7 +32,7 @@ class PaymentAccountDbModel {
         }
 
         fun asExternalModelWithTotalAmountList(paymentAccountEntitiesWithTotalAmount: List<PaymentAccountEntityWithTotalAmount>): List<PaymentAccount> {
-            return paymentAccountEntitiesWithTotalAmount.map(transform = ::asExternalModelWithTotalAmount)
+            return paymentAccountEntitiesWithTotalAmount.map(transform = Companion::asExternalModelWithTotalAmount)
         }
 
         fun asInternalModel(paymentAccount: PaymentAccount): PaymentAccountEntity {

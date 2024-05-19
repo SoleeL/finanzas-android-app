@@ -1,4 +1,4 @@
-package com.soleel.transaction.di
+package com.soleel.finanzas.data.paymentaccount.di
 
 import dagger.Module
 import dagger.Provides

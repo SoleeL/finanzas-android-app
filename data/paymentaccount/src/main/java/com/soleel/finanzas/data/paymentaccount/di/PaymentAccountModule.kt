@@ -1,7 +1,7 @@
-package com.soleel.paymentaccount.di
+package com.soleel.finanzas.data.paymentaccount.di
 
-import com.soleel.paymentaccount.PaymentAccountRepository
-import com.soleel.paymentaccount.interfaces.IPaymentAccountLocalDataSource
+import com.soleel.finanzas.data.paymentaccount.PaymentAccountRepository
+import com.soleel.finanzas.data.paymentaccount.interfaces.IPaymentAccountLocalDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

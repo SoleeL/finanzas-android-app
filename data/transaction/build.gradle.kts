@@ -3,5 +3,5 @@ plugins {
 }
 
 android {
-    namespace = "com.soleel.trasaction"
+    namespace = "com.soleel.finanzas.data.trasaction"
 }

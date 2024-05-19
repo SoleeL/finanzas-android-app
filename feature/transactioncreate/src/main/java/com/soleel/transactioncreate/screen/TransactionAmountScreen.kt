@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.soleel.finanzas.core.common.constants.PaymentAccountTypeConstant
 import com.soleel.finanzas.core.common.constants.TransactionCategoryConstant
 import com.soleel.finanzas.core.common.constants.TransactionTypeConstant
-import com.soleel.paymentaccount.model.PaymentAccount
+import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
 import com.soleel.transactioncreate.TransactionCreateViewModel
 import com.soleel.transactioncreate.TransactionUiCreate
 import com.soleel.transactioncreate.TransactionUiEvent

@@ -1,7 +1,7 @@
-package com.soleel.paymentaccount
+package com.soleel.finanzas.data.paymentaccount
 
-import com.soleel.paymentaccount.interfaces.IPaymentAccountLocalDataSource
-import com.soleel.paymentaccount.model.PaymentAccount
+import com.soleel.finanzas.data.paymentaccount.interfaces.IPaymentAccountLocalDataSource
+import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 

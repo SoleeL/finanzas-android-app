@@ -3,5 +3,5 @@ plugins {
 }
 
 android {
-    namespace = "com.soleel.paymentaccount"
+    namespace = "com.soleel.finanzas.data.paymentaccount"
 }

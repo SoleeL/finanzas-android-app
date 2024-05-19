@@ -1,4 +1,4 @@
-package com.soleel.paymentaccount.model
+package com.soleel.finanzas.data.paymentaccount.model
 
 data class PaymentAccount(
     val id: String,

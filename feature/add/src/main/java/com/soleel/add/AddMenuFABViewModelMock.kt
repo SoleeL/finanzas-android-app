@@ -1,7 +1,7 @@
 package com.soleel.add
 
 import androidx.lifecycle.viewModelScope
-import com.soleel.paymentaccount.PaymentAccountRepositoryMock
+import com.soleel.finanzas.data.paymentaccount.PaymentAccountRepositoryMock
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map

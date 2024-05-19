@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.soleel.finanzas.core.common.constants.TransactionCategoryConstant
 import com.soleel.finanzas.core.common.constants.TransactionTypeConstant
-import com.soleel.paymentaccount.interfaces.IPaymentAccountLocalDataSource
-import com.soleel.transaction.interfaces.ITransactionLocalDataSource
+import com.soleel.finanzas.data.paymentaccount.interfaces.IPaymentAccountLocalDataSource
+import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
 import com.soleel.validation.validator.AccountTypeValidator
 import com.soleel.validation.validator.NameValidator
 import com.soleel.validation.validator.PaymentAccountAmountValidator

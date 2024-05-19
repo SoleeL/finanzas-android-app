@@ -1,4 +1,4 @@
-package com.soleel.transaction.model
+package com.soleel.finanzas.data.transaction.model
 
 import com.soleel.finanzas.core.database.entities.TransactionEntity
 
@@ -20,7 +20,7 @@ class TransactionDbModel {
         }
 
         fun asExternalModelList(transactionEntities: List<TransactionEntity>): List<Transaction> {
-            return transactionEntities.map(::asExternalModel)
+            return transactionEntities.map(Companion::asExternalModel)
         }
     }
 }

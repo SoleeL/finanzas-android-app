@@ -1,10 +1,10 @@
-package com.soleel.paymentaccount
+package com.soleel.finanzas.data.paymentaccount
 
 import com.soleel.finanzas.core.database.daos.PaymentAccountDAO
-import com.soleel.paymentaccount.di.DefaultDispatcher
-import com.soleel.paymentaccount.interfaces.IPaymentAccountLocalDataSource
-import com.soleel.paymentaccount.model.PaymentAccount
-import com.soleel.paymentaccount.model.PaymentAccountDbModel
+import com.soleel.finanzas.data.paymentaccount.di.DefaultDispatcher
+import com.soleel.finanzas.data.paymentaccount.interfaces.IPaymentAccountLocalDataSource
+import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
+import com.soleel.finanzas.data.paymentaccount.model.PaymentAccountDbModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
