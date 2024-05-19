@@ -1,7 +1,7 @@
 plugins {
-    id("conventionPluginsApp.android.application")
-    id("conventionPluginsApp.android.app.compose")
-    id("conventionPluginsApp.android.hilt")
+    alias(libs.plugins.finanzas.android.application)
+    alias(libs.plugins.finanzas.android.application.compose)
+    alias(libs.plugins.finanzas.android.hilt)
 }
 
 android {

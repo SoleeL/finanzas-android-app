@@ -3,21 +3,21 @@ package com.soleel.finanzas.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
-import com.soleel.accounts.navigation.accountsScreen
+import com.soleel.finanzas.feature.accounts.navigation.accountsScreen
 import com.soleel.finanzas.ui.FinanzasAppState
-import com.soleel.home.navigation.homeRoute
-import com.soleel.home.navigation.homeScreen
-import com.soleel.paymentaccountcreate.navigation.navigateToPaymentAccountAmountRoute
-import com.soleel.paymentaccountcreate.navigation.navigateToPaymentAccountNameRoute
-import com.soleel.paymentaccountcreate.navigation.paymentAccountCreateGraph
-import com.soleel.profile.navigation.profileScreen
-import com.soleel.stats.navigation.statsScreen
-import com.soleel.transactioncreate.navigation.navigateToTransactionAmountRoute
-import com.soleel.transactioncreate.navigation.navigateToTransactionCategoryRoute
-import com.soleel.transactioncreate.navigation.navigateToTransactionNameRoute
-import com.soleel.transactioncreate.navigation.navigateToTransactionPaymentAccountRoute
-import com.soleel.transactioncreate.navigation.navigateToTransactionTypeRoute
-import com.soleel.transactioncreate.navigation.transactionCreateGraph
+import com.soleel.finanzas.feature.home.navigation.homeRoute
+import com.soleel.finanzas.feature.home.navigation.homeScreen
+import com.soleel.finanzas.feature.paymentaccountcreate.navigation.navigateToPaymentAccountAmountRoute
+import com.soleel.finanzas.feature.paymentaccountcreate.navigation.navigateToPaymentAccountNameRoute
+import com.soleel.finanzas.feature.paymentaccountcreate.navigation.paymentAccountCreateGraph
+import com.soleel.finanzas.feature.profile.navigation.profileScreen
+import com.soleel.finanzas.feature.stats.navigation.statsScreen
+import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionAmountRoute
+import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionCategoryRoute
+import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionNameRoute
+import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionPaymentAccountRoute
+import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionTypeRoute
+import com.soleel.finanzas.feature.transactioncreate.navigation.transactionCreateGraph
 
 
 @Composable
