@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.soleel.common.constants.TransactionCategoryConstant
-import com.soleel.common.constants.TransactionTypeConstant
+import com.soleel.finanzas.core.common.constants.TransactionCategoryConstant
+import com.soleel.finanzas.core.common.constants.TransactionTypeConstant
 import com.soleel.paymentaccount.interfaces.IPaymentAccountLocalDataSource
 import com.soleel.transaction.interfaces.ITransactionLocalDataSource
 import com.soleel.validation.validator.AccountTypeValidator

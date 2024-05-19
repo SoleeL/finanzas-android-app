@@ -1,6 +1,6 @@
 package com.soleel.validation.validator
 
-import com.soleel.ui.R
+import com.soleel.finanzas.core.ui.R
 import com.soleel.validation.generic.InValidation
 import com.soleel.validation.model.ResultValidation
 

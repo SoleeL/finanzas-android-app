@@ -1,6 +1,6 @@
 package com.soleel.paymentaccount
 
-import com.soleel.database.daos.PaymentAccountDAO
+import com.soleel.finanzas.core.database.daos.PaymentAccountDAO
 import com.soleel.paymentaccount.di.DefaultDispatcher
 import com.soleel.paymentaccount.interfaces.IPaymentAccountLocalDataSource
 import com.soleel.paymentaccount.model.PaymentAccount

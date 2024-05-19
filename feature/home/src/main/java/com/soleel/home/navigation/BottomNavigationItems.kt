@@ -1,6 +1,6 @@
 package com.soleel.home.navigation
 
-import com.soleel.ui.R
+import com.soleel.finanzas.core.ui.R
 
 
 sealed class HomeBottomNavigationItems(var title: String, var icon: Int, var screenRoute: String) {

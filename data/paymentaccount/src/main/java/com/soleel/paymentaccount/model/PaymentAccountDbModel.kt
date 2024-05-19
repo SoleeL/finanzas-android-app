@@ -1,7 +1,7 @@
 package com.soleel.paymentaccount.model
 
-import com.soleel.database.entities.PaymentAccountEntity
-import com.soleel.database.extras.PaymentAccountEntityWithTotalAmount
+import com.soleel.finanzas.core.database.entities.PaymentAccountEntity
+import com.soleel.finanzas.core.database.extras.PaymentAccountEntityWithTotalAmount
 
 
 class PaymentAccountDbModel {

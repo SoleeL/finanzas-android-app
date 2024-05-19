@@ -16,10 +16,10 @@ import com.soleel.paymentaccountcreate.PaymentAccountCreateViewModel
 import com.soleel.paymentaccountcreate.PaymentAccountUiCreate
 import com.soleel.paymentaccountcreate.PaymentAccountUiEvent
 import com.soleel.paymentaccountcreate.util.PaymentAccountCards
-import com.soleel.ui.R
-import com.soleel.ui.template.PaymentAccountCard
-import com.soleel.ui.template.PaymentAccountCreateTopAppBar
-import com.soleel.ui.util.PaymentAccountCardItem
+import com.soleel.finanzas.core.ui.R
+import com.soleel.finanzas.core.ui.template.PaymentAccountCard
+import com.soleel.finanzas.core.ui.template.PaymentAccountCreateTopAppBar
+import com.soleel.finanzas.core.ui.util.PaymentAccountCardItem
 
 
 @Composable

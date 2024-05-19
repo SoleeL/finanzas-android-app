@@ -1,6 +1,6 @@
 package com.soleel.finanzas.navigation
 
-import com.soleel.ui.R
+import com.soleel.finanzas.core.ui.R
 
 enum class TopLevelDestination(
     val selectedIcon: Int,

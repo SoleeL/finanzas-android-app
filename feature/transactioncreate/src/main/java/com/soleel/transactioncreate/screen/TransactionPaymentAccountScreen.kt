@@ -16,16 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.soleel.common.constants.PaymentAccountTypeConstant
+import com.soleel.finanzas.core.common.constants.PaymentAccountTypeConstant
 import com.soleel.paymentaccount.model.PaymentAccount
 import com.soleel.transactioncreate.PaymentAccountsUiState
 import com.soleel.transactioncreate.TransactionCreateViewModel
 import com.soleel.transactioncreate.TransactionUiEvent
 import com.soleel.transformation.visualtransformation.CurrencyVisualTransformation
-import com.soleel.ui.R
-import com.soleel.ui.template.PaymentAccountCard
-import com.soleel.ui.template.TransactionCreateTopAppBar
-import com.soleel.ui.util.getPaymentAccountCard
+import com.soleel.finanzas.core.ui.R
+import com.soleel.finanzas.core.ui.template.PaymentAccountCard
+import com.soleel.finanzas.core.ui.template.TransactionCreateTopAppBar
+import com.soleel.finanzas.core.ui.util.getPaymentAccountCard
 
 
 @Composable

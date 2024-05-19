@@ -4,6 +4,10 @@ plugins {
     id("conventionPluginsApp.android.hilt")
 }
 
+android {
+    namespace = "com.soleel.finanzas"
+}
+
 dependencies {
     implementation(projects.feature.home)
     implementation(projects.feature.stats)

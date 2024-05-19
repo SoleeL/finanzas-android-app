@@ -15,20 +15,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
-import com.soleel.common.constants.PaymentAccountTypeConstant
-import com.soleel.common.constants.TransactionCategoryConstant
-import com.soleel.common.constants.TransactionTypeConstant
+import com.soleel.finanzas.core.common.constants.PaymentAccountTypeConstant
+import com.soleel.finanzas.core.common.constants.TransactionCategoryConstant
+import com.soleel.finanzas.core.common.constants.TransactionTypeConstant
 import com.soleel.paymentaccount.model.PaymentAccount
 import com.soleel.transactioncreate.TransactionCreateViewModel
 import com.soleel.transactioncreate.TransactionUiCreate
 import com.soleel.transactioncreate.TransactionUiEvent
 import com.soleel.transformation.visualtransformation.CurrencyVisualTransformation
-import com.soleel.ui.R
-import com.soleel.ui.template.TransactionCard
-import com.soleel.ui.template.TransactionCreateTopAppBar
-import com.soleel.ui.util.getPaymentAccountCard
-import com.soleel.ui.util.getTransactionCategoryCard
-import com.soleel.ui.util.getTransactionTypeCard
+import com.soleel.finanzas.core.ui.R
+import com.soleel.finanzas.core.ui.template.TransactionCard
+import com.soleel.finanzas.core.ui.template.TransactionCreateTopAppBar
+import com.soleel.finanzas.core.ui.util.getPaymentAccountCard
+import com.soleel.finanzas.core.ui.util.getTransactionCategoryCard
+import com.soleel.finanzas.core.ui.util.getTransactionTypeCard
 
 
 @Composable

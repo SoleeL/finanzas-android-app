@@ -3,5 +3,5 @@ plugins {
 }
 
 android {
-    namespace = "com.soleel.common"
+    namespace = "com.soleel.finanzas.core.common"
 }

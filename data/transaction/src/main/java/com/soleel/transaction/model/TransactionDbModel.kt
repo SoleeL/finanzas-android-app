@@ -1,6 +1,6 @@
 package com.soleel.transaction.model
 
-import com.soleel.database.entities.TransactionEntity
+import com.soleel.finanzas.core.database.entities.TransactionEntity
 
 
 class TransactionDbModel {

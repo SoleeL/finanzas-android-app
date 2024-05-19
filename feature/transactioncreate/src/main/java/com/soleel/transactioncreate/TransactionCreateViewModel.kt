@@ -5,11 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.soleel.common.constants.TransactionTypeConstant
-import com.soleel.common.result.Result
-import com.soleel.common.result.asResult
-import com.soleel.common.retryflow.RetryableFlowTrigger
-import com.soleel.common.retryflow.retryableFlow
+import com.soleel.finanzas.core.common.constants.TransactionTypeConstant
+import com.soleel.finanzas.core.common.result.Result
+import com.soleel.finanzas.core.common.result.asResult
+import com.soleel.finanzas.core.common.retryflow.RetryableFlowTrigger
+import com.soleel.finanzas.core.common.retryflow.retryableFlow
 import com.soleel.paymentaccount.interfaces.IPaymentAccountLocalDataSource
 import com.soleel.paymentaccount.model.PaymentAccount
 import com.soleel.transaction.interfaces.ITransactionLocalDataSource

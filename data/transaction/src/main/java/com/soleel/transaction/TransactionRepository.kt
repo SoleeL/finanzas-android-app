@@ -1,7 +1,7 @@
 package com.soleel.transaction
 
-import com.soleel.database.daos.TransactionDAO
-import com.soleel.database.entities.TransactionEntity
+import com.soleel.finanzas.core.database.daos.TransactionDAO
+import com.soleel.finanzas.core.database.entities.TransactionEntity
 import com.soleel.transaction.di.DefaultDispatcher
 import com.soleel.transaction.interfaces.ITransactionLocalDataSource
 import com.soleel.transaction.model.Transaction

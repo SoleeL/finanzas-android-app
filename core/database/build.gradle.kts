@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.soleel.database"
+    namespace = "com.soleel.finanzas.core.database"
 }
 
 dependencies {
