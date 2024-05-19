@@ -18,8 +18,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
-import com.soleel.add.AddMenuFAB
-import com.soleel.cancelalert.CancelAlertDialog
+import com.soleel.finanzas.feature.add.AddMenuFAB
+import com.soleel.finanzas.feature.cancelalert.CancelAlertDialog
 import com.soleel.finanzas.navigation.FinanzasNavHost
 import com.soleel.finanzas.navigation.TopLevelDestination
 

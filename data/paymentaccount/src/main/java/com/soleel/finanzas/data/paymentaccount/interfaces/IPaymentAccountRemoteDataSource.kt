@@ -1,0 +1,3 @@
+package com.soleel.finanzas.data.paymentaccount.interfaces
+
+interface IPaymentAccountRemoteDataSource

@@ -1,7 +1,8 @@
 plugins {
-    id("conventionPluginsApp.android.domain")
+    alias(libs.plugins.finanzas.android.library)
+    alias(libs.plugins.finanzas.android.library.compose)
 }
 
 android {
-    namespace = "com.soleel.transformation"
+    namespace = "com.soleel.finanzas.domain.transformation"
 }

@@ -1,7 +1,8 @@
 plugins {
-    id("conventionPluginsApp.android.core")
+    alias(libs.plugins.finanzas.android.library)
+    alias(libs.plugins.finanzas.android.hilt)
 }
 
 android {
-    namespace = "com.soleel.common"
+    namespace = "com.soleel.finanzas.core.common"
 }

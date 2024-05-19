@@ -15,10 +15,14 @@ class AndroidHiltConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                add("implementation", versionCatalog().findLibrary("hilt-android").get())
-                add("ksp", versionCatalog().findLibrary("hilt-compiler").get())
-                add("kspAndroidTest", versionCatalog().findLibrary("hilt-compiler").get())
-                add("kspTest", versionCatalog().findLibrary("hilt-compiler").get())
+                "implementation"(versionCatalog().findLibrary("hilt.android").get())
+                "ksp"(versionCatalog().findLibrary("hilt-compiler").get())
+                "implementation"(versionCatalog().findLibrary("hilt-navigation-compose").get())
+//                add("implementation", versionCatalog().findLibrary("hilt-navigation-compose").get())
+//                add("implementation", versionCatalog().findLibrary("hilt-android").get())
+//                add("ksp", versionCatalog().findLibrary("hilt-compiler").get())
+//                add("kspAndroidTest", versionCatalog().findLibrary("hilt-compiler").get())
+//                add("kspTest", versionCatalog().findLibrary("hilt-compiler").get())
             }
         }
     }

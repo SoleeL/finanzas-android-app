@@ -1,7 +1,12 @@
 plugins {
-    id("conventionPluginsApp.android.data")
+    alias(libs.plugins.finanzas.android.library)
+    alias(libs.plugins.finanzas.android.hilt)
 }
 
 android {
-    namespace = "com.soleel.paymentaccount"
+    namespace = "com.soleel.finanzas.data.paymentaccount"
+}
+
+dependencies {
+    api(projects.core.database)
 }

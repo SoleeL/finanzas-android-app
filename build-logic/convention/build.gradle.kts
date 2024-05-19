@@ -4,6 +4,8 @@ plugins {
     `kotlin-dsl`
 }
 
+group = "com.soleel.finanzas.buildlogic"
+
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
@@ -22,55 +24,63 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        register("androidApp") {
-            id = "conventionPluginsApp.android.application"
-            implementationClass = "plugins.AndroidAppConventionPlugin"
+        // Application module
+        register("androidApplication") {
+            id = "finanzas.android.application"
+            implementationClass = "plugins.AndroidApplicationConventionPlugin"
         }
 
-        register("androidLib") {
-            id = "conventionPluginsApp.android.lib"
-            implementationClass = "plugins.AndroidLibConventionPlugin"
+        register("androidApplicationCompose") {
+            id = "finanzas.android.application.compose"
+            implementationClass = "plugins.AndroidApplicationComposeConventionPlugin"
         }
 
-        register("androidAppCompose") {
-            id = "conventionPluginsApp.android.app.compose"
-            implementationClass = "plugins.AndroidAppComposeConventionPlugin"
+        // Library module
+
+        register("androidLibrary") {
+            id = "finanzas.android.library"
+            implementationClass = "plugins.AndroidLibraryConventionPlugin"
         }
 
-        register("androidLibCompose") {
-            id = "conventionPluginsApp.android.lib.compose"
-            implementationClass = "plugins.AndroidLibComposeConventionPlugin"
+        register("androidLibraryCompose") {
+            id = "finanzas.android.library.compose"
+            implementationClass = "plugins.AndroidLibraryComposeConventionPlugin"
         }
+
+        // Library dependency
 
         register("androidHilt") {
-            id = "conventionPluginsApp.android.hilt"
+            id = "finanzas.android.hilt"
             implementationClass = "plugins.AndroidHiltConventionPlugin"
         }
 
         register("androidRoom") {
-            id = "conventionPluginsApp.android.room"
+            id = "finanzas.android.room"
             implementationClass = "plugins.AndroidRoomConventionPlugin"
         }
+
+        // Architecture module
 
         register("androidFeature") {
             id = "conventionPluginsApp.android.feature"
             implementationClass = "plugins.AndroidAppFeatureConventionPlugin"
         }
 
-        register("androidDomain") {
-            id = "conventionPluginsApp.android.domain"
-            implementationClass = "plugins.AndroidAppDomainConventionPlugin"
-        }
 
-        register("androidData") {
-            id = "conventionPluginsApp.android.data"
-            implementationClass = "plugins.AndroidAppDataConvetionPlugin"
-        }
+//        register("androidDomain") {
+//            id = "conventionPluginsApp.android.domain"
+//            implementationClass = "plugins.AndroidAppDomainConventionPlugin"
+//        }
 
-        register("androidCore") {
-            id = "conventionPluginsApp.android.core"
-            implementationClass = "plugins.AndroidAppCoreConventionPlugin"
-        }
+//        register("androidData") {
+//            id = "conventionPluginsApp.android.data"
+//            implementationClass = "plugins.AndroidAppDataConvetionPlugin"
+//        }
+
+//        register("androidCore") {
+//            id = "conventionPluginsApp.android.core"
+//            implementationClass = "plugins.AndroidAppCoreConventionPlugin"
+//        }
 
     }
 }

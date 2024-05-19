@@ -1,0 +1,45 @@
+package plugins
+
+import com.android.build.api.dsl.ApplicationExtension
+import config.Config
+import extensions.configureAndroidKotlin
+import extensions.configureBuildTypes
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.configure
+
+
+class AndroidApplicationConventionPlugin : Plugin<Project> {
+
+    override fun apply(project: Project) {
+        with(project) {
+            with(pluginManager) {
+                apply("com.android.application")
+                apply("kotlin-android")
+            }
+
+            extensions.configure<ApplicationExtension> {
+
+                defaultConfig.apply {
+                    targetSdk = Config.android.targetSdkVersion
+                    applicationId = Config.android.applicationId
+                    versionCode = Config.android.versionCode
+                    versionName = Config.android.versionName
+                }
+
+                configureAndroidKotlin(this)
+                configureBuildTypes(this)
+
+//                dependencies {
+//                    add("implementation", project(":feature:home"))
+//                    add("implementation", project(":feature:stats"))
+//                    add("implementation", project(":feature:accounts"))
+//                    add("implementation", project(":feature:profile"))
+//                    add("implementation", project(":feature:createpaymentaccount"))
+//                    add("implementation", project(":feature:createtransaction"))
+//                }
+                
+            }
+        }
+    }
+}
