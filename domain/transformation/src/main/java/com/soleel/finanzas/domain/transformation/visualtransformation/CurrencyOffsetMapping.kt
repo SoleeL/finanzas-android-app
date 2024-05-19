@@ -1,4 +1,4 @@
-package com.soleel.transformation.visualtransformation
+package com.soleel.finanzas.domain.transformation.visualtransformation
 
 import androidx.compose.ui.text.input.OffsetMapping
 

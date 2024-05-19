@@ -32,13 +32,13 @@ import com.soleel.finanzas.core.common.constants.PaymentAccountTypeConstant
 import com.soleel.paymentaccountcreate.PaymentAccountCreateViewModel
 import com.soleel.paymentaccountcreate.PaymentAccountUiCreate
 import com.soleel.paymentaccountcreate.PaymentAccountUiEvent
-import com.soleel.transformation.visualtransformation.CurrencyVisualTransformation
+import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.PaymentAccountCard
 import com.soleel.finanzas.core.ui.template.PaymentAccountCreateTopAppBar
 import com.soleel.finanzas.core.ui.util.PaymentAccountCardItem
 import com.soleel.finanzas.core.ui.util.getPaymentAccountCard
-import com.soleel.validation.validator.TransactionAmountValidator
+import com.soleel.finanzas.domain.validation.validator.TransactionAmountValidator
 
 
 @Composable

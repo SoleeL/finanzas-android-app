@@ -32,7 +32,7 @@ import com.soleel.finanzas.core.ui.template.PaymentAccountCard
 import com.soleel.finanzas.core.ui.template.PaymentAccountCreateTopAppBar
 import com.soleel.finanzas.core.ui.util.PaymentAccountCardItem
 import com.soleel.finanzas.core.ui.util.getPaymentAccountCard
-import com.soleel.validation.validator.NameValidator
+import com.soleel.finanzas.domain.validation.validator.NameValidator
 
 
 @Composable

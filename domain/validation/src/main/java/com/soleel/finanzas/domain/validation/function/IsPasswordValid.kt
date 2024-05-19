@@ -1,4 +1,4 @@
-package com.soleel.validation.function
+package com.soleel.finanzas.domain.validation.function
 
 
 fun isPasswordValid(password: String): Boolean {

@@ -1,11 +1,11 @@
-package com.soleel.validation.validator
+package com.soleel.finanzas.domain.validation.validator
 
 import com.soleel.finanzas.core.ui.R
-import com.soleel.validation.generic.InValidation
-import com.soleel.validation.model.ResultValidation
+import com.soleel.finanzas.domain.validation.generic.InValidation
+import com.soleel.finanzas.domain.validation.model.ResultValidation
 
 
-class AccountTypeValidator : InValidation<Int, ResultValidation>{
+class TransactionTypeValidator : InValidation<Int, ResultValidation> {
 
     override fun execute(input: Int): ResultValidation {
 
@@ -20,5 +20,6 @@ class AccountTypeValidator : InValidation<Int, ResultValidation>{
             successful = true,
             errorMessage = null
         )
+
     }
 }

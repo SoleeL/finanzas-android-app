@@ -1,4 +1,4 @@
-package com.soleel.transformation.visualtransformation
+package com.soleel.finanzas.domain.transformation.visualtransformation
 
 import android.util.Log
 import androidx.compose.runtime.Composable
@@ -71,7 +71,8 @@ class CurrencyVisualTransformation(
          */
         return TransformedText(
             AnnotatedString(formattedText),
-            CurrencyOffsetMapping(originalText, formattedText))
+            CurrencyOffsetMapping(originalText, formattedText)
+        )
     }
 }
 

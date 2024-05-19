@@ -1,4 +1,4 @@
-package com.soleel.validation.generic
+package com.soleel.finanzas.domain.validation.generic
 
 
 interface InValidation<In, Out> {

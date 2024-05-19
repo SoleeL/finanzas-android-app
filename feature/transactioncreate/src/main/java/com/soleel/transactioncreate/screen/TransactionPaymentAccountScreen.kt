@@ -21,7 +21,7 @@ import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
 import com.soleel.transactioncreate.PaymentAccountsUiState
 import com.soleel.transactioncreate.TransactionCreateViewModel
 import com.soleel.transactioncreate.TransactionUiEvent
-import com.soleel.transformation.visualtransformation.CurrencyVisualTransformation
+import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.PaymentAccountCard
 import com.soleel.finanzas.core.ui.template.TransactionCreateTopAppBar

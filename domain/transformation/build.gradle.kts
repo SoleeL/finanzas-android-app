@@ -3,5 +3,5 @@ plugins {
 }
 
 android {
-    namespace = "com.soleel.transformation"
+    namespace = "com.soleel.finanzas.domain.transformation"
 }

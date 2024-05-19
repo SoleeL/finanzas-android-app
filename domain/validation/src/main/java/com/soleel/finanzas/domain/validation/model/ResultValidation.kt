@@ -1,4 +1,4 @@
-package com.soleel.validation.model
+package com.soleel.finanzas.domain.validation.model
 
 
 data class ResultValidation(

@@ -3,5 +3,5 @@ plugins {
 }
 
 android {
-    namespace = "com.soleel.validation"
+    namespace = "com.soleel.finanzas.domain.validation"
 }

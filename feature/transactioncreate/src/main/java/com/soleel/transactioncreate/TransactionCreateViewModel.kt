@@ -13,11 +13,11 @@ import com.soleel.finanzas.core.common.retryflow.retryableFlow
 import com.soleel.finanzas.data.paymentaccount.interfaces.IPaymentAccountLocalDataSource
 import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
 import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
-import com.soleel.validation.validator.NameValidator
-import com.soleel.validation.validator.PaymentAccountTypeValidator
-import com.soleel.validation.validator.TransactionAmountValidator
-import com.soleel.validation.validator.TransactionCategoryValidator
-import com.soleel.validation.validator.TransactionTypeValidator
+import com.soleel.finanzas.domain.validation.validator.NameValidator
+import com.soleel.finanzas.domain.validation.validator.PaymentAccountTypeValidator
+import com.soleel.finanzas.domain.validation.validator.TransactionAmountValidator
+import com.soleel.finanzas.domain.validation.validator.TransactionCategoryValidator
+import com.soleel.finanzas.domain.validation.validator.TransactionTypeValidator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

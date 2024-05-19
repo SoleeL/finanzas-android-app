@@ -9,9 +9,9 @@ import com.soleel.finanzas.core.common.constants.TransactionCategoryConstant
 import com.soleel.finanzas.core.common.constants.TransactionTypeConstant
 import com.soleel.finanzas.data.paymentaccount.interfaces.IPaymentAccountLocalDataSource
 import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
-import com.soleel.validation.validator.AccountTypeValidator
-import com.soleel.validation.validator.NameValidator
-import com.soleel.validation.validator.PaymentAccountAmountValidator
+import com.soleel.finanzas.domain.validation.validator.AccountTypeValidator
+import com.soleel.finanzas.domain.validation.validator.NameValidator
+import com.soleel.finanzas.domain.validation.validator.PaymentAccountAmountValidator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

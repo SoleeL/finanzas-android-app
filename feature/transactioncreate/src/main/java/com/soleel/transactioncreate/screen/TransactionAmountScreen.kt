@@ -36,14 +36,14 @@ import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
 import com.soleel.transactioncreate.TransactionCreateViewModel
 import com.soleel.transactioncreate.TransactionUiCreate
 import com.soleel.transactioncreate.TransactionUiEvent
-import com.soleel.transformation.visualtransformation.CurrencyVisualTransformation
+import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.TransactionCard
 import com.soleel.finanzas.core.ui.template.TransactionCreateTopAppBar
 import com.soleel.finanzas.core.ui.util.getPaymentAccountCard
 import com.soleel.finanzas.core.ui.util.getTransactionCategoryCard
 import com.soleel.finanzas.core.ui.util.getTransactionTypeCard
-import com.soleel.validation.validator.TransactionAmountValidator
+import com.soleel.finanzas.domain.validation.validator.TransactionAmountValidator
 
 
 @Composable
