@@ -1,10 +1,10 @@
-package com.soleel.finanzas.feature.accounts.navigation
+package com.soleel.finanzas.feature.paymentaccounts.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.soleel.finanzas.feature.accounts.AccountsRoute
+import com.soleel.finanzas.feature.paymentaccounts.AccountsRoute
 
 const val accountsRoute = "accounts_route"
 

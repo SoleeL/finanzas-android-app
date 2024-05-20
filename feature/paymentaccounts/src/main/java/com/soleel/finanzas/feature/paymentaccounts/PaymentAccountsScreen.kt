@@ -1,4 +1,4 @@
-package com.soleel.finanzas.feature.accounts
+package com.soleel.finanzas.feature.paymentaccounts
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,7 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 internal fun AccountsRoute(
     modifier: Modifier = Modifier,
-    viewModel: AccountsViewModel = hiltViewModel()
+    viewModel: PaymentAccountsViewModel = hiltViewModel()
 ){
     AccountsScreen(modifier = modifier, viewModel = viewModel)
 }
@@ -24,7 +24,7 @@ internal fun AccountsRoute(
 @Composable
 fun AccountsScreen(
     modifier: Modifier,
-    viewModel: AccountsViewModel
+    viewModel: PaymentAccountsViewModel
 ) {
     Column(
         modifier = Modifier

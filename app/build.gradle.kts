@@ -9,9 +9,9 @@ android {
 }
 
 dependencies {
-    implementation(projects.feature.home)
+    implementation(projects.feature.transactions)
     implementation(projects.feature.stats)
-    implementation(projects.feature.accounts)
+    implementation(projects.feature.paymentaccounts)
     implementation(projects.feature.profile)
     implementation(projects.feature.add)
 //    implementation(projects.feature.addmodal)

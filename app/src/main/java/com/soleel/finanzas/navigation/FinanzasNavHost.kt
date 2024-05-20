@@ -3,10 +3,10 @@ package com.soleel.finanzas.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
-import com.soleel.finanzas.feature.accounts.navigation.accountsScreen
+import com.soleel.finanzas.feature.paymentaccounts.navigation.accountsScreen
 import com.soleel.finanzas.ui.FinanzasAppState
-import com.soleel.finanzas.feature.home.navigation.homeRoute
-import com.soleel.finanzas.feature.home.navigation.homeScreen
+import com.soleel.finanzas.feature.transactions.navigation.homeRoute
+import com.soleel.finanzas.feature.transactions.navigation.homeScreen
 import com.soleel.finanzas.feature.paymentaccountcreate.navigation.navigateToPaymentAccountAmountRoute
 import com.soleel.finanzas.feature.paymentaccountcreate.navigation.navigateToPaymentAccountNameRoute
 import com.soleel.finanzas.feature.paymentaccountcreate.navigation.paymentAccountCreateGraph

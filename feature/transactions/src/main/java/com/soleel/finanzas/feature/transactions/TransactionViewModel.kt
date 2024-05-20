@@ -1,4 +1,4 @@
-package com.soleel.finanzas.feature.home
+package com.soleel.finanzas.feature.transactions
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

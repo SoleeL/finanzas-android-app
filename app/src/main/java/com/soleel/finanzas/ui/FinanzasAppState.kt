@@ -12,14 +12,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import androidx.tracing.trace
-import com.soleel.finanzas.feature.accounts.navigation.navigateToAccounts
+import com.soleel.finanzas.feature.paymentaccounts.navigation.navigateToAccounts
 import com.soleel.finanzas.navigation.TopLevelDestination
 import com.soleel.finanzas.navigation.TopLevelDestination.ACCOUNTS
 import com.soleel.finanzas.navigation.TopLevelDestination.HOME
 import com.soleel.finanzas.navigation.TopLevelDestination.PROFILE
 import com.soleel.finanzas.navigation.TopLevelDestination.STATS
-import com.soleel.finanzas.feature.home.navigation.backToHome
-import com.soleel.finanzas.feature.home.navigation.homeRoute
+import com.soleel.finanzas.feature.transactions.navigation.backToHome
+import com.soleel.finanzas.feature.transactions.navigation.homeRoute
 import com.soleel.finanzas.feature.paymentaccountcreate.navigation.navigateToPaymentAccountCreateGraph
 import com.soleel.finanzas.feature.profile.navigation.navigateToProfile
 import com.soleel.finanzas.feature.stats.navigation.navigateToStats

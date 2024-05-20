@@ -5,5 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.soleel.finanzas.feature.accounts"
+    namespace = "com.soleel.finanzas.feature.transactions"
+}
+
+dependencies {
+    api(projects.core.ui)
+    api(projects.data.paymentaccount)
+    api(projects.data.transaction)
 }

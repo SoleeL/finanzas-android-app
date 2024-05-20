@@ -1,4 +1,4 @@
-package com.soleel.finanzas.feature.home
+package com.soleel.finanzas.feature.transactions
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
