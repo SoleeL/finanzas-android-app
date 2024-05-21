@@ -21,8 +21,8 @@ const val transactionCreateGraph = "transaction_create_graph"
 
 const val transactionCreateRoute = "transaction_create_route"
 const val transactionPaymentAccountRoute = "transaction_payment_account_route"
-const val transactionCategoryRoute = "transaction_category_route"
 const val transactionTypeRoute = "transaction_type_route"
+const val transactionCategoryRoute = "transaction_category_route"
 const val transactionNameRoute = "transaction_name_route"
 const val transactionAmountRoute = "transaction_amount_route"
 

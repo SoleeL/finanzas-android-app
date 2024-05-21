@@ -24,14 +24,11 @@ import com.soleel.finanzas.navigation.FinanzasNavHost
 import com.soleel.finanzas.navigation.TopLevelDestination
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun FinanzasApp(
     appState: FinanzasAppState = rememberFinanzasAppState()
 ) {
-//    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
     Scaffold(
         modifier = Modifier,
         bottomBar = {
@@ -90,7 +87,6 @@ fun FinanzasApp(
     )
 }
 
-
 @Composable
 private fun FinanzasBottomBar(
     destinations: List<TopLevelDestination>,
@@ -127,7 +123,12 @@ private fun FinanzasBottomBar(
 }
 
 private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLevelDestination): Boolean {
-    return this?.hierarchy?.any {
-        it.route?.contains(destination.name, true) ?: false
-    } ?: false
+    return this?.hierarchy?.any(
+        predicate = {
+            it.route?.contains(
+                other = destination.name,
+                ignoreCase = true
+            ) ?: false
+        }
+    ) ?: false
 }

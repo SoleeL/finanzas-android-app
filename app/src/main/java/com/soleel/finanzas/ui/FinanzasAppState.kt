@@ -14,16 +14,16 @@ import androidx.navigation.navOptions
 import androidx.tracing.trace
 import com.soleel.finanzas.feature.paymentaccounts.navigation.navigateToAccounts
 import com.soleel.finanzas.navigation.TopLevelDestination
-import com.soleel.finanzas.navigation.TopLevelDestination.ACCOUNTS
-import com.soleel.finanzas.navigation.TopLevelDestination.HOME
+import com.soleel.finanzas.navigation.TopLevelDestination.TRANSACTIONS
+import com.soleel.finanzas.navigation.TopLevelDestination.PAYMENT_ACCOUNTS
 import com.soleel.finanzas.navigation.TopLevelDestination.PROFILE
 import com.soleel.finanzas.navigation.TopLevelDestination.STATS
-import com.soleel.finanzas.feature.transactions.navigation.backToHome
-import com.soleel.finanzas.feature.transactions.navigation.homeRoute
 import com.soleel.finanzas.feature.paymentaccountcreate.navigation.navigateToPaymentAccountCreateGraph
 import com.soleel.finanzas.feature.profile.navigation.navigateToProfile
 import com.soleel.finanzas.feature.stats.navigation.navigateToStats
 import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionCreateGraph
+import com.soleel.finanzas.feature.transactions.navigation.navigationToTransactionGraph
+import com.soleel.finanzas.feature.transactions.navigation.transactionsGraph
 import kotlinx.coroutines.CoroutineScope
 
 
@@ -89,7 +89,7 @@ class FinanzasAppState(
     @Composable
     fun getCurrentTopLevelDestination(): TopLevelDestination? {
         return when (getCurrentDestination()?.route) {
-            homeRoute -> HOME
+            transactionsGraph -> TRANSACTIONS
             else -> null
         }
     }
@@ -114,11 +114,11 @@ class FinanzasAppState(
                 )
 
                 when (topLevelDestination) {
-                    HOME -> navController.backToHome(topLevelNavOptions)
+                    TRANSACTIONS -> navController.navigationToTransactionGraph(topLevelNavOptions)
+
+                    PAYMENT_ACCOUNTS -> navController.navigateToAccounts(topLevelNavOptions)
 
                     STATS -> navController.navigateToStats(topLevelNavOptions)
-
-                    ACCOUNTS -> navController.navigateToAccounts(topLevelNavOptions)
 
                     PROFILE -> navController.navigateToProfile(topLevelNavOptions)
                 }
@@ -135,7 +135,7 @@ class FinanzasAppState(
     }
 
     fun backToHome() {
-        navController.popBackStack(route = homeRoute, inclusive = false)
+        navController.popBackStack(route = transactionsGraph, inclusive = false)
     }
 
     fun shouldShowBottomBar(): Boolean {

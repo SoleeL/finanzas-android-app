@@ -106,6 +106,17 @@ class TransactionCreateViewModel @Inject constructor(
             .map(transform = this::getData)
     }
 
+    private fun getData(
+        itemsPaymentAccount: Result<List<PaymentAccount>>
+    ): PaymentAccountsUiState {
+        return when (itemsPaymentAccount) {
+            is Result.Success -> PaymentAccountsUiState.Success(itemsPaymentAccount.data)
+            is Result.Error -> PaymentAccountsUiState.Error
+            is Result.Loading -> PaymentAccountsUiState.Loading
+        }
+    }
+
+
 //    private fun paymentAccountUiState(
 //        paymentAccountRepository: IPaymentAccountLocalDataSource,
 //    ): Flow<PaymentAccountsUiState> {
@@ -121,16 +132,6 @@ class TransactionCreateViewModel @Inject constructor(
 //            emitAll(itemsPaymentAccount)
 //        }
 //    }
-
-    private fun getData(
-        itemsPaymentAccount: Result<List<PaymentAccount>>
-    ): PaymentAccountsUiState {
-        return when (itemsPaymentAccount) {
-            is Result.Success -> PaymentAccountsUiState.Success(itemsPaymentAccount.data)
-            is Result.Error -> PaymentAccountsUiState.Error
-            is Result.Loading -> PaymentAccountsUiState.Loading
-        }
-    }
 
     fun onPaymentAccountsUiEvent(event: PaymentAccountsUiEvent) {
         when (event) {

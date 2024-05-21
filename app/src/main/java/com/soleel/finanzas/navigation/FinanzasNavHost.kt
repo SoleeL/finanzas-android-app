@@ -5,8 +5,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.soleel.finanzas.feature.paymentaccounts.navigation.accountsScreen
 import com.soleel.finanzas.ui.FinanzasAppState
-import com.soleel.finanzas.feature.transactions.navigation.homeRoute
-import com.soleel.finanzas.feature.transactions.navigation.homeScreen
 import com.soleel.finanzas.feature.paymentaccountcreate.navigation.navigateToPaymentAccountAmountRoute
 import com.soleel.finanzas.feature.paymentaccountcreate.navigation.navigateToPaymentAccountNameRoute
 import com.soleel.finanzas.feature.paymentaccountcreate.navigation.paymentAccountCreateGraph
@@ -18,13 +16,15 @@ import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransa
 import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionPaymentAccountRoute
 import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionTypeRoute
 import com.soleel.finanzas.feature.transactioncreate.navigation.transactionCreateGraph
+import com.soleel.finanzas.feature.transactions.navigation.transactionGraph
+import com.soleel.finanzas.feature.transactions.navigation.transactionsGraph
 
 
 @Composable
 fun FinanzasNavHost(
     appState: FinanzasAppState,
     modifier: Modifier = Modifier,
-    startDestination: String = homeRoute,
+    startDestination: String = transactionsGraph,
 ) {
     val navController = appState.navController
 
@@ -34,7 +34,9 @@ fun FinanzasNavHost(
         modifier = modifier,
 //        builder = NavGraphBuilder.finanzas(navController)
         builder = {
-            homeScreen()
+            transactionGraph(
+                navController = navController
+            )
 
             statsScreen()
 

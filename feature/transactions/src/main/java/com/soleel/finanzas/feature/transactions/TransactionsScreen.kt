@@ -1,7 +1,6 @@
-package com.soleel.finanzas.feature.transactioncreate
+package com.soleel.finanzas.feature.transactions
 
 import android.annotation.SuppressLint
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +15,7 @@ import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,80 +23,69 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.soleel.finanzas.core.ui.template.TransactionCreateTopAppBar
 
 
 @Composable
-internal fun TransactionCreateRoute(
+internal fun TransactionsRoute(
     modifier: Modifier = Modifier,
-    showBottomBar: () -> Unit,
-    showFloatingAddMenu: () -> Unit,
-    onBackClick: () -> Unit,
-    fromInitToPaymentAccount: () -> Unit,
-    viewModel: TransactionCreateViewModel = hiltViewModel()
+    fromTransactionsToTransactionsList: () -> Unit,
+    viewModel: TransactionsViewModel = hiltViewModel()
 ) {
-    val paymentAccountsUiState by viewModel.paymentAccountsUiState.collectAsStateWithLifecycle()
+    val transactionsUiState: TransactionsUiState by viewModel.transactionsUiState.collectAsState()
 
-    TransactionCreateScreen(
+    TransactionsScreen(
         modifier = modifier,
-        showBottomBar = showBottomBar,
-        showFloatingAddMenu = showFloatingAddMenu,
-        onBackClick = onBackClick,
-        fromInitToPaymentAccount = fromInitToPaymentAccount,
-        paymentAccountsUiState = paymentAccountsUiState,
-        onPaymentAccountsUiEvent = viewModel::onPaymentAccountsUiEvent
+        fromTransactionsToTransactionsList = fromTransactionsToTransactionsList,
+        transactionsUiState = transactionsUiState,
+        onTransactionsUiEvent = viewModel::onTransactionsUiEvent
     )
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-private fun TransactionCreateScreen(
+fun TransactionsScreen(
     modifier: Modifier,
-    showBottomBar: () -> Unit,
-    showFloatingAddMenu: () -> Unit,
-    onBackClick: () -> Unit,
-    fromInitToPaymentAccount: () -> Unit,
-    paymentAccountsUiState: PaymentAccountsUiState,
-    onPaymentAccountsUiEvent: (PaymentAccountsUiEvent) -> Unit
+    fromTransactionsToTransactionsList: () -> Unit,
+    transactionsUiState: TransactionsUiState,
+    onTransactionsUiEvent: (TransactionsUiEvent) -> Unit
 ) {
 
-    BackHandler(
-        enabled = true,
-        onBack = {
-            showBottomBar()
-            showFloatingAddMenu()
-            onBackClick()
-        }
-    )
+//    BackHandler(
+//        enabled = true,
+//        onBack = {
+//            showBottomBar()
+//            showFloatingAddMenu()
+//            onBackClick()
+//        }
+//    )
 
     Scaffold(
-        topBar = {
-            TransactionCreateTopAppBar(
-                onClick = {
-                    showBottomBar()
-                    showFloatingAddMenu()
-                    onBackClick()
-                }
-            )
-        },
+//        topBar = {
+//            TransactionCreateTopAppBar(
+//                onClick = {
+//                    showBottomBar()
+//                    showFloatingAddMenu()
+//                    onBackClick()
+//                }
+//            )
+//        },
         content = {
-            when (paymentAccountsUiState) {
-                is PaymentAccountsUiState.Success -> fromInitToPaymentAccount()
+            when (transactionsUiState) {
+                is TransactionsUiState.Success -> fromTransactionsToTransactionsList()
 
-                is PaymentAccountsUiState.Error -> TransactionCreateErrorScreen(
+                is TransactionsUiState.Error -> TransactionsErrorScreen(
                     modifier = modifier,
-                    onRetry = { onPaymentAccountsUiEvent(PaymentAccountsUiEvent.Retry) }
+                    onRetry = { onTransactionsUiEvent(TransactionsUiEvent.Retry) }
                 )
 
-                is PaymentAccountsUiState.Loading -> TransactionCreateLoadingScreen()
+                is TransactionsUiState.Loading -> TransactionsLoadingScreen()
             }
         }
     )
 }
 
 @Composable
-fun TransactionCreateErrorScreen(
+fun TransactionsErrorScreen(
     modifier: Modifier = Modifier,
     onRetry: () -> Unit
 ) {
@@ -136,7 +125,7 @@ fun TransactionCreateErrorScreen(
 }
 
 @Composable
-fun TransactionCreateLoadingScreen() {
+fun TransactionsLoadingScreen() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,

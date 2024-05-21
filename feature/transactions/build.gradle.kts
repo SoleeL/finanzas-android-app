@@ -9,6 +9,7 @@ android {
 }
 
 dependencies {
+    api(projects.core.common)
     api(projects.core.ui)
     api(projects.data.paymentaccount)
     api(projects.data.transaction)

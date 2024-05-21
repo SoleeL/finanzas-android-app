@@ -3,7 +3,7 @@ package com.soleel.finanzas
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
-@HiltAndroidApp // TODO: @AndroidEntryPoint
+@HiltAndroidApp
 class FinanzasApplication : Application() {
 //    override fun onCreate() {
 //        super.onCreate()
