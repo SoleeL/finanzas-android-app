@@ -48,6 +48,7 @@ import com.soleel.finanzas.domain.validation.validator.TransactionAmountValidato
 
 @Composable
 internal fun TransactionAmountRoute(
+    showTransactionsTab: () -> Unit,
     showBottomBar: () -> Unit,
     showFloatingAddMenu: () -> Unit,
     hideExtendAddMenu: () -> Unit,
@@ -60,6 +61,7 @@ internal fun TransactionAmountRoute(
 
     TransactionAmountScreen(
         modifier = Modifier,
+        showTransactionsTab = showTransactionsTab,
         showBottomBar = showBottomBar,
         showFloatingAddMenu = showFloatingAddMenu,
         hideExtendAddMenu = hideExtendAddMenu,
@@ -76,6 +78,7 @@ internal fun TransactionAmountRoute(
 fun TransactionAmountScreenPreview() {
     TransactionAmountScreen(
         modifier = Modifier,
+        showTransactionsTab = {},
         showBottomBar = {},
         showFloatingAddMenu = {},
         hideExtendAddMenu = {},
@@ -103,6 +106,7 @@ fun TransactionAmountScreenPreview() {
 @Composable
 fun TransactionAmountScreen(
     modifier: Modifier,
+    showTransactionsTab: () -> Unit,
     showBottomBar: () -> Unit,
     showFloatingAddMenu: () -> Unit,
     hideExtendAddMenu: () -> Unit,
@@ -118,6 +122,7 @@ fun TransactionAmountScreen(
     )
 
     if (transactionUiCreate.isTransactionSaved) {
+        showTransactionsTab()
         showBottomBar()
         showFloatingAddMenu()
         hideExtendAddMenu()

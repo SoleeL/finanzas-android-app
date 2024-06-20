@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun CancelAlertDialogPreview() {
     CancelAlertDialog(
+        showTransactionsTab = {},
         showBottomBar = {},
         showFloatingAddMenu = {},
         hideExtendAddMenu = {},
@@ -23,6 +24,7 @@ fun CancelAlertDialogPreview() {
 
 @Composable
 fun CancelAlertDialog(
+    showTransactionsTab: () -> Unit,
     showBottomBar: () -> Unit,
     showFloatingAddMenu: () -> Unit,
     hideExtendAddMenu: () -> Unit,
@@ -38,24 +40,27 @@ fun CancelAlertDialog(
         confirmButton = {
             TextButton(
                 onClick = {
+                    showTransactionsTab()
                     showBottomBar()
                     showFloatingAddMenu()
                     hideExtendAddMenu()
                     onConfirmation()
                     onDismissRequest()
+                },
+                content = {
+                    Text("Aceptar")
                 }
-            ) {
-                Text("Aceptar")
-            }
+            )
         },
         dismissButton = {
             TextButton(
                 onClick = {
                     onDismissRequest()
+                },
+                content = {
+                    Text("Cancelar")
                 }
-            ) {
-                Text("Cancelar")
-            }
+            )
         },
         title = {
             Text(text = dialogTitle)

@@ -1,10 +1,13 @@
 package com.soleel.finanzas.ui
 
+import android.app.Activity
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -12,18 +15,24 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import androidx.tracing.trace
-import com.soleel.finanzas.feature.paymentaccounts.navigation.navigateToAccounts
-import com.soleel.finanzas.navigation.TopLevelDestination
-import com.soleel.finanzas.navigation.TopLevelDestination.TRANSACTIONS
-import com.soleel.finanzas.navigation.TopLevelDestination.PAYMENT_ACCOUNTS
-import com.soleel.finanzas.navigation.TopLevelDestination.PROFILE
-import com.soleel.finanzas.navigation.TopLevelDestination.STATS
 import com.soleel.finanzas.feature.paymentaccountcreate.navigation.navigateToPaymentAccountCreateGraph
+import com.soleel.finanzas.feature.paymentaccounts.navigation.navigateToAccounts
 import com.soleel.finanzas.feature.profile.navigation.navigateToProfile
 import com.soleel.finanzas.feature.stats.navigation.navigateToStats
 import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionCreateGraph
-import com.soleel.finanzas.feature.transactions.navigation.navigationToTransactionGraph
+import com.soleel.finanzas.feature.transactions.navigation.allTransactionsListRoute
+import com.soleel.finanzas.feature.transactions.navigation.navigationToAllTransactionsListRoute
+import com.soleel.finanzas.feature.transactions.navigation.navigationToAnnuallyTransactionsListRoute
+import com.soleel.finanzas.feature.transactions.navigation.navigationToDailyTransactionsListRoute
+import com.soleel.finanzas.feature.transactions.navigation.navigationToMonthlyTransactionsListRoute
+import com.soleel.finanzas.feature.transactions.navigation.navigationToWeeklyTransactionsListRoute
 import com.soleel.finanzas.feature.transactions.navigation.transactionsGraph
+import com.soleel.finanzas.navigation.TopLevelDestination
+import com.soleel.finanzas.navigation.TopLevelDestination.PAYMENT_ACCOUNTS
+import com.soleel.finanzas.navigation.TopLevelDestination.PROFILE
+import com.soleel.finanzas.navigation.TopLevelDestination.STATS
+import com.soleel.finanzas.navigation.TopLevelDestination.TRANSACTIONS
+import com.soleel.finanzas.navigation.TransactionsLevelDestination
 import kotlinx.coroutines.CoroutineScope
 
 
@@ -31,6 +40,7 @@ import kotlinx.coroutines.CoroutineScope
 fun rememberFinanzasAppState(
     navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    showTransactionsTab: MutableState<Boolean> = remember { mutableStateOf(true) },
     showBottomBar: MutableState<Boolean> = remember { mutableStateOf(true) },
     showFloatingAddMenu: MutableState<Boolean> = remember { mutableStateOf(true) },
     showExtendAddMenu: MutableState<Boolean> = remember { mutableStateOf(false) },
@@ -45,6 +55,7 @@ fun rememberFinanzasAppState(
             FinanzasAppState(
                 navController = navController,
                 coroutineScope = coroutineScope,
+                showTransactionsTab = showTransactionsTab,
                 showBottomBar = showBottomBar,
                 showFloatingAddMenu = showFloatingAddMenu,
                 showExtendAddMenu = showExtendAddMenu,
@@ -57,6 +68,7 @@ fun rememberFinanzasAppState(
 private fun createAppState(
     navController: NavHostController,
     coroutineScope: CoroutineScope,
+    showTransactionsTab: MutableState<Boolean>,
     showBottomBar: MutableState<Boolean>,
     showFloatingAddMenu: MutableState<Boolean>,
     showExtendAddMenu: MutableState<Boolean>,
@@ -65,6 +77,7 @@ private fun createAppState(
     return FinanzasAppState(
         navController = navController,
         coroutineScope = coroutineScope,
+        showTransactionsTab = showTransactionsTab,
         showBottomBar = showBottomBar,
         showFloatingAddMenu = showFloatingAddMenu,
         showExtendAddMenu = showExtendAddMenu,
@@ -75,6 +88,7 @@ private fun createAppState(
 class FinanzasAppState(
     val navController: NavHostController,
     val coroutineScope: CoroutineScope,
+    val showTransactionsTab: MutableState<Boolean>,
     val showBottomBar: MutableState<Boolean>,
     val showFloatingAddMenu: MutableState<Boolean>,
     val showExtendAddMenu: MutableState<Boolean>,
@@ -114,7 +128,7 @@ class FinanzasAppState(
                 )
 
                 when (topLevelDestination) {
-                    TRANSACTIONS -> navController.navigationToTransactionGraph(topLevelNavOptions)
+                    TRANSACTIONS -> navController.navigationToAllTransactionsListRoute(topLevelNavOptions)
 
                     PAYMENT_ACCOUNTS -> navController.navigateToAccounts(topLevelNavOptions)
 
@@ -126,16 +140,76 @@ class FinanzasAppState(
         )
     }
 
-    fun navigateToCreatePaymentAccount() {
+    fun transactionsLevelDestinations(): List<TransactionsLevelDestination> {
+        return TransactionsLevelDestination.entries
+    }
+
+    fun navigateToTransactionsLevelDestination(transactionsLevelDestination: TransactionsLevelDestination) {
+        trace(
+            label = "Navigation: ${transactionsLevelDestination.name}",
+            block = {
+                val transactionsLevelNavOptions = navOptions(
+                    optionsBuilder = {
+                        popUpTo(
+                            id = navController.graph.findStartDestination().id,
+                            popUpToBuilder = { saveState = true }
+                        )
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                )
+
+                when (transactionsLevelDestination) {
+                    TransactionsLevelDestination.ALL_TRANSACTIONS -> navController.navigationToAllTransactionsListRoute(
+                        transactionsLevelNavOptions
+                    )
+
+                    TransactionsLevelDestination.DAILY_TRANSACTIONS -> navController.navigationToDailyTransactionsListRoute(
+                        transactionsLevelNavOptions
+                    )
+
+                    TransactionsLevelDestination.WEEKLY_TRANSACTIONS -> navController.navigationToWeeklyTransactionsListRoute(
+                        transactionsLevelNavOptions
+                    )
+
+                    TransactionsLevelDestination.MONTHLY_TRANSACTIONS -> navController.navigationToMonthlyTransactionsListRoute(
+                        transactionsLevelNavOptions
+                    )
+
+                    TransactionsLevelDestination.ANNUALLY_TRANSACTIONS -> navController.navigationToAnnuallyTransactionsListRoute(
+                        transactionsLevelNavOptions
+                    )
+                }
+            }
+        )
+    }
+
+    fun finishApp(context: Context) {
+        (context as Activity).finish()
+    }
+
+    fun navigateToPaymentAccountCreate() {
         navController.navigateToPaymentAccountCreateGraph()
     }
 
-    fun navigateToCreateTransaction() {
+    fun navigateToTransactionCreate() {
         navController.navigateToTransactionCreateGraph()
     }
 
     fun backToHome() {
-        navController.popBackStack(route = transactionsGraph, inclusive = false)
+        navController.popBackStack(route = allTransactionsListRoute, inclusive = false)
+    }
+
+    fun shouldShowTransactionsTab(): Boolean {
+        return this.showTransactionsTab.value
+    }
+
+    fun showTransactionsTab() {
+        this.showTransactionsTab.value = true
+    }
+
+    fun hideTransactionsTab() {
+        this.showTransactionsTab.value = false
     }
 
     fun shouldShowBottomBar(): Boolean {

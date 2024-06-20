@@ -29,21 +29,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.soleel.finanzas.core.common.constants.PaymentAccountTypeConstant
-import com.soleel.finanzas.feature.paymentaccountcreate.PaymentAccountCreateViewModel
-import com.soleel.finanzas.feature.paymentaccountcreate.PaymentAccountUiCreate
-import com.soleel.finanzas.feature.paymentaccountcreate.PaymentAccountUiEvent
-import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.PaymentAccountCard
 import com.soleel.finanzas.core.ui.template.PaymentAccountCreateTopAppBar
 import com.soleel.finanzas.core.ui.util.PaymentAccountCardItem
 import com.soleel.finanzas.core.ui.util.getPaymentAccountCard
+import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.domain.validation.validator.TransactionAmountValidator
+import com.soleel.finanzas.feature.paymentaccountcreate.PaymentAccountCreateViewModel
+import com.soleel.finanzas.feature.paymentaccountcreate.PaymentAccountUiCreate
+import com.soleel.finanzas.feature.paymentaccountcreate.PaymentAccountUiEvent
 
 
 @Composable
 internal fun PaymentAccountAmountRoute(
     modifier: Modifier = Modifier,
+    showTransactionsTab: () -> Unit,
     showBottomBar: () -> Unit,
     showFloatingAddMenu: () -> Unit,
     hideExtendAddMenu: () -> Unit,
@@ -57,6 +58,7 @@ internal fun PaymentAccountAmountRoute(
     PaymentAccountAmountScreen(
         modifier = modifier,
 
+        showTransactionsTab = showTransactionsTab,
         showBottomBar = showBottomBar,
         showFloatingAddMenu = showFloatingAddMenu,
         hideExtendAddMenu = hideExtendAddMenu,
@@ -76,6 +78,7 @@ fun PaymentAccountAmountScreenPreview() {
     PaymentAccountAmountScreen(
         modifier = Modifier,
         onBackClick = {},
+        showTransactionsTab = {},
         showBottomBar = {},
         showFloatingAddMenu = {},
         hideExtendAddMenu = {},
@@ -94,6 +97,7 @@ fun PaymentAccountAmountScreenPreview() {
 internal fun PaymentAccountAmountScreen(
     modifier: Modifier,
     onBackClick: () -> Unit,
+    showTransactionsTab: () -> Unit,
     showBottomBar: () -> Unit,
     showFloatingAddMenu: () -> Unit,
     hideExtendAddMenu: () -> Unit,
@@ -108,6 +112,7 @@ internal fun PaymentAccountAmountScreen(
     )
 
     if (paymentAccountCreateUi.isPaymentAccountSaved) {
+        showTransactionsTab()
         showBottomBar()
         showFloatingAddMenu()
         hideExtendAddMenu()

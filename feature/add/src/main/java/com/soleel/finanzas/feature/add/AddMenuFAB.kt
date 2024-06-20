@@ -31,6 +31,7 @@ fun FabMenuHidePreview() {
         shouldShowExtendAddMenu = false,
         showExtendAddMenu = {},
         hideExtendAddMenu = {},
+        hideTransactionsTab = {},
         hideBottomBar = {},
         toCreatePaymentAccount = {},
         toCreateTransaction = {},
@@ -46,6 +47,7 @@ fun FabMenuShowPreview() {
         shouldShowExtendAddMenu = true,
         showExtendAddMenu = {},
         hideExtendAddMenu = {},
+        hideTransactionsTab = {},
         hideBottomBar = {},
         toCreatePaymentAccount = {},
         toCreateTransaction = {},
@@ -59,6 +61,7 @@ fun AddMenuFAB(
     shouldShowExtendAddMenu: Boolean,
     showExtendAddMenu: () -> Unit,
     hideExtendAddMenu: () -> Unit,
+    hideTransactionsTab: () -> Unit,
     hideBottomBar: () -> Unit,
     toCreatePaymentAccount: () -> Unit,
     toCreateTransaction: () -> Unit,
@@ -79,6 +82,7 @@ fun AddMenuFAB(
                                 onClick = {
                                     toCreateTransaction()
                                     hideFloatingAddMenu()
+                                    hideTransactionsTab()
                                     hideBottomBar()
                                 },
                                 icon = R.drawable.ic_add_transaction,
@@ -89,6 +93,7 @@ fun AddMenuFAB(
                             onClick = {
                                 toCreatePaymentAccount()
                                 hideFloatingAddMenu()
+                                hideTransactionsTab()
                                 hideBottomBar()
                             },
                             icon = R.drawable.ic_add_account,

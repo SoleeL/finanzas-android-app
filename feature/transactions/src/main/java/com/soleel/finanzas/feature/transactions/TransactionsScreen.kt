@@ -1,6 +1,5 @@
 package com.soleel.finanzas.feature.transactions
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,77 +11,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 
-
-@Composable
-internal fun TransactionsRoute(
-    modifier: Modifier = Modifier,
-    fromTransactionsToTransactionsList: () -> Unit,
-    viewModel: TransactionsViewModel = hiltViewModel()
-) {
-    val transactionsUiState: TransactionsUiState by viewModel.transactionsUiState.collectAsState()
-
-    TransactionsScreen(
-        modifier = modifier,
-        fromTransactionsToTransactionsList = fromTransactionsToTransactionsList,
-        transactionsUiState = transactionsUiState,
-        onTransactionsUiEvent = viewModel::onTransactionsUiEvent
-    )
-}
-
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Composable
-fun TransactionsScreen(
-    modifier: Modifier,
-    fromTransactionsToTransactionsList: () -> Unit,
-    transactionsUiState: TransactionsUiState,
-    onTransactionsUiEvent: (TransactionsUiEvent) -> Unit
-) {
-
-//    BackHandler(
-//        enabled = true,
-//        onBack = {
-//            showBottomBar()
-//            showFloatingAddMenu()
-//            onBackClick()
-//        }
-//    )
-
-    Scaffold(
-//        topBar = {
-//            TransactionCreateTopAppBar(
-//                onClick = {
-//                    showBottomBar()
-//                    showFloatingAddMenu()
-//                    onBackClick()
-//                }
-//            )
-//        },
-        content = {
-            when (transactionsUiState) {
-                is TransactionsUiState.Success -> fromTransactionsToTransactionsList()
-
-                is TransactionsUiState.Error -> TransactionsErrorScreen(
-                    modifier = modifier,
-                    onRetry = { onTransactionsUiEvent(TransactionsUiEvent.Retry) }
-                )
-
-                is TransactionsUiState.Loading -> TransactionsLoadingScreen()
-            }
-        }
-    )
-}
 
 @Composable
 fun TransactionsErrorScreen(

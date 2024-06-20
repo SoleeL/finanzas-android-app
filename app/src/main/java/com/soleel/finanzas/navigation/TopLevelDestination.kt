@@ -1,14 +1,12 @@
 package com.soleel.finanzas.navigation
 
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
 import com.soleel.finanzas.core.ui.R
 
 enum class TopLevelDestination(
     val selectedIcon: Int,
     val unselectedIcon: Int,
     val iconTextId: String,
-    val titleTextId: String,
+    val titleTextId: String
 ) {
     TRANSACTIONS(
         selectedIcon = R.drawable.ic_add_transaction,
@@ -36,5 +34,5 @@ enum class TopLevelDestination(
         unselectedIcon = R.drawable.ic_profile,
         iconTextId = "Profile",
         titleTextId = "Perfil",
-    )
+    );
 }

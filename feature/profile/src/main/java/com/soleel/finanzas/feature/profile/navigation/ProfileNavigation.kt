@@ -1,5 +1,6 @@
 package com.soleel.finanzas.feature.profile.navigation
 
+import android.content.Context
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -13,9 +14,15 @@ fun NavController.navigateToProfile(navOptions: NavOptions? = null) {
     this.navigate(profileRoute, navOptions)
 }
 
-fun NavGraphBuilder.profileScreen() {
+fun NavGraphBuilder.profileScreen(
+    finishApp: (Context) -> Unit
+) {
     composable(
         route = profileRoute,
-        content = { ProfileRoute() }
+        content = {
+            ProfileRoute(
+                finishApp = finishApp
+            )
+        }
     )
 }

@@ -30,6 +30,7 @@ import com.soleel.finanzas.core.ui.template.TransactionCreateTopAppBar
 @Composable
 internal fun TransactionCreateRoute(
     modifier: Modifier = Modifier,
+    showTransactionsTab: () -> Unit,
     showBottomBar: () -> Unit,
     showFloatingAddMenu: () -> Unit,
     onBackClick: () -> Unit,
@@ -40,6 +41,7 @@ internal fun TransactionCreateRoute(
 
     TransactionCreateScreen(
         modifier = modifier,
+        showTransactionsTab = showTransactionsTab,
         showBottomBar = showBottomBar,
         showFloatingAddMenu = showFloatingAddMenu,
         onBackClick = onBackClick,
@@ -53,6 +55,7 @@ internal fun TransactionCreateRoute(
 @Composable
 private fun TransactionCreateScreen(
     modifier: Modifier,
+    showTransactionsTab: () -> Unit,
     showBottomBar: () -> Unit,
     showFloatingAddMenu: () -> Unit,
     onBackClick: () -> Unit,
@@ -64,6 +67,7 @@ private fun TransactionCreateScreen(
     BackHandler(
         enabled = true,
         onBack = {
+            showTransactionsTab()
             showBottomBar()
             showFloatingAddMenu()
             onBackClick()

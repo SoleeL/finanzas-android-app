@@ -1,5 +1,6 @@
 package com.soleel.finanzas.feature.stats.navigation
 
+import android.content.Context
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -12,9 +13,15 @@ fun NavController.navigateToStats(navOptions: NavOptions? = null) {
     this.navigate(statsRoute, navOptions)
 }
 
-fun NavGraphBuilder.statsScreen() {
+fun NavGraphBuilder.statsScreen(
+    finishApp: (Context) -> Unit
+) {
     composable(
         route = statsRoute,
-        content = { StatsRoute() }
+        content = {
+            StatsRoute(
+                finishApp = finishApp
+            )
+        }
     )
 }

@@ -52,6 +52,7 @@ fun NavController.navigateToTransactionAmountRoute(navOptions: NavOptions? = nul
 
 fun NavGraphBuilder.transactionCreateGraph(
     navController: NavHostController,
+    showTransactionsTab: () -> Unit,
     showBottomBar: () -> Unit,
     showFloatingAddMenu: () -> Unit,
     hideExtendAddMenu: () -> Unit,
@@ -72,6 +73,7 @@ fun NavGraphBuilder.transactionCreateGraph(
             //  mostrar le modal de cancelar la creacion de la transaccion.
             transactionCreateRoute(
                 navController = navController,
+                showTransactionsTab = showTransactionsTab,
                 showBottomBar = showBottomBar,
                 showFloatingAddMenu = showFloatingAddMenu,
                 onBackClick = onBackClick,
@@ -102,6 +104,7 @@ fun NavGraphBuilder.transactionCreateGraph(
             )
             transactionAmountRoute(
                 navController = navController,
+                showTransactionsTab = showTransactionsTab,
                 showBottomBar = showBottomBar,
                 showFloatingAddMenu = showFloatingAddMenu,
                 hideExtendAddMenu = hideExtendAddMenu,
@@ -115,6 +118,7 @@ fun NavGraphBuilder.transactionCreateGraph(
 
 fun NavGraphBuilder.transactionCreateRoute(
     navController: NavHostController,
+    showTransactionsTab: () -> Unit,
     showBottomBar: () -> Unit,
     showFloatingAddMenu: () -> Unit,
     onBackClick: () -> Unit,
@@ -136,6 +140,7 @@ fun NavGraphBuilder.transactionCreateRoute(
             )
 
             TransactionCreateRoute(
+                showTransactionsTab = showTransactionsTab,
                 showBottomBar = showBottomBar,
                 showFloatingAddMenu = showFloatingAddMenu,
                 onBackClick = onBackClick,
@@ -271,6 +276,7 @@ fun NavGraphBuilder.transactionNameRoute(
 
 fun NavGraphBuilder.transactionAmountRoute(
     navController: NavHostController,
+    showTransactionsTab: () -> Unit,
     showBottomBar: () -> Unit,
     showFloatingAddMenu: () -> Unit,
     hideExtendAddMenu: () -> Unit,
@@ -294,6 +300,7 @@ fun NavGraphBuilder.transactionAmountRoute(
             )
 
             TransactionAmountRoute(
+                showTransactionsTab = showTransactionsTab,
                 showBottomBar = showBottomBar,
                 showFloatingAddMenu = showFloatingAddMenu,
                 hideExtendAddMenu = hideExtendAddMenu,

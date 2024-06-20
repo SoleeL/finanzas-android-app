@@ -21,8 +21,8 @@ import javax.inject.Inject
 
 sealed interface TransactionsUiState {
     data class Success(
-        val itemsTransaction: List<Transaction>,
-        val itemsPaymentAccount: List<PaymentAccount>
+        val allTransactions: List<Transaction>,
+        val paymentAccounts: List<PaymentAccount>
     ) : TransactionsUiState
     data object Error : TransactionsUiState
     data object Loading : TransactionsUiState
@@ -72,8 +72,8 @@ class TransactionsViewModel @Inject constructor(
             transactionResult is Result.Loading || paymentAccountResult is Result.Loading -> TransactionsUiState.Loading
             transactionResult is Result.Error || paymentAccountResult is Result.Error -> TransactionsUiState.Error
             transactionResult is Result.Success && paymentAccountResult is Result.Success -> TransactionsUiState.Success(
-                itemsTransaction = transactionResult.data,
-                itemsPaymentAccount = paymentAccountResult.data
+                allTransactions = transactionResult.data,
+                paymentAccounts = paymentAccountResult.data
             )
             else -> TransactionsUiState.Error
         }

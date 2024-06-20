@@ -1,5 +1,6 @@
 package com.soleel.finanzas.feature.paymentaccounts.navigation
 
+import android.content.Context
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -12,9 +13,15 @@ fun NavController.navigateToAccounts(navOptions: NavOptions? = null) {
     this.navigate(paymentAccountsRoute, navOptions)
 }
 
-fun NavGraphBuilder.accountsScreen() {
+fun NavGraphBuilder.accountsScreen(
+    finishApp: (Context) -> Unit
+) {
     composable(
         route = paymentAccountsRoute,
-        content = { AccountsRoute() }
+        content = {
+            AccountsRoute(
+                finishApp = finishApp
+            )
+        }
     )
 }

@@ -38,6 +38,7 @@ fun NavController.navigateToPaymentAccountAmountRoute(navOptions: NavOptions? = 
 
 fun NavGraphBuilder.paymentAccountCreateGraph(
     navController: NavHostController,
+    showTransactionsTab: () -> Unit,
     showBottomBar: () -> Unit,
     showFloatingAddMenu: () -> Unit,
     hideExtendAddMenu: () -> Unit,
@@ -64,6 +65,7 @@ fun NavGraphBuilder.paymentAccountCreateGraph(
             )
             paymentAccountAmountRoute(
                 navController = navController,
+                showTransactionsTab = showTransactionsTab,
                 showBottomBar = showBottomBar,
                 showFloatingAddMenu = showFloatingAddMenu,
                 hideExtendAddMenu = hideExtendAddMenu,
@@ -137,6 +139,7 @@ fun NavGraphBuilder.paymentAccountNameRoute(
 
 fun NavGraphBuilder.paymentAccountAmountRoute(
     navController: NavHostController,
+    showTransactionsTab: () -> Unit,
     showBottomBar: () -> Unit,
     showFloatingAddMenu: () -> Unit,
     hideExtendAddMenu: () -> Unit,
@@ -160,6 +163,7 @@ fun NavGraphBuilder.paymentAccountAmountRoute(
             )
 
             PaymentAccountAmountRoute(
+                showTransactionsTab = showTransactionsTab,
                 showBottomBar = showBottomBar,
                 showFloatingAddMenu = showFloatingAddMenu,
                 hideExtendAddMenu = hideExtendAddMenu,

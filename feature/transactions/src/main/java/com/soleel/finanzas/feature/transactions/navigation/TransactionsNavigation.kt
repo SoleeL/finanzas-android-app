@@ -1,37 +1,34 @@
 package com.soleel.finanzas.feature.transactions.navigation
 
-import androidx.compose.runtime.remember
-import androidx.hilt.navigation.compose.hiltViewModel
+import android.content.Context
+import androidx.activity.compose.BackHandler
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
-import com.soleel.finanzas.feature.transactions.TransactionsRoute
-import com.soleel.finanzas.feature.transactions.TransactionsViewModel
+import androidx.navigation.navigation
+import com.soleel.finanzas.feature.transactions.screen.AllTransactionsListRoute
 import com.soleel.finanzas.feature.transactions.screen.AnnuallyTransactionsListRoute
 import com.soleel.finanzas.feature.transactions.screen.DailyTransactionsListRoute
 import com.soleel.finanzas.feature.transactions.screen.MonthlyTransactionsListRoute
-import com.soleel.finanzas.feature.transactions.screen.TransactionsListRoute
 import com.soleel.finanzas.feature.transactions.screen.WeeklyTransactionsListRoute
+import kotlin.reflect.KFunction1
 
 
 const val transactionsGraph = "transactions_graph"
 
-const val transactionsRoute = "transaction_route"
-const val transactionsListRoute = "transactions_list_route"
-const val dailyTransactionsListRoute = "daily_transactions_list_route"
-const val weeklyTransactionsListRoute = "weekly_transactions_list_route"
-const val monthlyTransactionsListRoute = "monthly_transactions_list_route"
-const val annuallyTransactionsListRoute = "annually_transactions_list_route"
+const val allTransactionsListRoute = "$transactionsGraph/all_transactions_list_route"
+const val dailyTransactionsListRoute = "$transactionsGraph/daily_transactions_list_route"
+const val weeklyTransactionsListRoute = "$transactionsGraph/weekly_transactions_list_route"
+const val monthlyTransactionsListRoute = "$transactionsGraph/monthly_transactions_list_route"
+const val annuallyTransactionsListRoute = "$transactionsGraph/annually_transactions_list_route"
 
-fun NavController.navigationToTransactionGraph(navOptions: NavOptions? = null) {
-    this.navigate(transactionsGraph, navOptions)
-}
+//fun NavController.navigationToTransactionGraph(navOptions: NavOptions? = null) {
+//    this.navigate(transactionsGraph, navOptions)
+//}
 
-fun NavController.navigationToTransactionsListRoute(navOptions: NavOptions? = null) {
-    this.navigate(transactionsListRoute, navOptions)
+fun NavController.navigationToAllTransactionsListRoute(navOptions: NavOptions? = null) {
+    this.navigate(allTransactionsListRoute, navOptions)
 }
 
 fun NavController.navigationToDailyTransactionsListRoute(navOptions: NavOptions? = null) {
@@ -51,165 +48,91 @@ fun NavController.navigationToAnnuallyTransactionsListRoute(navOptions: NavOptio
 }
 
 fun NavGraphBuilder.transactionGraph(
-    navController: NavHostController
+    finishApp: (Context) -> Unit
 ) {
     navigation(
-        startDestination = transactionsRoute,
+        startDestination = allTransactionsListRoute,
         route = transactionsGraph,
         builder = {
-            transactionsRoute(
-                navController = navController
-            )
-            transactionsListRoute(
-                navController = navController
-            )
-            dailyTransactionsListRoute(
-                navController = navController
-            )
-            weeklyTransactionListRoute(
-                navController = navController
-            )
-            monthlyTransactionListRoute(
-                navController = navController
-            )
-            annuallyTransactionListRoute(
-                navController = navController
-            )
+            allTransactionsListRoute(finishApp = finishApp)
+            dailyTransactionsListRoute(finishApp = finishApp)
+            weeklyTransactionListRoute(finishApp = finishApp)
+            monthlyTransactionListRoute(finishApp = finishApp)
+            annuallyTransactionListRoute(finishApp = finishApp)
         }
     )
 }
 
-fun NavGraphBuilder.transactionsRoute(
-    navController: NavHostController,
+//fun NavGraphBuilder.transactionsRoute() {
+//    composable(
+//        route = transactionsRoute,
+//        content = {
+//            TransactionsRoute()
+//        }
+//    )
+//}
+
+fun NavGraphBuilder.allTransactionsListRoute(
+    finishApp: (Context) -> Unit
 ) {
     composable(
-        route = transactionsRoute,
+        route = allTransactionsListRoute,
         content = {
-            val parentEntry = remember(
-                key1 = it,
-                calculation = {
-                    navController.getBackStackEntry(route = transactionsGraph)
-                }
+            AllTransactionsListRoute(
+                finishApp = finishApp
             )
-
-            val viewModel: TransactionsViewModel = hiltViewModel(
-                viewModelStoreOwner = parentEntry
-            )
-
-            TransactionsRoute(
-                fromTransactionsToTransactionsList = navController::navigationToTransactionsListRoute,
-                viewModel = viewModel
-            )
-        }
-    )
-}
-
-fun NavGraphBuilder.transactionsListRoute(
-    navController: NavHostController,
-) {
-    composable(
-        route = transactionsListRoute,
-        content = {
-            val parentEntry = remember(
-                key1 = it,
-                calculation = {
-                    navController.getBackStackEntry(route = transactionsGraph)
-                }
-            )
-
-            val viewModel: TransactionsViewModel = hiltViewModel(
-                viewModelStoreOwner = parentEntry
-            )
-
-            TransactionsListRoute(viewModel = viewModel)
         }
     )
 }
 
 fun NavGraphBuilder.dailyTransactionsListRoute(
-    navController: NavHostController,
+    finishApp: (Context) -> Unit
 ) {
     composable(
         route = dailyTransactionsListRoute,
         content = {
-            val parentEntry = remember(
-                key1 = it,
-                calculation = {
-                    navController.getBackStackEntry(route = transactionsGraph)
-                }
+            DailyTransactionsListRoute(
+                finishApp = finishApp
             )
-
-            val viewModel: TransactionsViewModel = hiltViewModel(
-                viewModelStoreOwner = parentEntry
-            )
-
-            DailyTransactionsListRoute(viewModel = viewModel)
         }
     )
 }
 
 fun NavGraphBuilder.weeklyTransactionListRoute(
-    navController: NavHostController,
+    finishApp: (Context) -> Unit
 ) {
     composable(
         route = weeklyTransactionsListRoute,
         content = {
-            val parentEntry = remember(
-                key1 = it,
-                calculation = {
-                    navController.getBackStackEntry(route = transactionsGraph)
-                }
+            WeeklyTransactionsListRoute(
+                finishApp = finishApp
             )
-
-            val viewModel: TransactionsViewModel = hiltViewModel(
-                viewModelStoreOwner = parentEntry
-            )
-
-            WeeklyTransactionsListRoute(viewModel = viewModel)
         }
     )
 }
 
 fun NavGraphBuilder.monthlyTransactionListRoute(
-    navController: NavHostController,
+    finishApp: (Context) -> Unit
 ) {
     composable(
         route = monthlyTransactionsListRoute,
         content = {
-            val parentEntry = remember(
-                key1 = it,
-                calculation = {
-                    navController.getBackStackEntry(route = transactionsGraph)
-                }
+            MonthlyTransactionsListRoute(
+                finishApp = finishApp
             )
-
-            val viewModel: TransactionsViewModel = hiltViewModel(
-                viewModelStoreOwner = parentEntry
-            )
-
-            MonthlyTransactionsListRoute(viewModel = viewModel)
         }
     )
 }
 
 fun NavGraphBuilder.annuallyTransactionListRoute(
-    navController: NavHostController,
+    finishApp: (Context) -> Unit
 ) {
     composable(
         route = annuallyTransactionsListRoute,
         content = {
-            val parentEntry = remember(
-                key1 = it,
-                calculation = {
-                    navController.getBackStackEntry(route = transactionsGraph)
-                }
+            AnnuallyTransactionsListRoute(
+                finishApp = finishApp
             )
-
-            val viewModel: TransactionsViewModel = hiltViewModel(
-                viewModelStoreOwner = parentEntry
-            )
-
-            AnnuallyTransactionsListRoute(viewModel = viewModel)
         }
     )
 }
