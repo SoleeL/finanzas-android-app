@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.soleel.finanzas.core.common.constants.TransactionTypeConstant
+import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.common.result.Result
 import com.soleel.finanzas.core.common.result.asResult
 import com.soleel.finanzas.core.common.retryflow.RetryableFlowTrigger
@@ -267,8 +267,8 @@ class TransactionCreateViewModel @Inject constructor(
         }
 
         transactionUiCreate.paymentAccount.amount = when (transactionUiCreate.transactionType) {
-            TransactionTypeConstant.INCOME -> initialPaymentAccountAmount + transactionUiCreate.transactionAmount
-            TransactionTypeConstant.EXPENDITURE -> initialPaymentAccountAmount - transactionUiCreate.transactionAmount
+            TransactionTypeEnum.INCOME.id -> initialPaymentAccountAmount + transactionUiCreate.transactionAmount
+            TransactionTypeEnum.EXPENDITURE.id -> initialPaymentAccountAmount - transactionUiCreate.transactionAmount
             else -> initialPaymentAccountAmount
         }
     }

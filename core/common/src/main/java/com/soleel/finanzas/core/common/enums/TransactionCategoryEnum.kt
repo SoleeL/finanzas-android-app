@@ -24,87 +24,94 @@ enum class TransactionCategoryEnum(
     EXPENDITURE_GIFT(id = 26, value = "Regalo"),
     EXPENDITURE_OTHER(id = 27, value = "Otro");
 
-    fun getTransactionCategories(
-        transactionType: TransactionTypeEnum,
-        accountType: PaymentAccountTypeEnum
-    ): List<TransactionCategoryEnum> {
-        return when (transactionType) {
-            TransactionTypeEnum.INCOME -> this.getIncomeTransactionCategories(accountType)
-            TransactionTypeEnum.EXPENDITURE -> this.getExpenditureTransactionCategories(accountType)
+    companion object {
+        fun fromId(id: Int): TransactionCategoryEnum {
+            val transactionCategoryEnum: TransactionCategoryEnum? = entries.find(predicate = { it.id == id })
+            return transactionCategoryEnum ?: INCOME_TRANSFER
         }
-    }
 
-    private fun getIncomeTransactionCategories(accountType: PaymentAccountTypeEnum): List<TransactionCategoryEnum> {
-        return when (accountType) {
-            PaymentAccountTypeEnum.CREDIT -> listOf(
-                INCOME_TRANSFER,
-                INCOME_OTHER
-            )
-
-            PaymentAccountTypeEnum.DEBIT -> listOf(
-                INCOME_TRANSFER,
-                INCOME_SALARY,
-                INCOME_SERVICE,
-                INCOME_SALES,
-                INCOME_BONUS,
-                INCOME_REFUND,
-                INCOME_OTHER
-            )
-
-            PaymentAccountTypeEnum.SAVING,
-            PaymentAccountTypeEnum.INVESTMENT -> listOf(
-                INCOME_TRANSFER,
-                INCOME_OTHER
-            )
-
-            PaymentAccountTypeEnum.CASH -> listOf(
-                INCOME_TRANSFER,
-                INCOME_SALARY,
-                INCOME_SERVICE,
-                INCOME_SALES,
-                INCOME_BONUS,
-                INCOME_REFUND,
-                INCOME_OTHER
-            )
+        fun getTransactionCategories(
+            transactionType: TransactionTypeEnum,
+            accountType: PaymentAccountTypeEnum
+        ): List<TransactionCategoryEnum> {
+            return when (transactionType) {
+                TransactionTypeEnum.INCOME -> this.getIncomeTransactionCategories(accountType)
+                TransactionTypeEnum.EXPENDITURE -> this.getExpenditureTransactionCategories(accountType)
+            }
         }
-    }
 
-    private fun getExpenditureTransactionCategories(accountType: PaymentAccountTypeEnum): List<TransactionCategoryEnum> {
-        return when (accountType) {
-            PaymentAccountTypeEnum.CREDIT -> listOf(
-                EXPENDITURE_MARKET,
-                EXPENDITURE_SERVICE,
-                EXPENDITURE_ACQUISITION,
-                EXPENDITURE_LEASURE,
-                EXPENDITURE_GIFT,
-                EXPENDITURE_OTHER
-            )
+        private fun getIncomeTransactionCategories(accountType: PaymentAccountTypeEnum): List<TransactionCategoryEnum> {
+            return when (accountType) {
+                PaymentAccountTypeEnum.CREDIT -> listOf(
+                    INCOME_TRANSFER,
+                    INCOME_OTHER
+                )
 
-            PaymentAccountTypeEnum.DEBIT -> listOf(
-                EXPENDITURE_TRANSFER,
-                EXPENDITURE_MARKET,
-                EXPENDITURE_SERVICE,
-                EXPENDITURE_ACQUISITION,
-                EXPENDITURE_LEASURE,
-                EXPENDITURE_GIFT,
-                EXPENDITURE_OTHER
-            )
+                PaymentAccountTypeEnum.DEBIT -> listOf(
+                    INCOME_TRANSFER,
+                    INCOME_SALARY,
+                    INCOME_SERVICE,
+                    INCOME_SALES,
+                    INCOME_BONUS,
+                    INCOME_REFUND,
+                    INCOME_OTHER
+                )
 
-            PaymentAccountTypeEnum.SAVING,
-            PaymentAccountTypeEnum.INVESTMENT -> listOf(
-                EXPENDITURE_TRANSFER,
-                EXPENDITURE_OTHER
-            )
+                PaymentAccountTypeEnum.SAVING,
+                PaymentAccountTypeEnum.INVESTMENT -> listOf(
+                    INCOME_TRANSFER,
+                    INCOME_OTHER
+                )
 
-            PaymentAccountTypeEnum.CASH -> listOf(
-                EXPENDITURE_TRANSFER,
-                EXPENDITURE_MARKET,
-                EXPENDITURE_SERVICE,
-                EXPENDITURE_ACQUISITION,
-                EXPENDITURE_LEASURE,
-                EXPENDITURE_GIFT,
-                EXPENDITURE_OTHER
-            )
+                PaymentAccountTypeEnum.CASH -> listOf(
+                    INCOME_TRANSFER,
+                    INCOME_SALARY,
+                    INCOME_SERVICE,
+                    INCOME_SALES,
+                    INCOME_BONUS,
+                    INCOME_REFUND,
+                    INCOME_OTHER
+                )
+            }
+        }
+
+        private fun getExpenditureTransactionCategories(accountType: PaymentAccountTypeEnum): List<TransactionCategoryEnum> {
+            return when (accountType) {
+                PaymentAccountTypeEnum.CREDIT -> listOf(
+                    EXPENDITURE_MARKET,
+                    EXPENDITURE_SERVICE,
+                    EXPENDITURE_ACQUISITION,
+                    EXPENDITURE_LEASURE,
+                    EXPENDITURE_GIFT,
+                    EXPENDITURE_OTHER
+                )
+
+                PaymentAccountTypeEnum.DEBIT -> listOf(
+                    EXPENDITURE_TRANSFER,
+                    EXPENDITURE_MARKET,
+                    EXPENDITURE_SERVICE,
+                    EXPENDITURE_ACQUISITION,
+                    EXPENDITURE_LEASURE,
+                    EXPENDITURE_GIFT,
+                    EXPENDITURE_OTHER
+                )
+
+                PaymentAccountTypeEnum.SAVING,
+                PaymentAccountTypeEnum.INVESTMENT -> listOf(
+                    EXPENDITURE_TRANSFER,
+                    EXPENDITURE_OTHER
+                )
+
+                PaymentAccountTypeEnum.CASH -> listOf(
+                    EXPENDITURE_TRANSFER,
+                    EXPENDITURE_MARKET,
+                    EXPENDITURE_SERVICE,
+                    EXPENDITURE_ACQUISITION,
+                    EXPENDITURE_LEASURE,
+                    EXPENDITURE_GIFT,
+                    EXPENDITURE_OTHER
+                )
+            }
         }
     }
 }

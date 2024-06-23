@@ -23,15 +23,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.soleel.finanzas.core.common.constants.PaymentAccountTypeConstant
+import com.soleel.finanzas.core.common.enums.PaymentAccountTypeEnum
 import com.soleel.finanzas.feature.paymentaccountcreate.PaymentAccountCreateViewModel
 import com.soleel.finanzas.feature.paymentaccountcreate.PaymentAccountUiCreate
 import com.soleel.finanzas.feature.paymentaccountcreate.PaymentAccountUiEvent
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.PaymentAccountCard
 import com.soleel.finanzas.core.ui.template.PaymentAccountCreateTopAppBar
-import com.soleel.finanzas.core.ui.util.PaymentAccountCardItem
-import com.soleel.finanzas.core.ui.util.getPaymentAccountCard
+import com.soleel.finanzas.core.ui.uivalues.PaymentAccountUIValues
+import com.soleel.finanzas.core.ui.uivalues.getPaymentAccountUI
 import com.soleel.finanzas.domain.validation.validator.NameValidator
 
 
@@ -66,7 +66,7 @@ internal fun PaymentAccountNameScreenPreview() {
         onBackClick = {},
         onCancelClick = {},
         paymentAccountCreateUi = PaymentAccountUiCreate(
-            type = PaymentAccountTypeConstant.CREDIT,
+            type = PaymentAccountTypeEnum.CREDIT.id,
             name = "Inversion en bolsa",
         ),
         onPaymentAccountCreateEventUi = {},
@@ -116,21 +116,22 @@ internal fun PaymentAccountNameScreen(
             )
         },
         content = {
-
-            val paymentAccountCardItem: PaymentAccountCardItem = remember(calculation = {
-                getPaymentAccountCard(
-                    paymentAccountCreateUi.type
+            val paymentAccountUIValues: PaymentAccountUIValues = remember(calculation = {
+                getPaymentAccountUI(
+                    paymentAccountTypeEnum = PaymentAccountTypeEnum.fromId(paymentAccountCreateUi.type),
+                    paymentAccountName = "",
+                    paymentAccountAmount = ""
                 )
             })
 
             val originTypeDescription: String = remember(calculation = {
-                paymentAccountCardItem.typeNameAccount
+                paymentAccountUIValues.name
             })
 
             if (paymentAccountCreateUi.name.isNotBlank()) {
-                paymentAccountCardItem.typeNameAccount = paymentAccountCreateUi.name
+                paymentAccountUIValues.name = paymentAccountCreateUi.name
             } else {
-                paymentAccountCardItem.typeNameAccount = originTypeDescription
+                paymentAccountUIValues.name = originTypeDescription
             }
 
             Column(
@@ -139,7 +140,7 @@ internal fun PaymentAccountNameScreen(
                     .padding(top = it.calculateTopPadding()),
                 content = {
                     PaymentAccountCard(
-                        paymentAccountCardItem = paymentAccountCardItem,
+                        paymentAccountUIValues = paymentAccountUIValues,
                         onClickEnable = false
                     )
                     EnterPaymentAccountNameTextField(

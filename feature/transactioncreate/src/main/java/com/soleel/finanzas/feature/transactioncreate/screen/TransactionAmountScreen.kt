@@ -29,21 +29,19 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.soleel.finanzas.core.common.constants.PaymentAccountTypeConstant
-import com.soleel.finanzas.core.common.constants.TransactionCategoryConstant
-import com.soleel.finanzas.core.common.constants.TransactionTypeConstant
-import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
-import com.soleel.finanzas.feature.transactioncreate.TransactionCreateViewModel
-import com.soleel.finanzas.feature.transactioncreate.TransactionUiCreate
-import com.soleel.finanzas.feature.transactioncreate.TransactionUiEvent
-import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
+import com.soleel.finanzas.core.common.enums.PaymentAccountTypeEnum
+import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
+import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.TransactionCard
 import com.soleel.finanzas.core.ui.template.TransactionCreateTopAppBar
-import com.soleel.finanzas.core.ui.util.getPaymentAccountCard
-import com.soleel.finanzas.core.ui.util.getTransactionCategoryCard
-import com.soleel.finanzas.core.ui.util.getTransactionTypeCard
+import com.soleel.finanzas.core.ui.uivalues.getTransactionUI
+import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
+import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.domain.validation.validator.TransactionAmountValidator
+import com.soleel.finanzas.feature.transactioncreate.TransactionCreateViewModel
+import com.soleel.finanzas.feature.transactioncreate.TransactionUiCreate
+import com.soleel.finanzas.feature.transactioncreate.TransactionUiEvent
 
 
 @Composable
@@ -92,10 +90,10 @@ fun TransactionAmountScreenPreview() {
                 amount = 400000,
                 createAt = 1708709787983L,
                 updatedAt = 1708709787983L,
-                accountType = PaymentAccountTypeConstant.CREDIT
+                accountType = PaymentAccountTypeEnum.CREDIT.id
             ),
-            transactionType = TransactionTypeConstant.EXPENDITURE,
-            transactionCategory = TransactionCategoryConstant.EXPENDITURE_GIFT,
+            transactionType = TransactionTypeEnum.EXPENDITURE.id,
+            transactionCategory = TransactionCategoryEnum.EXPENDITURE_GIFT.id,
             transactionName = "Regalo para abuela"
         ),
         onTransactionCreateUiEvent = {}
@@ -176,20 +174,14 @@ fun TransactionAmountScreen(
                     .padding(top = it.calculateTopPadding()),
                 content = {
                     TransactionCard(
-                        transactionTypeCardItem = getTransactionTypeCard(
-                            transactionType = transactionUiCreate.transactionType
-                        ),
-                        paymentAccountCardItem = getPaymentAccountCard(
-                            paymentAccountType = transactionUiCreate.paymentAccount.accountType,
-                            paymentAccountTypeName = transactionUiCreate.paymentAccount.name,
-                            amount = paymentAccountAmount
-                        ),
-                        transactionCategoryCardItem = getTransactionCategoryCard(
-                            transactionType = transactionUiCreate.transactionType,
-                            transactionCategory = transactionUiCreate.transactionCategory,
+                        transactionUIValues = getTransactionUI(
+                            paymentAccountTypeEnum = PaymentAccountTypeEnum.fromId(transactionUiCreate.paymentAccount.accountType),
+                            paymentAccountName = transactionUiCreate.paymentAccount.name,
+                            paymentAccountAmount = paymentAccountAmount,
+                            transactionType = TransactionTypeEnum.fromId(transactionUiCreate.transactionType),
+                            transactionCategory = TransactionCategoryEnum.fromId(transactionUiCreate.transactionCategory),
                             transactionName = transactionUiCreate.transactionName,
-                            transactionAmount = transactionAmount
-                        )
+                            transactionAmount = transactionAmount)
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))

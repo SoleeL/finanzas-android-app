@@ -23,10 +23,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.soleel.finanzas.core.common.enums.PaymentAccountTypeEnum
+import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
+import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.ui.template.AllTransactionItem
-import com.soleel.finanzas.core.ui.util.TransactionTypeCardItem
-import com.soleel.finanzas.core.ui.util.TransactionUI
-import com.soleel.finanzas.core.ui.util.getTransactionTypeCard
+import com.soleel.finanzas.core.ui.uivalues.TransactionUIValues
 import com.soleel.finanzas.core.ui.uivalues.getTransactionUI
 import com.soleel.finanzas.data.transaction.model.Transaction
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
@@ -126,21 +127,19 @@ fun AllTransactionList(
                     .text
                     .toString()
 
-                val transactionTypeCardItem: TransactionTypeCardItem =
-                    getTransactionTypeCard(transaction.transactionType)
-
-                val transactionUI: TransactionUI = getTransactionUI(
-                    transactionType = transaction.transactionType,
-                    transactionCategory = transaction.categoryType,
+                val transactionUIValues: TransactionUIValues = getTransactionUI(
+                    paymentAccountTypeEnum = PaymentAccountTypeEnum.CREDIT,
+                    paymentAccountName = "CMR Falabella",
+                    paymentAccountAmount = "$280,000",
+                    transactionType = TransactionTypeEnum.fromId(transaction.transactionType),
+                    transactionCategory = TransactionCategoryEnum.fromId(transaction.categoryType),
                     transactionName = transaction.name,
                     transactionDate = transaction.createAt,
                     transactionAmount = transactionAmount
                 )
 
                 AllTransactionItem(
-                    transactionTypeCardItem = transactionTypeCardItem,
-                    paymentAccountTypeName = "HOLA",
-                    transactionUI = transactionUI,
+                    transactionUIValues = transactionUIValues,
                     onClick = {}
                 )
             }

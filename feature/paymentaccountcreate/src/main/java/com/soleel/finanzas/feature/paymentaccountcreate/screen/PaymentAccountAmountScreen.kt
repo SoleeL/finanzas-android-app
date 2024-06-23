@@ -28,12 +28,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.soleel.finanzas.core.common.constants.PaymentAccountTypeConstant
+import com.soleel.finanzas.core.common.enums.PaymentAccountTypeEnum
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.PaymentAccountCard
 import com.soleel.finanzas.core.ui.template.PaymentAccountCreateTopAppBar
-import com.soleel.finanzas.core.ui.util.PaymentAccountCardItem
-import com.soleel.finanzas.core.ui.util.getPaymentAccountCard
+import com.soleel.finanzas.core.ui.uivalues.PaymentAccountUIValues
+import com.soleel.finanzas.core.ui.uivalues.getPaymentAccountUI
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.domain.validation.validator.TransactionAmountValidator
 import com.soleel.finanzas.feature.paymentaccountcreate.PaymentAccountCreateViewModel
@@ -85,7 +85,7 @@ fun PaymentAccountAmountScreenPreview() {
         onCancelClick = {},
         onSaveClick = {},
         paymentAccountCreateUi = PaymentAccountUiCreate(
-            type = PaymentAccountTypeConstant.INVESTMENT,
+            type = PaymentAccountTypeEnum.INVESTMENT.id,
             amount = "$340,000"
         ),
         onPaymentAccountCreateEventUi = {}
@@ -152,25 +152,25 @@ internal fun PaymentAccountAmountScreen(
                 mutableStateOf(CurrencyVisualTransformation(currencyCode = "USD"))
             })
 
-            val paymentAccountCardItem: PaymentAccountCardItem = remember(calculation = {
-                getPaymentAccountCard(
-                    paymentAccountCreateUi.type
+            val paymentAccountUIValues: PaymentAccountUIValues = remember(calculation = {
+                getPaymentAccountUI(
+                    paymentAccountTypeEnum = PaymentAccountTypeEnum.fromId(paymentAccountCreateUi.type),
+                    paymentAccountName = paymentAccountCreateUi.name,
+                    paymentAccountAmount = ""
                 )
             })
 
-            paymentAccountCardItem.typeNameAccount = paymentAccountCreateUi.name
-
             val originAmount: String = remember(calculation = {
-                paymentAccountCardItem.amount
+                paymentAccountUIValues.amount
             })
 
             if (paymentAccountCreateUi.amount.isNotBlank()) {
-                paymentAccountCardItem.amount = currencyVisualTransformation
+                paymentAccountUIValues.amount = currencyVisualTransformation
                     .filter(AnnotatedString(text = paymentAccountCreateUi.amount))
                     .text
                     .toString()
             } else {
-                paymentAccountCardItem.amount = originAmount
+                paymentAccountUIValues.amount = originAmount
             }
 
             Column(
@@ -179,7 +179,7 @@ internal fun PaymentAccountAmountScreen(
                     .padding(top = it.calculateTopPadding()),
                 content = {
                     PaymentAccountCard(
-                        paymentAccountCardItem = paymentAccountCardItem,
+                        paymentAccountUIValues = paymentAccountUIValues,
                         onClickEnable = false
                     )
                     EnterPaymentAccountAmountTextFlied(

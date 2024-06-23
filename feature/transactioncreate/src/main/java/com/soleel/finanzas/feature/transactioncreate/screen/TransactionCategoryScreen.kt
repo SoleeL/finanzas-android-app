@@ -15,20 +15,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
-import com.soleel.finanzas.core.common.constants.PaymentAccountTypeConstant
-import com.soleel.finanzas.core.common.constants.TransactionCategoryConstant
-import com.soleel.finanzas.core.common.constants.TransactionTypeConstant
-import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
-import com.soleel.finanzas.feature.transactioncreate.TransactionCreateViewModel
-import com.soleel.finanzas.feature.transactioncreate.TransactionUiCreate
-import com.soleel.finanzas.feature.transactioncreate.TransactionUiEvent
-import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
+import com.soleel.finanzas.core.common.enums.PaymentAccountTypeEnum
+import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
+import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.TransactionCard
 import com.soleel.finanzas.core.ui.template.TransactionCreateTopAppBar
-import com.soleel.finanzas.core.ui.util.getPaymentAccountCard
-import com.soleel.finanzas.core.ui.util.getTransactionCategoryCard
-import com.soleel.finanzas.core.ui.util.getTransactionTypeCard
+import com.soleel.finanzas.core.ui.uivalues.getTransactionUI
+import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
+import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
+import com.soleel.finanzas.feature.transactioncreate.TransactionCreateViewModel
+import com.soleel.finanzas.feature.transactioncreate.TransactionUiCreate
+import com.soleel.finanzas.feature.transactioncreate.TransactionUiEvent
 
 
 @Composable
@@ -64,9 +62,9 @@ fun TransactionCategoryScreenPreview() {
                 amount = 400000,
                 createAt = 1708709787983L,
                 updatedAt = 1708709787983L,
-                accountType = PaymentAccountTypeConstant.CREDIT
+                accountType = PaymentAccountTypeEnum.CREDIT.id
             ),
-            transactionType = TransactionTypeConstant.EXPENDITURE
+            transactionType = TransactionTypeEnum.EXPENDITURE.id
         ),
         onTransactionCreateUiEvent = {},
         fromCategoryToName = {}
@@ -144,10 +142,10 @@ fun SelectTransactionCategory(
     fromCategoryToName: () -> Unit
 ) {
 
-    val transactionCategories: List<Pair<Int, String>> = remember(calculation = {
-        TransactionCategoryConstant.getIdToValueList(
-            transactionType = transactionUiCreate.transactionType,
-            accountType = transactionUiCreate.paymentAccount.accountType
+    val transactionCategories: List<TransactionCategoryEnum> = remember(calculation = {
+        TransactionCategoryEnum.getTransactionCategories(
+            transactionType = TransactionTypeEnum.fromId(transactionUiCreate.transactionType),
+            accountType = PaymentAccountTypeEnum.fromId(transactionUiCreate.paymentAccount.accountType)
         )
     })
 
@@ -163,22 +161,16 @@ fun SelectTransactionCategory(
                 items = transactionCategories,
                 itemContent = { transactionCategory ->
                     TransactionCard(
-                        transactionTypeCardItem = getTransactionTypeCard(
-                            transactionType = transactionUiCreate.transactionType
-                        ),
-                        paymentAccountCardItem = getPaymentAccountCard(
-                            paymentAccountType = transactionUiCreate.paymentAccount.accountType,
-                            paymentAccountTypeName = transactionUiCreate.paymentAccount.name,
-                            amount = paymentAccountAmount
-                        ),
-                        transactionCategoryCardItem = getTransactionCategoryCard(
-                            transactionType = transactionUiCreate.transactionType,
-                            transactionCategory = transactionCategory.first
+                        transactionUIValues = getTransactionUI(
+                            paymentAccountTypeEnum = PaymentAccountTypeEnum.fromId(transactionUiCreate.paymentAccount.accountType),
+                            paymentAccountName = transactionUiCreate.paymentAccount.name,
+                            paymentAccountAmount = paymentAccountAmount,
+                            transactionType = TransactionTypeEnum.fromId(transactionUiCreate.transactionType),
                         ),
                         onClick = {
                             onTransactionCreateUiEvent(
                                 TransactionUiEvent.TransactionCategoryChanged(
-                                    transactionCategory = transactionCategory.first
+                                    transactionCategory = transactionCategory.id
                                 )
                             )
                             fromCategoryToName()

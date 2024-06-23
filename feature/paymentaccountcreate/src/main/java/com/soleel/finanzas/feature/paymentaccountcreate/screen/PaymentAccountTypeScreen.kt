@@ -12,6 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.soleel.finanzas.core.common.enums.PaymentAccountTypeEnum
 import com.soleel.finanzas.feature.paymentaccountcreate.PaymentAccountCreateViewModel
 import com.soleel.finanzas.feature.paymentaccountcreate.PaymentAccountUiCreate
 import com.soleel.finanzas.feature.paymentaccountcreate.PaymentAccountUiEvent
@@ -19,7 +20,7 @@ import com.soleel.finanzas.feature.paymentaccountcreate.util.PaymentAccountCards
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.PaymentAccountCard
 import com.soleel.finanzas.core.ui.template.PaymentAccountCreateTopAppBar
-import com.soleel.finanzas.core.ui.util.PaymentAccountCardItem
+import com.soleel.finanzas.core.ui.uivalues.PaymentAccountUIValues
 
 
 @Composable
@@ -123,13 +124,13 @@ fun SelectPaymentAccountType(
         content = {
             items(
                 items = PaymentAccountCards.cardsList,
-                itemContent = { paymentAccountCard: PaymentAccountCardItem ->
+                itemContent = { paymentAccountUIValues: PaymentAccountUIValues ->
                     PaymentAccountCard(
-                        paymentAccountCardItem = paymentAccountCard,
+                        paymentAccountUIValues = paymentAccountUIValues,
                         onClick = {
                             onPaymentAccountCreateEventUi(
                                 PaymentAccountUiEvent.TypeChanged(
-                                    accountType = paymentAccountCard.type
+                                    accountType = PaymentAccountTypeEnum.getIdByName(paymentAccountUIValues.type.name),
                                 )
                             )
                             fromTypeToName()

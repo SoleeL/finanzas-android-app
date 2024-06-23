@@ -2,7 +2,6 @@ package com.soleel.finanzas.core.ui.uivalues
 
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import com.soleel.finanzas.core.common.constants.TransactionCategoryConstant
 import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
 import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.ui.R
@@ -154,7 +153,7 @@ private fun getExpenditureTransactionCategoryUI(
 
         TransactionCategoryEnum.EXPENDITURE_TRANSFER -> TransactionCategoryUIValues(
             icon = R.drawable.ic_expenditure_transfer,
-            name = TransactionCategoryConstant.EXPENDITURE_TRANSFER_VALUE,
+            name = TransactionCategoryEnum.EXPENDITURE_TRANSFER.name,
             letterColor = ExpenditureCategoryTransferLetterColor,
             gradientBrush = getCardLinearGradient(
                 ExpenditureCategoryTransferGradientColor1, ExpenditureCategoryTransferGradientColor2
@@ -163,7 +162,7 @@ private fun getExpenditureTransactionCategoryUI(
 
         TransactionCategoryEnum.EXPENDITURE_MARKET -> TransactionCategoryUIValues(
             icon = R.drawable.ic_expenditure_market,
-            name = TransactionCategoryConstant.EXPENDITURE_MARKET_VALUE,
+            name = TransactionCategoryEnum.EXPENDITURE_MARKET.name,
             letterColor = ExpenditureCategoryMarketLetterColor,
             gradientBrush = getCardLinearGradient(
                 ExpenditureCategoryMarketGradientColor1, ExpenditureCategoryMarketGradientColor2
@@ -172,7 +171,7 @@ private fun getExpenditureTransactionCategoryUI(
 
         TransactionCategoryEnum.EXPENDITURE_SERVICE -> TransactionCategoryUIValues(
             icon = R.drawable.ic_expenditure_service,
-            name = TransactionCategoryConstant.EXPENDITURE_SERVICE_VALUE,
+            name = TransactionCategoryEnum.EXPENDITURE_SERVICE.name,
             letterColor = ExpenditureCategoryServiceLetterColor,
             gradientBrush = getCardLinearGradient(
                 ExpenditureCategoryServiceGradientColor1, ExpenditureCategoryServiceGradientColor2
@@ -181,7 +180,7 @@ private fun getExpenditureTransactionCategoryUI(
 
         TransactionCategoryEnum.EXPENDITURE_ACQUISITION -> TransactionCategoryUIValues(
             icon = R.drawable.ic_expenditure_acquisition,
-            name = TransactionCategoryConstant.EXPENDITURE_ACQUISITION_VALUE,
+            name = TransactionCategoryEnum.EXPENDITURE_ACQUISITION.name,
             letterColor = ExpenditureCategoryAcquisitionLetterColor,
             gradientBrush = getCardLinearGradient(
                 ExpenditureCategoryAcquisitionGradientColor1,
@@ -191,7 +190,7 @@ private fun getExpenditureTransactionCategoryUI(
 
         TransactionCategoryEnum.EXPENDITURE_LEASURE -> TransactionCategoryUIValues(
             icon = R.drawable.ic_expenditure_leasure,
-            name = TransactionCategoryConstant.EXPENDITURE_LEASURE_VALUE,
+            name = TransactionCategoryEnum.EXPENDITURE_LEASURE.name,
             letterColor = ExpenditureCategoryLeasureLetterColor,
             gradientBrush = getCardLinearGradient(
                 ExpenditureCategoryLeasureGradientColor1, ExpenditureCategoryLeasureGradientColor2
@@ -200,7 +199,7 @@ private fun getExpenditureTransactionCategoryUI(
 
         TransactionCategoryEnum.EXPENDITURE_GIFT -> TransactionCategoryUIValues(
             icon = R.drawable.ic_expenditure_gift,
-            name = TransactionCategoryConstant.EXPENDITURE_GIFT_VALUE,
+            name = TransactionCategoryEnum.EXPENDITURE_GIFT.name,
             letterColor = ExpenditureCategoryGiftLetterColor,
             gradientBrush = getCardLinearGradient(
                 ExpenditureCategoryGiftGradientColor1, ExpenditureCategoryGiftGradientColor2
@@ -209,7 +208,7 @@ private fun getExpenditureTransactionCategoryUI(
 
         TransactionCategoryEnum.EXPENDITURE_OTHER -> TransactionCategoryUIValues(
             icon = R.drawable.ic_expenditure_other,
-            name = TransactionCategoryConstant.EXPENDITURE_OTHER_VALUE,
+            name = TransactionCategoryEnum.EXPENDITURE_OTHER.name,
             letterColor = ExpenditureCategoryOtherLetterColor,
             gradientBrush = getCardLinearGradient(
                 ExpenditureCategoryOtherGradientColor1, ExpenditureCategoryOtherGradientColor2
@@ -218,7 +217,7 @@ private fun getExpenditureTransactionCategoryUI(
 
         else -> TransactionCategoryUIValues(
             icon = R.drawable.ic_debit,
-            name = "",
+            name = TransactionCategoryEnum.EXPENDITURE_TRANSFER.name,
             letterColor = TransactionTypeLetterColor,
             gradientBrush = getCardLinearGradient(Color.Black, Color.Gray)
         )

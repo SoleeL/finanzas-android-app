@@ -16,17 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.soleel.finanzas.core.common.constants.PaymentAccountTypeConstant
-import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
-import com.soleel.finanzas.feature.transactioncreate.PaymentAccountsUiState
-import com.soleel.finanzas.feature.transactioncreate.TransactionCreateViewModel
-import com.soleel.finanzas.feature.transactioncreate.TransactionUiEvent
-import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
+import com.soleel.finanzas.core.common.enums.PaymentAccountTypeEnum
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.PaymentAccountCard
 import com.soleel.finanzas.core.ui.template.TransactionCreateTopAppBar
-import com.soleel.finanzas.core.ui.util.getPaymentAccountCard
-
+import com.soleel.finanzas.core.ui.uivalues.getPaymentAccountUI
+import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
+import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
+import com.soleel.finanzas.feature.transactioncreate.PaymentAccountsUiState
+import com.soleel.finanzas.feature.transactioncreate.TransactionCreateViewModel
+import com.soleel.finanzas.feature.transactioncreate.TransactionUiEvent
 
 @Composable
 internal fun TransactionPaymentAccountRoute(
@@ -61,7 +60,7 @@ fun TransactionPaymentAccountScreenPreview() {
                     amount = 300000,
                     createAt = 1708709787983L,
                     updatedAt = 1708709787983L,
-                    accountType = PaymentAccountTypeConstant.CREDIT
+                    accountType = PaymentAccountTypeEnum.CREDIT.id
                 ),
 
                 PaymentAccount(
@@ -70,7 +69,7 @@ fun TransactionPaymentAccountScreenPreview() {
                     amount = 400000,
                     createAt = 1708709787983L,
                     updatedAt = 1708709787983L,
-                    accountType = PaymentAccountTypeConstant.DEBIT
+                    accountType = PaymentAccountTypeEnum.DEBIT.id
                 ),
 
                 PaymentAccount(
@@ -79,7 +78,7 @@ fun TransactionPaymentAccountScreenPreview() {
                     amount = 500000,
                     createAt = 1708709787983L,
                     updatedAt = 1708709787983L,
-                    accountType = PaymentAccountTypeConstant.INVESTMENT
+                    accountType = PaymentAccountTypeEnum.INVESTMENT.id
                 )
             )
         ),
@@ -178,10 +177,10 @@ fun SelectPaymentAccount(
                         .toString()
 
                     PaymentAccountCard(
-                        paymentAccountCardItem = getPaymentAccountCard(
-                            paymentAccountType = paymentAccount.accountType,
-                            paymentAccountTypeName = paymentAccount.name,
-                            amount = paymentAccountAmount,
+                        paymentAccountUIValues = getPaymentAccountUI(
+                            paymentAccountTypeEnum = PaymentAccountTypeEnum.fromId(paymentAccount.accountType),
+                            paymentAccountName=paymentAccount.name,
+                            paymentAccountAmount = paymentAccountAmount
                         ),
                         onClick = {
                             onTransactionCreateUiEvent(

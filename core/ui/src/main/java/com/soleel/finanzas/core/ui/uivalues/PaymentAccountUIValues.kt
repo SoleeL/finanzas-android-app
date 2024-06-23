@@ -5,8 +5,8 @@ import com.soleel.finanzas.core.common.enums.PaymentAccountTypeEnum
 
 data class PaymentAccountUIValues(
     val type: PaymentAccountTypeUIValues,
-    val name: String,
-    val amount: String,
+    var name: String,
+    var amount: String,
 )
 
 fun getPaymentAccountUI(

@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.soleel.finanzas.core.common.constants.TransactionCategoryConstant
-import com.soleel.finanzas.core.common.constants.TransactionTypeConstant
+import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
+import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
 import com.soleel.finanzas.data.paymentaccount.interfaces.IPaymentAccountLocalDataSource
 import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
 import com.soleel.finanzas.domain.validation.validator.AccountTypeValidator
@@ -122,8 +122,8 @@ class PaymentAccountCreateViewModel @Inject constructor(
                 transactionRepository.createTransaction(
                     name = "Monto inicial",
                     amount = paymentAccountUiCreate.amount.toInt(),
-                    transactionType = TransactionTypeConstant.INCOME,
-                    transactionCategory = TransactionCategoryConstant.INCOME_TRANSFER,
+                    transactionType = TransactionTypeEnum.INCOME.id,
+                    transactionCategory = TransactionCategoryEnum.INCOME_TRANSFER.id,
                     paymentAccountId = paymentAccountId
                 )
 
