@@ -1,5 +1,6 @@
 package com.soleel.finanzas.core.common.constants
 
+// TODO: Convertir a enum
 object PaymentAccountTypeConstant {
     const val CREDIT: Int = 1
     const val CREDIT_VALUE: String = "Credito"

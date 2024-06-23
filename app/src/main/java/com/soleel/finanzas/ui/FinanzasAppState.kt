@@ -7,7 +7,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -27,12 +26,12 @@ import com.soleel.finanzas.feature.transactions.navigation.navigationToDailyTran
 import com.soleel.finanzas.feature.transactions.navigation.navigationToMonthlyTransactionsListRoute
 import com.soleel.finanzas.feature.transactions.navigation.navigationToWeeklyTransactionsListRoute
 import com.soleel.finanzas.feature.transactions.navigation.transactionsGraph
-import com.soleel.finanzas.navigation.TopLevelDestination
-import com.soleel.finanzas.navigation.TopLevelDestination.PAYMENT_ACCOUNTS
-import com.soleel.finanzas.navigation.TopLevelDestination.PROFILE
-import com.soleel.finanzas.navigation.TopLevelDestination.STATS
-import com.soleel.finanzas.navigation.TopLevelDestination.TRANSACTIONS
-import com.soleel.finanzas.navigation.TransactionsLevelDestination
+import com.soleel.finanzas.navigation.destination.TopLevelDestination
+import com.soleel.finanzas.navigation.destination.TopLevelDestination.PAYMENT_ACCOUNTS
+import com.soleel.finanzas.navigation.destination.TopLevelDestination.PROFILE
+import com.soleel.finanzas.navigation.destination.TopLevelDestination.STATS
+import com.soleel.finanzas.navigation.destination.TopLevelDestination.TRANSACTIONS
+import com.soleel.finanzas.navigation.destination.TransactionsLevelDestination
 import kotlinx.coroutines.CoroutineScope
 
 

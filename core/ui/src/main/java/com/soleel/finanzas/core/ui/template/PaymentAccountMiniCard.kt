@@ -19,37 +19,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.soleel.finanzas.core.common.constants.PaymentAccountTypeConstant
-import com.soleel.finanzas.core.ui.R
-import com.soleel.finanzas.core.ui.theme.CreditGradientColor1
-import com.soleel.finanzas.core.ui.theme.CreditGradientColor2
-import com.soleel.finanzas.core.ui.theme.CreditLetterColor
-import com.soleel.finanzas.core.ui.util.PaymentAccountCardItem
-import com.soleel.finanzas.core.ui.util.getCardLinearGradient
+import com.soleel.finanzas.core.common.enums.PaymentAccountTypeEnum
+import com.soleel.finanzas.core.ui.uivalues.PaymentAccountUIValues
+import com.soleel.finanzas.core.ui.uivalues.getPaymentAccountUI
 
 
 @Preview
 @Composable
 fun PaymentAccountMiniCardPreview() {
     PaymentAccountMiniCard(
-        PaymentAccountCardItem(
-            type = PaymentAccountTypeConstant.CREDIT,
-            typeName = "CREDITO",
-            typeNameAccount = "Tarjeta de credito",
-            typeIcon = R.drawable.ic_credit,
-            amount = "$1,000,000",
-            letterColor = CreditLetterColor,
-            gradientBrush = getCardLinearGradient(
-                            CreditGradientColor1,
-                            CreditGradientColor2
-                        )
+        paymentAccountUIValues = getPaymentAccountUI(
+            paymentAccountTypeEnum = PaymentAccountTypeEnum.CREDIT,
+            paymentAccountName = "Tarjeta de credito",
+            paymentAccountAmount = "$1,000,000",
         )
     )
 }
 
 @Composable
 fun PaymentAccountMiniCard(
-    paymentAccountCardItem: PaymentAccountCardItem,
+    paymentAccountUIValues: PaymentAccountUIValues
 ) {
     ElevatedCard(
         modifier = Modifier
@@ -63,7 +52,7 @@ fun PaymentAccountMiniCard(
         ),
         content = {
             Column(
-                modifier = Modifier.background(brush = paymentAccountCardItem.gradientBrush),
+                modifier = Modifier.background(brush = paymentAccountUIValues.type.gradientBrush),
                 content = {
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -75,23 +64,23 @@ fun PaymentAccountMiniCard(
                                 verticalAlignment = Alignment.CenterVertically,
                                 content = {
                                     Icon(
-                                        painter = painterResource(id = paymentAccountCardItem.typeIcon),
+                                        painter = painterResource(id = paymentAccountUIValues.type.icon),
                                         contentDescription = "Add button.",
                                         modifier = Modifier.size(48.dp),
-                                        tint = paymentAccountCardItem.letterColor
+                                        tint = paymentAccountUIValues.type.letterColor
                                     )
                                     Text(
-                                        text = paymentAccountCardItem.typeName,
+                                        text = paymentAccountUIValues.type.name,
                                         modifier = Modifier.padding(start = 8.dp),
-                                        color = paymentAccountCardItem.letterColor,
+                                        color = paymentAccountUIValues.type.letterColor,
                                         style = MaterialTheme.typography.titleMedium
                                     )
                                 }
                             )
                             Text(
-                                text = paymentAccountCardItem.amount,
+                                text = paymentAccountUIValues.amount,
                                 modifier = Modifier,
-                                color = paymentAccountCardItem.letterColor,
+                                color = paymentAccountUIValues.type.letterColor,
                                 style = MaterialTheme.typography.titleLarge
                             )
                         }
@@ -103,8 +92,8 @@ fun PaymentAccountMiniCard(
                         content = {
                             Text(
                                 modifier = Modifier,
-                                text = paymentAccountCardItem.typeNameAccount,
-                                color = paymentAccountCardItem.letterColor,
+                                text = paymentAccountUIValues.name,
+                                color = paymentAccountUIValues.type.letterColor,
                                 style = MaterialTheme.typography.titleLarge,
                                 textAlign = TextAlign.Center
                             )

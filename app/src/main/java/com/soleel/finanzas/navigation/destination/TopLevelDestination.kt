@@ -1,4 +1,4 @@
-package com.soleel.finanzas.navigation
+package com.soleel.finanzas.navigation.destination
 
 import com.soleel.finanzas.core.ui.R
 

@@ -12,15 +12,24 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.soleel.finanzas.core.ui.template.AllTransactionItem
+import com.soleel.finanzas.core.ui.util.TransactionTypeCardItem
+import com.soleel.finanzas.core.ui.util.TransactionUI
+import com.soleel.finanzas.core.ui.util.getTransactionTypeCard
+import com.soleel.finanzas.core.ui.uivalues.getTransactionUI
 import com.soleel.finanzas.data.transaction.model.Transaction
+import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.feature.transactions.TransactionsErrorScreen
 import com.soleel.finanzas.feature.transactions.TransactionsLoadingScreen
 import com.soleel.finanzas.feature.transactions.TransactionsUiEvent
@@ -71,33 +80,18 @@ fun AllTransactionsListScreen(
 
         is TransactionsUiState.Loading -> TransactionsLoadingScreen()
     }
-
 }
 
 @Composable
 fun AllTransactionsSuccessScreen(
     allTransactions: List<Transaction>
 ) {
-//    Column(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .wrapContentSize(Alignment.Center)
-//    ) {
-//        Text(
-//            text = "All Transactions List Screen",
-//            fontWeight = FontWeight.Bold,
-//            modifier = Modifier.align(Alignment.CenterHorizontally),
-//            textAlign = TextAlign.Center,
-//            fontSize = 20.sp
-//        )
-//    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .wrapContentSize(Alignment.Center),
-        content = {
-            if (allTransactions.isEmpty()) {
+    if (allTransactions.isEmpty()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentSize(Alignment.Center),
+            content = {
                 Text(
                     text = "No existen transacciones actualmente.",
                     fontWeight = FontWeight.Bold,
@@ -106,18 +100,50 @@ fun AllTransactionsSuccessScreen(
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp
                 )
-            } else {
-                LazyColumn {
-                    items(allTransactions) { transaction ->
-                        TransactionItem(transaction)
-                    }
-                }
             }
-        }
-    )
+        )
+    } else {
+        AllTransactionList(
+            allTransactions = allTransactions
+        )
+    }
 }
 
 @Composable
-fun TransactionItem(transaction: Transaction) {
-    Text(text = transaction.name)
+fun AllTransactionList(
+    allTransactions: List<Transaction>
+) {
+    val currencyVisualTransformation by remember(calculation = {
+        mutableStateOf(CurrencyVisualTransformation(currencyCode = "USD"))
+    })
+
+    LazyColumn(
+        content = {
+            items(items = allTransactions) { transaction ->
+
+                val transactionAmount: String = currencyVisualTransformation
+                    .filter(AnnotatedString(text = transaction.amount.toString()))
+                    .text
+                    .toString()
+
+                val transactionTypeCardItem: TransactionTypeCardItem =
+                    getTransactionTypeCard(transaction.transactionType)
+
+                val transactionUI: TransactionUI = getTransactionUI(
+                    transactionType = transaction.transactionType,
+                    transactionCategory = transaction.categoryType,
+                    transactionName = transaction.name,
+                    transactionDate = transaction.createAt,
+                    transactionAmount = transactionAmount
+                )
+
+                AllTransactionItem(
+                    transactionTypeCardItem = transactionTypeCardItem,
+                    paymentAccountTypeName = "HOLA",
+                    transactionUI = transactionUI,
+                    onClick = {}
+                )
+            }
+        }
+    )
 }

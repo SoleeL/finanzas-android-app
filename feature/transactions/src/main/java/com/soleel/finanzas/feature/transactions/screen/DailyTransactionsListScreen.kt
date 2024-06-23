@@ -82,15 +82,16 @@ fun DailyTransactionsSuccessScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .wrapContentSize(Alignment.Center)
-    ) {
-        Text(
-            text = "Daily Transactions List Screen",
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            textAlign = TextAlign.Center,
-            fontSize = 20.sp
-        )
-    }
+            .wrapContentSize(Alignment.Center),
+        content = {
+            Text(
+                text = "Daily Transactions List Screen",
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                textAlign = TextAlign.Center,
+                fontSize = 20.sp
+            )
+        }
+    )
 }
 

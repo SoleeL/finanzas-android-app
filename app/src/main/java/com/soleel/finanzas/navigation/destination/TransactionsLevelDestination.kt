@@ -1,4 +1,4 @@
-package com.soleel.finanzas.navigation
+package com.soleel.finanzas.navigation.destination
 
 enum class TransactionsLevelDestination(
     val fullTitleText: String,
