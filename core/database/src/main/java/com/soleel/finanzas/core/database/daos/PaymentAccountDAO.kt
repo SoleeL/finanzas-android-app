@@ -8,7 +8,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.soleel.finanzas.core.database.entities.PaymentAccountEntity
-import com.soleel.finanzas.core.database.extras.PaymentAccountEntityWithTotalAmount
+import com.soleel.finanzas.core.database.extras.PaymentAccountWithTotalAmountEntity
 import kotlinx.coroutines.flow.Flow
 
 
@@ -30,7 +30,7 @@ interface PaymentAccountDAO {
         FROM payment_account_table 
         LEFT JOIN transaction_table ON payment_account_table.id = transaction_table.payment_account_id 
         GROUP BY payment_account_table.id""")
-    fun getPaymentAccountsWithTotalsAmount(): Flow<List<PaymentAccountEntityWithTotalAmount>>
+    fun getPaymentAccountsWithTotalsAmount(): Flow<List<PaymentAccountWithTotalAmountEntity>>
 
     @Query("SELECT * FROM payment_account_table WHERE id = :id")
     fun getPaymentAccountById(id: String): Flow<PaymentAccountEntity>
@@ -45,7 +45,7 @@ interface PaymentAccountDAO {
         LEFT JOIN transaction_table ON payment_account_table.id = transaction_table.payment_account_id 
         WHERE payment_account_table.id = :id 
         GROUP BY payment_account_table.id""")
-    fun getPaymentAccountByIdWithTotalsAmount(id: String): Flow<PaymentAccountEntityWithTotalAmount>
+    fun getPaymentAccountByIdWithTotalsAmount(id: String): Flow<PaymentAccountWithTotalAmountEntity>
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun update(paymentAccountEntity: PaymentAccountEntity)

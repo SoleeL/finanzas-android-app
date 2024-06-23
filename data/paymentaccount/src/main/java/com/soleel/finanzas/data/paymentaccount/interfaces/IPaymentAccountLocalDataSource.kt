@@ -1,7 +1,9 @@
 package com.soleel.finanzas.data.paymentaccount.interfaces
 
-import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
+
+import com.soleel.finanzas.core.model.PaymentAccount
 import kotlinx.coroutines.flow.Flow
+
 
 interface IPaymentAccountLocalDataSource {
 

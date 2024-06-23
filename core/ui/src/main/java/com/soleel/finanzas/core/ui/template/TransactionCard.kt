@@ -66,7 +66,7 @@ fun TransactionTypeIncomeCategoryTransferCardPreview() {
             transactionType = TransactionTypeEnum.INCOME,
             transactionCategory = TransactionCategoryEnum.INCOME_TRANSFER,
             transactionName = "Transferencia a juan",
-            transactionDate = System.currentTimeMillis(),
+            transactionDate = "30/05/1994 01:12",
             transactionAmount = "$20.000")
     )
 }
@@ -82,7 +82,7 @@ fun TransactionTypeIncomeCategorySalaryCardPreview() {
             transactionType = TransactionTypeEnum.INCOME,
             transactionCategory = TransactionCategoryEnum.INCOME_SALARY,
             transactionName = "Transferencia a juan",
-            transactionDate = System.currentTimeMillis(),
+            transactionDate = "30/05/1994 01:12",
             transactionAmount = "$20.000")
     )
 }
@@ -98,7 +98,7 @@ fun TransactionTypeIncomeCategoryServiceCardPreview() {
             transactionType = TransactionTypeEnum.INCOME,
             transactionCategory = TransactionCategoryEnum.INCOME_SERVICE,
             transactionName = "Transferencia a juan",
-            transactionDate = System.currentTimeMillis(),
+            transactionDate = "30/05/1994 01:12",
             transactionAmount = "$20.000")
     )
 }
@@ -114,7 +114,7 @@ fun TransactionTypeIncomeCategorySalesCardPreview() {
             transactionType = TransactionTypeEnum.INCOME,
             transactionCategory = TransactionCategoryEnum.INCOME_SALES,
             transactionName = "Transferencia a juan",
-            transactionDate = System.currentTimeMillis(),
+            transactionDate = "30/05/1994 01:12",
             transactionAmount = "$20.000")
     )
 }
@@ -130,7 +130,7 @@ fun TransactionTypeIncomeCategoryBonusCardPreview() {
             transactionType = TransactionTypeEnum.INCOME,
             transactionCategory = TransactionCategoryEnum.INCOME_BONUS,
             transactionName = "Transferencia a juan",
-            transactionDate = System.currentTimeMillis(),
+            transactionDate = "30/05/1994 01:12",
             transactionAmount = "$20.000")
     )
 }
@@ -146,7 +146,7 @@ fun TransactionTypeIncomeCategoryRefundCardPreview() {
             transactionType = TransactionTypeEnum.INCOME,
             transactionCategory = TransactionCategoryEnum.INCOME_REFUND,
             transactionName = "Transferencia a juan",
-            transactionDate = System.currentTimeMillis(),
+            transactionDate = "30/05/1994 01:12",
             transactionAmount = "$20.000")
     )
 }
@@ -162,7 +162,7 @@ fun TransactionTypeIncomeCategoryOtherCardPreview() {
             transactionType = TransactionTypeEnum.INCOME,
             transactionCategory = TransactionCategoryEnum.INCOME_OTHER,
             transactionName = "Transferencia a juan",
-            transactionDate = System.currentTimeMillis(),
+            transactionDate = "30/05/1994 01:12",
             transactionAmount = "$20.000")
     )
 }
@@ -178,7 +178,7 @@ fun TransactionTypeExpenditureCategoryTransferCardPreview() {
             transactionType = TransactionTypeEnum.EXPENDITURE,
             transactionCategory = TransactionCategoryEnum.EXPENDITURE_TRANSFER,
             transactionName = "Transferencia a juan",
-            transactionDate = System.currentTimeMillis(),
+            transactionDate = "30/05/1994 01:12",
             transactionAmount = "$20.000")
     )
 }
@@ -194,7 +194,7 @@ fun TransactionTypeExpenditureCategoryMarketCardPreview() {
             transactionType = TransactionTypeEnum.EXPENDITURE,
             transactionCategory = TransactionCategoryEnum.EXPENDITURE_MARKET,
             transactionName = "Transferencia a juan",
-            transactionDate = System.currentTimeMillis(),
+            transactionDate = "30/05/1994 01:12",
             transactionAmount = "$20.000")
     )
 }
@@ -210,7 +210,7 @@ fun TransactionTypeExpenditureCategoryServiceCardPreview() {
             transactionType = TransactionTypeEnum.EXPENDITURE,
             transactionCategory = TransactionCategoryEnum.EXPENDITURE_SERVICE,
             transactionName = "Transferencia a juan",
-            transactionDate = System.currentTimeMillis(),
+            transactionDate = "30/05/1994 01:12",
             transactionAmount = "$20.000")
     )
 }
@@ -226,7 +226,7 @@ fun TransactionTypeExpenditureCategoryAcquisitionCardPreview() {
             transactionType = TransactionTypeEnum.EXPENDITURE,
             transactionCategory = TransactionCategoryEnum.EXPENDITURE_ACQUISITION,
             transactionName = "Transferencia a juan",
-            transactionDate = System.currentTimeMillis(),
+            transactionDate = "30/05/1994 01:12",
             transactionAmount = "$20.000")
     )
 }
@@ -242,7 +242,7 @@ fun TransactionTypeExpenditureCategoryLeasureCardPreview() {
             transactionType = TransactionTypeEnum.EXPENDITURE,
             transactionCategory = TransactionCategoryEnum.EXPENDITURE_LEASURE,
             transactionName = "Transferencia a juan",
-            transactionDate = System.currentTimeMillis(),
+            transactionDate = "30/05/1994 01:12",
             transactionAmount = "$20.000")
     )
 }
@@ -258,7 +258,7 @@ fun TransactionTypeExpenditureCategoryGiftCardPreview() {
             transactionType = TransactionTypeEnum.EXPENDITURE,
             transactionCategory = TransactionCategoryEnum.EXPENDITURE_GIFT,
             transactionName = "Transferencia a juan",
-            transactionDate = System.currentTimeMillis(),
+            transactionDate = "30/05/1994 01:12",
             transactionAmount = "$20.000")
     )
 }
@@ -274,7 +274,7 @@ fun TransactionTypeExpenditureCategoryOtherCardPreview() {
             transactionType = TransactionTypeEnum.EXPENDITURE,
             transactionCategory = TransactionCategoryEnum.EXPENDITURE_OTHER,
             transactionName = "Transferencia a juan",
-            transactionDate = System.currentTimeMillis(),
+            transactionDate = "30/05/1994 01:12",
             transactionAmount = "$20.000")
     )
 }

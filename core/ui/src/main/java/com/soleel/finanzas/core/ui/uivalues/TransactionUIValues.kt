@@ -3,7 +3,6 @@ package com.soleel.finanzas.core.ui.uivalues
 import com.soleel.finanzas.core.common.enums.PaymentAccountTypeEnum
 import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
 import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
-import com.soleel.finanzas.core.ui.util.getAllTransactionStringDate
 
 
 data class TransactionUIValues(
@@ -22,8 +21,8 @@ fun getTransactionUI(
     transactionType: TransactionTypeEnum,
     transactionCategory: TransactionCategoryEnum? = null,
     transactionName: String = "",
-    transactionDate: Long = System.currentTimeMillis(),
-    transactionAmount: String = ""
+    transactionAmount: String = "",
+    transactionDate: String = ""
 ): TransactionUIValues {
     val paymentAccountUI: PaymentAccountUIValues = getPaymentAccountUI(
         paymentAccountTypeEnum = paymentAccountTypeEnum,
@@ -46,7 +45,7 @@ fun getTransactionUI(
         category = transactionCategoryUI,
         name = transactionName.ifEmpty(defaultValue = { "Gasto en ..." }),
         amount = transactionAmount.ifEmpty(defaultValue = { "$10,000" }),
-        date = getAllTransactionStringDate(transactionDate)
+        date = transactionDate.ifEmpty(defaultValue = { "dd/MM/yyyy HH:mm" })
     )
 
     return transactionUI

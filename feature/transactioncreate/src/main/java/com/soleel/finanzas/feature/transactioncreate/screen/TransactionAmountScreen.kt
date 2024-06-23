@@ -36,7 +36,7 @@ import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.TransactionCard
 import com.soleel.finanzas.core.ui.template.TransactionCreateTopAppBar
 import com.soleel.finanzas.core.ui.uivalues.getTransactionUI
-import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
+import com.soleel.finanzas.core.model.PaymentAccount
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.domain.validation.validator.TransactionAmountValidator
 import com.soleel.finanzas.feature.transactioncreate.TransactionCreateViewModel
@@ -84,7 +84,7 @@ fun TransactionAmountScreenPreview() {
         onBackClick = {},
         onSaveClick = {},
         transactionUiCreate = TransactionUiCreate(
-            paymentAccount = PaymentAccount(
+            paymentAccount = com.soleel.finanzas.core.model.PaymentAccount(
                 id = "2",
                 name = "Cuenta corriente falabella",
                 amount = 400000,

@@ -134,7 +134,7 @@ fun AllTransactionList(
                     transactionType = TransactionTypeEnum.fromId(transaction.transactionType),
                     transactionCategory = TransactionCategoryEnum.fromId(transaction.categoryType),
                     transactionName = transaction.name,
-                    transactionDate = transaction.createAt,
+                    transactionDate = TransactionFormatDateUseCase.provideAllTransactionStringDate(transaction.createAt),
                     transactionAmount = transactionAmount
                 )
 

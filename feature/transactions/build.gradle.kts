@@ -11,7 +11,6 @@ android {
 dependencies {
     api(projects.core.common)
     api(projects.core.ui)
-    api(projects.data.paymentaccount)
-    api(projects.data.transaction)
-    api(projects.domain.transformation)
+    api(projects.domain.visualtransformation)
+    api(projects.domain.formatdate)
 }

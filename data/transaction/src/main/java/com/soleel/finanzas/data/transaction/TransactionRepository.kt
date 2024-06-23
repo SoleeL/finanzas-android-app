@@ -2,10 +2,9 @@ package com.soleel.finanzas.data.transaction
 
 import com.soleel.finanzas.core.database.daos.TransactionDAO
 import com.soleel.finanzas.core.database.entities.TransactionEntity
+import com.soleel.finanzas.core.model.Transaction
 import com.soleel.finanzas.data.transaction.di.DefaultDispatcher
 import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
-import com.soleel.finanzas.data.transaction.model.Transaction
-import com.soleel.finanzas.data.transaction.model.TransactionDbModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -13,6 +12,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.util.UUID
 import javax.inject.Inject
+
 
 class TransactionRepository @Inject constructor(
     private val transactionDAO: TransactionDAO,
@@ -22,7 +22,7 @@ class TransactionRepository @Inject constructor(
     override fun getTransaction(transactionId: String): Flow<Transaction?> {
         return transactionDAO
             .getTransactionForTransactionId(transactionId)
-            .map(transform = TransactionDbModel::asExternalModel)
+            .map(transform = {it.toModel()})
     }
 
     override fun getTransactionWithForceUpdate(transactionId: String, forceUpdate: Boolean): Transaction? {
@@ -32,7 +32,7 @@ class TransactionRepository @Inject constructor(
     override fun getTransactions(): Flow<List<Transaction>> {
         return transactionDAO
             .getAllTransaction()
-            .map(transform = TransactionDbModel::asExternalModelList)
+            .map(transform = {it.toModelList()})
     }
 
     override fun getTransactionsWithForceUpdate(forceUpdate: Boolean): List<Transaction> {

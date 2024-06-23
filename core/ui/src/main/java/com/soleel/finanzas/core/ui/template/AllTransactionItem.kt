@@ -37,7 +37,7 @@ fun AllTransactionItemINCOMEPreview() {
             transactionType = TransactionTypeEnum.INCOME,
             transactionCategory = TransactionCategoryEnum.INCOME_TRANSFER,
             transactionName = "Transferencia a juan",
-            transactionDate = System.currentTimeMillis(),
+            transactionDate = "30/05/1994 01:12",
             transactionAmount = "$20.000"
         ),
         onClick = {}
@@ -55,7 +55,7 @@ fun AllTransactionItemEXPENDITUREPreview() {
             transactionType = TransactionTypeEnum.EXPENDITURE,
             transactionCategory = TransactionCategoryEnum.EXPENDITURE_GIFT,
             transactionName = "Juego en steam a juan",
-            transactionDate = System.currentTimeMillis(),
+            transactionDate = "30/05/1994 01:12",
             transactionAmount = "$20.000"
         ),
         onClick = {}

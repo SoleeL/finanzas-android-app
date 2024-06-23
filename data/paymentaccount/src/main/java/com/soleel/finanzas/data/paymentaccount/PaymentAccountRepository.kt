@@ -1,10 +1,9 @@
 package com.soleel.finanzas.data.paymentaccount
 
 import com.soleel.finanzas.core.database.daos.PaymentAccountDAO
+import com.soleel.finanzas.core.model.PaymentAccount
 import com.soleel.finanzas.data.paymentaccount.di.DefaultDispatcher
 import com.soleel.finanzas.data.paymentaccount.interfaces.IPaymentAccountLocalDataSource
-import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
-import com.soleel.finanzas.data.paymentaccount.model.PaymentAccountDbModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -13,15 +12,15 @@ import kotlinx.coroutines.withContext
 import java.util.UUID
 import javax.inject.Inject
 
+
 class PaymentAccountRepository @Inject constructor(
     private val paymentAccountDAO: PaymentAccountDAO,
+    // private val paymentAccountNetwork: PaymentAccountNetwork,
     @DefaultDispatcher private val dispatcher: CoroutineDispatcher
 ) : IPaymentAccountLocalDataSource {
 
     override fun getPaymentAccount(paymentAccountId: String): Flow<PaymentAccount?> {
-        return paymentAccountDAO
-            .getPaymentAccountById(paymentAccountId)
-            .map(transform = PaymentAccountDbModel::asExternalModel)
+        return paymentAccountDAO.getPaymentAccountById(paymentAccountId).map(transform =  { it.toModel() })
     }
 
     override fun getPaymentAccountWithForceUpdate(paymentAccountId: String, forceUpdate: Boolean): PaymentAccount? {
@@ -29,9 +28,7 @@ class PaymentAccountRepository @Inject constructor(
     }
 
     override fun getPaymentAccounts(): Flow<List<PaymentAccount>> {
-        return paymentAccountDAO
-            .getAllPaymentAccount()
-            .map(transform = PaymentAccountDbModel::asExternalModelList)
+        return paymentAccountDAO.getAllPaymentAccount().map(transform =  { it.toModelList() })
     }
 
     override fun getPaymentAccountsWithForceUpdate(forceUpdate: Boolean): List<PaymentAccount> {
@@ -39,15 +36,11 @@ class PaymentAccountRepository @Inject constructor(
     }
 
     override fun getPaymentAccountWithTotalAmount(paymentAccountId: String): Flow<PaymentAccount?> {
-        return paymentAccountDAO
-            .getPaymentAccountByIdWithTotalsAmount(paymentAccountId)
-            .map(transform = PaymentAccountDbModel::asExternalModelWithTotalAmount)
+        return paymentAccountDAO.getPaymentAccountByIdWithTotalsAmount(paymentAccountId).map(transform =  { it.toModel() })
     }
 
     override fun getPaymentAccountsWithTotalAmount(): Flow<List<PaymentAccount>> {
-        return paymentAccountDAO
-            .getPaymentAccountsWithTotalsAmount()
-            .map(transform = PaymentAccountDbModel::asExternalModelWithTotalAmountList)
+        return paymentAccountDAO.getPaymentAccountsWithTotalsAmount().map(transform =  { it.toModelList() })
     }
 
     override suspend fun refreshPaymentAccounts() {
@@ -81,7 +74,7 @@ class PaymentAccountRepository @Inject constructor(
         withContext(
             context = Dispatchers.IO,
             block = {
-                paymentAccountDAO.insert(PaymentAccountDbModel.asInternalModel(paymentAccount))
+                paymentAccountDAO.insert(paymentAccount.toEntity())
             }
         )
 
@@ -100,5 +93,4 @@ class PaymentAccountRepository @Inject constructor(
     override suspend fun deletePaymentAccount(paymentAccountId: String) {
         TODO("Not yet implemented")
     }
-
 }

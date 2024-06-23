@@ -3,7 +3,7 @@ package com.soleel.finanzas.feature.add
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.soleel.finanzas.data.paymentaccount.interfaces.IPaymentAccountLocalDataSource
-import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
+import com.soleel.finanzas.core.model.PaymentAccount
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 data class AddUiState(
-    val itemsPaymentAccount: List<PaymentAccount> = emptyList(),
+    val itemsPaymentAccount: List<com.soleel.finanzas.core.model.PaymentAccount> = emptyList(),
     val userMessage: String? = null,
     val isPaymentAccountLoading: Boolean = false,
     val isPaymentAccountSuccess: Boolean = false,
@@ -39,7 +39,7 @@ open class AddMenuFABViewModel @Inject constructor(
         )
 
     fun getData(
-        itemsPaymentAccount: List<PaymentAccount>
+        itemsPaymentAccount: List<com.soleel.finanzas.core.model.PaymentAccount>
     ): AddUiState {
         return AddUiState(
             itemsPaymentAccount = itemsPaymentAccount,

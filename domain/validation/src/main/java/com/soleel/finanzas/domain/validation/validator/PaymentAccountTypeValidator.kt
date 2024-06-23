@@ -1,14 +1,14 @@
 package com.soleel.finanzas.domain.validation.validator
 
-import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
+import com.soleel.finanzas.core.model.PaymentAccount
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.domain.validation.generic.InValidation
 import com.soleel.finanzas.domain.validation.model.ResultValidation
 
 
-class PaymentAccountTypeValidator : InValidation<PaymentAccount, ResultValidation> {
+class PaymentAccountTypeValidator : InValidation<com.soleel.finanzas.core.model.PaymentAccount, ResultValidation> {
 
-    override fun execute(input: PaymentAccount): ResultValidation {
+    override fun execute(input: com.soleel.finanzas.core.model.PaymentAccount): ResultValidation {
         
         if (input.id.isBlank()) {
             return ResultValidation(

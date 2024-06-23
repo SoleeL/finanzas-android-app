@@ -13,5 +13,5 @@ dependencies {
     api(projects.data.paymentaccount)
     api(projects.data.transaction)
     api(projects.domain.validation)
-    api(projects.domain.transformation)
+    api(projects.domain.visualtransformation)
 }

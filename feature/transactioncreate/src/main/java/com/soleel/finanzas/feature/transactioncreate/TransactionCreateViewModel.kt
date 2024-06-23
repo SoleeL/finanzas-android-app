@@ -11,7 +11,7 @@ import com.soleel.finanzas.core.common.result.asResult
 import com.soleel.finanzas.core.common.retryflow.RetryableFlowTrigger
 import com.soleel.finanzas.core.common.retryflow.retryableFlow
 import com.soleel.finanzas.data.paymentaccount.interfaces.IPaymentAccountLocalDataSource
-import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
+import com.soleel.finanzas.core.model.PaymentAccount
 import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
 import com.soleel.finanzas.domain.validation.validator.NameValidator
 import com.soleel.finanzas.domain.validation.validator.PaymentAccountTypeValidator
@@ -30,7 +30,7 @@ import javax.inject.Inject
 
 
 data class TransactionUiCreate(
-    val paymentAccount: PaymentAccount = PaymentAccount(
+    val paymentAccount: com.soleel.finanzas.core.model.PaymentAccount = com.soleel.finanzas.core.model.PaymentAccount(
         id = "", name = "", amount = 0, createAt = 0, updatedAt = 0, accountType = 0
     ),
     val paymentAccountError: Int? = null,
@@ -51,7 +51,7 @@ data class TransactionUiCreate(
 )
 
 sealed class TransactionUiEvent {
-    data class PaymentAccountChanged(val paymentAccount: PaymentAccount) : TransactionUiEvent()
+    data class PaymentAccountChanged(val paymentAccount: com.soleel.finanzas.core.model.PaymentAccount) : TransactionUiEvent()
     data class TransactionTypeChanged(val transactionType: Int) : TransactionUiEvent()
     data class TransactionCategoryChanged(val transactionCategory: Int) : TransactionUiEvent()
     data class TransactionNameChanged(val transactionName: String) : TransactionUiEvent()
@@ -61,7 +61,7 @@ sealed class TransactionUiEvent {
 }
 
 sealed interface PaymentAccountsUiState {
-    data class Success(val paymentAccounts: List<PaymentAccount>) : PaymentAccountsUiState
+    data class Success(val paymentAccounts: List<com.soleel.finanzas.core.model.PaymentAccount>) : PaymentAccountsUiState
     data object Error : PaymentAccountsUiState
     data object Loading : PaymentAccountsUiState
 }
@@ -107,7 +107,7 @@ class TransactionCreateViewModel @Inject constructor(
     }
 
     private fun getData(
-        itemsPaymentAccount: Result<List<PaymentAccount>>
+        itemsPaymentAccount: Result<List<com.soleel.finanzas.core.model.PaymentAccount>>
     ): PaymentAccountsUiState {
         return when (itemsPaymentAccount) {
             is Result.Success -> PaymentAccountsUiState.Success(itemsPaymentAccount.data)

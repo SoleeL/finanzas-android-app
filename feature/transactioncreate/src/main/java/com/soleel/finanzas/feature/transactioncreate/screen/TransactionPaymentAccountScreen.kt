@@ -21,7 +21,7 @@ import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.PaymentAccountCard
 import com.soleel.finanzas.core.ui.template.TransactionCreateTopAppBar
 import com.soleel.finanzas.core.ui.uivalues.getPaymentAccountUI
-import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
+import com.soleel.finanzas.core.model.PaymentAccount
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.feature.transactioncreate.PaymentAccountsUiState
 import com.soleel.finanzas.feature.transactioncreate.TransactionCreateViewModel
@@ -54,7 +54,7 @@ fun TransactionPaymentAccountScreenPreview() {
         onCancelClick = {},
         paymentAccountsUiState = PaymentAccountsUiState.Success(
             listOf(
-                PaymentAccount(
+                com.soleel.finanzas.core.model.PaymentAccount(
                     id = "1",
                     name = "Credito falabella",
                     amount = 300000,
@@ -63,7 +63,7 @@ fun TransactionPaymentAccountScreenPreview() {
                     accountType = PaymentAccountTypeEnum.CREDIT.id
                 ),
 
-                PaymentAccount(
+                com.soleel.finanzas.core.model.PaymentAccount(
                     id = "2",
                     name = "Cuenta corriente falabella",
                     amount = 400000,
@@ -72,7 +72,7 @@ fun TransactionPaymentAccountScreenPreview() {
                     accountType = PaymentAccountTypeEnum.DEBIT.id
                 ),
 
-                PaymentAccount(
+                com.soleel.finanzas.core.model.PaymentAccount(
                     id = "3",
                     name = "App Racional",
                     amount = 500000,
@@ -155,7 +155,7 @@ fun TransactionPaymentAccountScreen(
 
 @Composable
 fun SelectPaymentAccount(
-    paymentAccounts: List<PaymentAccount>,
+    paymentAccounts: List<com.soleel.finanzas.core.model.PaymentAccount>,
 //    transactionUiCreate: TransactionUiCreate,
     onTransactionCreateUiEvent: (TransactionUiEvent) -> Unit,
     fromPaymentAccountToType: () -> Unit
