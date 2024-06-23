@@ -68,7 +68,7 @@ fun PaymentAccountCard(
                                 text = paymentAccountUIValues.type.name,
                                 modifier = Modifier.padding(16.dp),
                                 color = paymentAccountUIValues.type.letterColor,
-                                style = MaterialTheme.typography.titleMedium
+                                style = MaterialTheme.typography.titleLarge
                             )
                             Text(
                                 text = paymentAccountUIValues.amount,

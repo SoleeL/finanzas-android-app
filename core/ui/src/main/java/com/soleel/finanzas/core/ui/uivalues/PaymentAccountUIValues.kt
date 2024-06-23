@@ -11,8 +11,8 @@ data class PaymentAccountUIValues(
 
 fun getPaymentAccountUI(
     paymentAccountTypeEnum: PaymentAccountTypeEnum,
-    paymentAccountName: String,
-    paymentAccountAmount: String
+    paymentAccountName: String = "",
+    paymentAccountAmount: String = ""
 ): PaymentAccountUIValues {
     val paymentAccountTypeUI: PaymentAccountTypeUIValues = getPaymentAccountTypeUI(
         paymentAccountType = paymentAccountTypeEnum
@@ -20,8 +20,8 @@ fun getPaymentAccountUI(
 
     val paymentAccountUI: PaymentAccountUIValues = PaymentAccountUIValues(
         type = paymentAccountTypeUI,
-        name = paymentAccountName,
-        amount = paymentAccountAmount
+        name = paymentAccountName.ifEmpty(defaultValue = {"Cuenta de pago"}),
+        amount = paymentAccountAmount.ifEmpty(defaultValue = {"$1,000,000"})
     )
 
     return paymentAccountUI

@@ -8,9 +8,7 @@ object PaymentAccountCards {
     val cardsList: List<PaymentAccountUIValues> = PaymentAccountTypeEnum.entries.map(
         transform = {
             getPaymentAccountUI(
-                paymentAccountTypeEnum = PaymentAccountTypeEnum.fromId(it.id),
-                paymentAccountName = "",
-                paymentAccountAmount = ""
+                paymentAccountTypeEnum = PaymentAccountTypeEnum.fromId(it.id)
             )
         }
     )

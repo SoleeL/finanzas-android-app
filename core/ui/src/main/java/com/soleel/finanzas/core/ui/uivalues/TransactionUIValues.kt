@@ -44,7 +44,7 @@ fun getTransactionUI(
         paymentAccount = paymentAccountUI,
         type = transactionTypeUI,
         category = transactionCategoryUI,
-        name = transactionName.ifEmpty(defaultValue = { "Transferencia de ..." }),
+        name = transactionName.ifEmpty(defaultValue = { "Gasto en ..." }),
         amount = transactionAmount.ifEmpty(defaultValue = { "$10,000" }),
         date = getAllTransactionStringDate(transactionDate)
     )

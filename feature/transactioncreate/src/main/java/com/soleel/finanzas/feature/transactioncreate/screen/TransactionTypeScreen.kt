@@ -115,7 +115,6 @@ fun TransactionTypeScreen(
                 .fillMaxSize()
                 .padding(top = it.calculateTopPadding()),
                 content = {
-
                     SelectTransactionType(
                         transactionUiCreate = transactionUiCreate,
                         onTransactionCreateUiEvent = onTransactionCreateUiEvent,
@@ -156,10 +155,7 @@ fun SelectTransactionType(
                             paymentAccountTypeEnum = PaymentAccountTypeEnum.fromId(transactionUiCreate.paymentAccount.accountType),
                             paymentAccountName = transactionUiCreate.paymentAccount.name,
                             paymentAccountAmount = paymentAccountAmount,
-                            transactionType = TransactionTypeEnum.fromId(transactionType.id),
-                            transactionCategory = TransactionCategoryEnum.fromId(transactionUiCreate.transactionCategory),
-                            transactionName = transactionUiCreate.transactionName,
-                            transactionAmount = ""
+                            transactionType = TransactionTypeEnum.fromId(transactionType.id)
                         ),
                         onClick = {
                             onTransactionCreateUiEvent(

@@ -166,6 +166,7 @@ fun SelectTransactionCategory(
                             paymentAccountName = transactionUiCreate.paymentAccount.name,
                             paymentAccountAmount = paymentAccountAmount,
                             transactionType = TransactionTypeEnum.fromId(transactionUiCreate.transactionType),
+                            transactionCategory = transactionCategory
                         ),
                         onClick = {
                             onTransactionCreateUiEvent(
