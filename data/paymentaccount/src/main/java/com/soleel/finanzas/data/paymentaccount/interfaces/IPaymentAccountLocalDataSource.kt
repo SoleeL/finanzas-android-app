@@ -1,6 +1,7 @@
 package com.soleel.finanzas.data.paymentaccount.interfaces
 
 
+import com.soleel.finanzas.core.common.enums.PaymentAccountTypeEnum
 import com.soleel.finanzas.core.model.PaymentAccount
 import kotlinx.coroutines.flow.Flow
 
@@ -26,7 +27,7 @@ interface IPaymentAccountLocalDataSource {
     suspend fun createPaymentAccount(
         name: String,
         amount: Int,
-        accountType: Int
+        type: PaymentAccountTypeEnum
     ): String
 
     suspend fun updatePaymentAccount(

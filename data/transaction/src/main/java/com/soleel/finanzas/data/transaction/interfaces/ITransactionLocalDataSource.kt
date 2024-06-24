@@ -1,16 +1,17 @@
 package com.soleel.finanzas.data.transaction.interfaces
 
+import com.soleel.finanzas.core.model.Transaction
 import kotlinx.coroutines.flow.Flow
 
 interface ITransactionLocalDataSource {
 
-    fun getTransaction(transactionId: String): Flow<com.soleel.finanzas.core.model.Transaction?>
+    fun getTransaction(transactionId: String): Flow<Transaction?>
 
-    fun getTransactionWithForceUpdate(transactionId: String, forceUpdate: Boolean = false): com.soleel.finanzas.core.model.Transaction?
+    fun getTransactionWithForceUpdate(transactionId: String, forceUpdate: Boolean = false): Transaction?
 
-    fun getTransactions(): Flow<List<com.soleel.finanzas.core.model.Transaction>>
+    fun getTransactions(): Flow<List<Transaction>>
 
-    fun getTransactionsWithForceUpdate(forceUpdate: Boolean = false): List<com.soleel.finanzas.core.model.Transaction>
+    fun getTransactionsWithForceUpdate(forceUpdate: Boolean = false): List<Transaction>
 
     suspend fun refreshTransactions()
 

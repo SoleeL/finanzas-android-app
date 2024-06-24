@@ -1,12 +1,17 @@
 package com.soleel.finanzas.core.model
 
+import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
+import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
+import java.util.Date
+
+
 data class Transaction(
     val id: String,
     var name: String,
     val amount: Int,
-    val createAt: Long,
-    val updatedAt: Long,
-    val categoryType: Int,
-    val transactionType: Int,
+    val createAt: Date,
+    val updatedAt: Date,
+    val type: TransactionTypeEnum,
+    val category: TransactionCategoryEnum,
     val paymentAccountId: String
 )

@@ -1,5 +1,6 @@
 package com.soleel.finanzas.data.paymentaccount
 
+import com.soleel.finanzas.core.common.enums.PaymentAccountTypeEnum
 import com.soleel.finanzas.core.database.daos.PaymentAccountDAO
 import com.soleel.finanzas.core.model.PaymentAccount
 import com.soleel.finanzas.data.paymentaccount.di.DefaultDispatcher
@@ -9,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import java.util.Date
 import java.util.UUID
 import javax.inject.Inject
 
@@ -40,7 +42,7 @@ class PaymentAccountRepository @Inject constructor(
     }
 
     override fun getPaymentAccountsWithTotalAmount(): Flow<List<PaymentAccount>> {
-        return paymentAccountDAO.getPaymentAccountsWithTotalsAmount().map(transform =  { it.toModelList() })
+        return paymentAccountDAO.getPaymentAccountsWithTotalsAmount().map(transform =  { it.toWithTotalAmountModelList() })
     }
 
     override suspend fun refreshPaymentAccounts() {
@@ -54,7 +56,7 @@ class PaymentAccountRepository @Inject constructor(
     override suspend fun createPaymentAccount(
         name: String,
         amount: Int,
-        accountType: Int
+        type: PaymentAccountTypeEnum
     ): String {
         val id = withContext(
             context = dispatcher,
@@ -66,9 +68,9 @@ class PaymentAccountRepository @Inject constructor(
             id = id,
             name = name,
             amount = amount,
-            createAt = System.currentTimeMillis(),
-            updatedAt = System.currentTimeMillis(),
-            accountType = accountType
+            createAt = Date(),
+            updatedAt = Date(),
+            type = type
         )
 
         withContext(
