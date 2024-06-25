@@ -2,15 +2,20 @@ package com.soleel.finanzas.feature.transactions
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.soleel.finanzas.core.common.result.asResult
+import com.soleel.finanzas.core.common.result.Result
 import com.soleel.finanzas.core.common.retryflow.RetryableFlowTrigger
 import com.soleel.finanzas.core.common.retryflow.retryableFlow
 import com.soleel.finanzas.core.model.TransactionWithAccount
 import com.soleel.finanzas.domain.transactions.GetAllTransactionsWithAccountUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 
@@ -30,27 +35,27 @@ sealed class TransactionsUiEvent {
 @HiltViewModel
 class TransactionsViewModel @Inject constructor(
     private val getAllTransactionsWithAccountUseCase: GetAllTransactionsWithAccountUseCase,
-    private val retryableFlowTrigger: RetryableFlowTrigger
+    private val retryableFlowTrigger: RetryableFlowTrigger,
 ) : ViewModel() {
 
-    private val _transactionsUiState: MutableStateFlow<TransactionsUiState> =
-        MutableStateFlow(TransactionsUiState.Loading)
-    val transactionsUiState: StateFlow<TransactionsUiState> = _transactionsUiState
+    private val _transactionsUiState: Flow<TransactionsUiState> = retryableFlowTrigger
+        .retryableFlow(flowProvider = { getFlowAllTransactionsWithAccount() })
 
-    init {
-        getAllTransactionsWithAccount()
+    val transactionsUiState: StateFlow<TransactionsUiState> = _transactionsUiState.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
+        initialValue = TransactionsUiState.Loading
+    )
+
+    private fun getFlowAllTransactionsWithAccount(): Flow<TransactionsUiState> {
+        return getAllTransactionsWithAccountUseCase().asResult().map(transform = { this.getData(it) })
     }
-    
-    private fun getAllTransactionsWithAccount() {
-        viewModelScope.launch {
-            _transactionsUiState.value = TransactionsUiState.Loading
-            try {
-                _transactionsUiState.value = TransactionsUiState.Success(
-                    allTransactionsWithAccount = getAllTransactionsWithAccountUseCase()
-                )
-            } catch (e: Exception) {
-                _transactionsUiState.value = TransactionsUiState.Error
-            }
+
+    private fun getData(allTransactionsWithAccount: Result<List<TransactionWithAccount>>): TransactionsUiState {
+        return when (allTransactionsWithAccount) {
+            is Result.Loading -> TransactionsUiState.Loading
+            is Result.Success -> TransactionsUiState.Success(allTransactionsWithAccount = allTransactionsWithAccount.data)
+            else -> TransactionsUiState.Error
         }
     }
 

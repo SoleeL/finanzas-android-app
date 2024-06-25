@@ -9,25 +9,16 @@ import com.soleel.finanzas.data.account.interfaces.IAccountLocalDataSource
 import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import java.util.Date
 import javax.inject.Inject
 
 class GetAllTransactionsWithAccountUseCase @Inject constructor(
     private val transactionRepository: ITransactionLocalDataSource,
     private val accountRepository: IAccountLocalDataSource,
-    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher
 ) {
-    suspend operator fun invoke(): List<TransactionWithAccount> = withContext(
-        context = defaultDispatcher,
-        block = {
-            transactionRepository.getTransactions()
-                .mapToWithAccount(accounts = accountRepository.getAccounts())
-                .first()
-        }
-    )
+    operator fun invoke(): Flow<List<TransactionWithAccount>> = transactionRepository.getTransactions()
+        .mapToWithAccount(accounts = accountRepository.getAccounts())
 }
 
 private fun Flow<List<Transaction>>.mapToWithAccount(
