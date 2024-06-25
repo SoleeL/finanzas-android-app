@@ -130,7 +130,7 @@ fun AllTransactionItemDetail(
                     )
 
                     Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
+                        horizontalAlignment = Alignment.End,
                         content = {
                             Text(
                                 text = transactionUIValues.amount,

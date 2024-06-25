@@ -64,7 +64,6 @@ fun AllTransactionsListScreen(
     BackHandler(
         enabled = true,
         onBack = {
-            Log.d("finanzas", "AllTransactionsListScreen: back press")
             finishApp(context)
         }
     )
