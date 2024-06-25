@@ -1,7 +1,6 @@
 package com.soleel.finanzas.feature.transactions.navigation
 
 import android.content.Context
-import androidx.activity.compose.BackHandler
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -12,7 +11,6 @@ import com.soleel.finanzas.feature.transactions.screen.AnnuallyTransactionsListR
 import com.soleel.finanzas.feature.transactions.screen.DailyTransactionsListRoute
 import com.soleel.finanzas.feature.transactions.screen.MonthlyTransactionsListRoute
 import com.soleel.finanzas.feature.transactions.screen.WeeklyTransactionsListRoute
-import kotlin.reflect.KFunction1
 
 
 const val transactionsGraph = "transactions_graph"

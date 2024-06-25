@@ -1,6 +1,5 @@
 package com.soleel.finanzas.feature.profile
 
-import android.app.Activity
 import android.content.Context
 import android.util.Log
 import androidx.activity.compose.BackHandler

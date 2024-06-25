@@ -23,10 +23,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.soleel.finanzas.core.common.enums.AccountTypeEnum
-import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
-import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
-import com.soleel.finanzas.core.model.Transaction
 import com.soleel.finanzas.core.model.TransactionWithAccount
 import com.soleel.finanzas.core.ui.template.AllTransactionItem
 import com.soleel.finanzas.core.ui.uivalues.TransactionUIValues

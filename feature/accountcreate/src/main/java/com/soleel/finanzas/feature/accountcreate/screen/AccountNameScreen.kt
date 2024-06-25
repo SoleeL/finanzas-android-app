@@ -24,15 +24,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.soleel.finanzas.core.common.enums.AccountTypeEnum
-import com.soleel.finanzas.feature.accountcreate.AccountCreateViewModel
-import com.soleel.finanzas.feature.accountcreate.AccountUiCreate
-import com.soleel.finanzas.feature.accountcreate.AccountUiEvent
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.AccountCard
 import com.soleel.finanzas.core.ui.template.AccountCreateTopAppBar
 import com.soleel.finanzas.core.ui.uivalues.AccountUIValues
 import com.soleel.finanzas.core.ui.uivalues.getAccountUI
 import com.soleel.finanzas.domain.validation.validator.NameValidator
+import com.soleel.finanzas.feature.accountcreate.AccountCreateViewModel
+import com.soleel.finanzas.feature.accountcreate.AccountUiCreate
+import com.soleel.finanzas.feature.accountcreate.AccountUiEvent
 
 
 @Composable

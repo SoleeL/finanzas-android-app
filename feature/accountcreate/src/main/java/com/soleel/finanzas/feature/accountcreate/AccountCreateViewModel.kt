@@ -10,9 +10,9 @@ import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
 import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
 import com.soleel.finanzas.data.account.interfaces.IAccountLocalDataSource
 import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
+import com.soleel.finanzas.domain.validation.validator.AccountAmountValidator
 import com.soleel.finanzas.domain.validation.validator.AccountTypeValidator
 import com.soleel.finanzas.domain.validation.validator.NameValidator
-import com.soleel.finanzas.domain.validation.validator.AccountAmountValidator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
