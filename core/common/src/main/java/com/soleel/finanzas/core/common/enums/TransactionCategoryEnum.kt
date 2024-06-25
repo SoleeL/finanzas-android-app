@@ -32,7 +32,7 @@ enum class TransactionCategoryEnum(
 
         fun getTransactionCategories(
             transactionType: TransactionTypeEnum,
-            accountType: PaymentAccountTypeEnum
+            accountType: AccountTypeEnum
         ): List<TransactionCategoryEnum> {
             return when (transactionType) {
                 TransactionTypeEnum.INCOME -> this.getIncomeTransactionCategories(accountType)
@@ -40,14 +40,14 @@ enum class TransactionCategoryEnum(
             }
         }
 
-        private fun getIncomeTransactionCategories(accountType: PaymentAccountTypeEnum): List<TransactionCategoryEnum> {
+        private fun getIncomeTransactionCategories(accountType: AccountTypeEnum): List<TransactionCategoryEnum> {
             return when (accountType) {
-                PaymentAccountTypeEnum.CREDIT -> listOf(
+                AccountTypeEnum.CREDIT -> listOf(
                     INCOME_TRANSFER,
                     INCOME_OTHER
                 )
 
-                PaymentAccountTypeEnum.DEBIT -> listOf(
+                AccountTypeEnum.DEBIT -> listOf(
                     INCOME_TRANSFER,
                     INCOME_SALARY,
                     INCOME_SERVICE,
@@ -57,13 +57,13 @@ enum class TransactionCategoryEnum(
                     INCOME_OTHER
                 )
 
-                PaymentAccountTypeEnum.SAVING,
-                PaymentAccountTypeEnum.INVESTMENT -> listOf(
+                AccountTypeEnum.SAVING,
+                AccountTypeEnum.INVESTMENT -> listOf(
                     INCOME_TRANSFER,
                     INCOME_OTHER
                 )
 
-                PaymentAccountTypeEnum.CASH -> listOf(
+                AccountTypeEnum.CASH -> listOf(
                     INCOME_TRANSFER,
                     INCOME_SALARY,
                     INCOME_SERVICE,
@@ -75,9 +75,9 @@ enum class TransactionCategoryEnum(
             }
         }
 
-        private fun getExpenditureTransactionCategories(accountType: PaymentAccountTypeEnum): List<TransactionCategoryEnum> {
+        private fun getExpenditureTransactionCategories(accountType: AccountTypeEnum): List<TransactionCategoryEnum> {
             return when (accountType) {
-                PaymentAccountTypeEnum.CREDIT -> listOf(
+                AccountTypeEnum.CREDIT -> listOf(
                     EXPENDITURE_MARKET,
                     EXPENDITURE_SERVICE,
                     EXPENDITURE_ACQUISITION,
@@ -86,7 +86,7 @@ enum class TransactionCategoryEnum(
                     EXPENDITURE_OTHER
                 )
 
-                PaymentAccountTypeEnum.DEBIT -> listOf(
+                AccountTypeEnum.DEBIT -> listOf(
                     EXPENDITURE_TRANSFER,
                     EXPENDITURE_MARKET,
                     EXPENDITURE_SERVICE,
@@ -96,13 +96,13 @@ enum class TransactionCategoryEnum(
                     EXPENDITURE_OTHER
                 )
 
-                PaymentAccountTypeEnum.SAVING,
-                PaymentAccountTypeEnum.INVESTMENT -> listOf(
+                AccountTypeEnum.SAVING,
+                AccountTypeEnum.INVESTMENT -> listOf(
                     EXPENDITURE_TRANSFER,
                     EXPENDITURE_OTHER
                 )
 
-                PaymentAccountTypeEnum.CASH -> listOf(
+                AccountTypeEnum.CASH -> listOf(
                     EXPENDITURE_TRANSFER,
                     EXPENDITURE_MARKET,
                     EXPENDITURE_SERVICE,

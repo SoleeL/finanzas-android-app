@@ -22,7 +22,7 @@ interface ITransactionLocalDataSource {
         amount: Int,
         transactionType: Int,
         transactionCategory: Int,
-        paymentAccountId: String
+        accountId: String
     ): String
 
     suspend fun updateTransaction(
@@ -30,12 +30,12 @@ interface ITransactionLocalDataSource {
         transactionAmount: Int,
         transactionDescription: String,
         transactionCreateAt: Long,
-        paymentAccountId: Int,
+        accountId: Int,
         typeTransactionId: Int,
         categoryId: Int
     )
 
-    suspend fun deleteAllTransactions(paymentAccountId: String)
+    suspend fun deleteAllTransactions(accountId: String)
 
     suspend fun deleteTransaction(transactionId: String)
 }

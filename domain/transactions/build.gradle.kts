@@ -8,6 +8,6 @@ android {
 }
 
 dependencies{
-    api(projects.data.paymentaccount)
+    api(projects.data.account)
     api(projects.data.transaction)
 }

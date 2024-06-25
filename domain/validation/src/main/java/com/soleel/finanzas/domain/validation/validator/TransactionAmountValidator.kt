@@ -18,7 +18,7 @@ class TransactionAmountValidator : InValidation<Triple<Int, Int, Int>, ResultVal
         if (0 == input.second) {
             return ResultValidation(
                 successful = false,
-                errorMessage = R.string.payment_account_not_selected_error_message
+                errorMessage = R.string.account_not_selected_error_message
             )
         }
 
@@ -55,7 +55,7 @@ class TransactionAmountValidator : InValidation<Triple<Int, Int, Int>, ResultVal
         ) {
             return ResultValidation(
                 successful = false,
-                errorMessage = R.string.amount_more_payment_account_can_not_be_gt_error_message
+                errorMessage = R.string.amount_more_account_can_not_be_gt_error_message
             )
         }
 
@@ -64,7 +64,7 @@ class TransactionAmountValidator : InValidation<Triple<Int, Int, Int>, ResultVal
         ) {
             return ResultValidation(
                 successful = false,
-                errorMessage = R.string.amount_can_not_be_gt_payment_account_error_message
+                errorMessage = R.string.amount_can_not_be_gt_account_error_message
             )
         }
 

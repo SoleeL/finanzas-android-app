@@ -19,7 +19,7 @@ class AndroidAppFeatureConventionPlugin : Plugin<Project> {
                 add("implementation", project(":domain:validation"))
                 add("implementation", project(":domain:transformation"))
 
-                add("implementation", project(":data:paymentaccount"))
+                add("implementation", project(":data:account"))
                 add("implementation", project(":data:transaction"))
 
                 add("implementation", project(":core:common"))

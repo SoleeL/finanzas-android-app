@@ -23,13 +23,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.soleel.finanzas.core.common.enums.PaymentAccountTypeEnum
+import com.soleel.finanzas.core.common.enums.AccountTypeEnum
 import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
 import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
+import com.soleel.finanzas.core.model.Transaction
+import com.soleel.finanzas.core.model.TransactionWithAccount
 import com.soleel.finanzas.core.ui.template.AllTransactionItem
 import com.soleel.finanzas.core.ui.uivalues.TransactionUIValues
 import com.soleel.finanzas.core.ui.uivalues.getTransactionUI
-import com.soleel.finanzas.data.transaction.model.Transaction
+import com.soleel.finanzas.domain.formatdate.AllTransactionFormatDateUseCase
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.feature.transactions.TransactionsErrorScreen
 import com.soleel.finanzas.feature.transactions.TransactionsLoadingScreen
@@ -72,7 +74,7 @@ fun AllTransactionsListScreen(
     )
 
     when (transactionsUiState) {
-        is TransactionsUiState.Success -> AllTransactionsSuccessScreen(transactionsUiState.allTransactions)
+        is TransactionsUiState.Success -> AllTransactionsSuccessScreen(transactionsUiState.allTransactionsWithAccount)
 
         is TransactionsUiState.Error -> TransactionsErrorScreen(
             modifier = modifier,
@@ -85,9 +87,9 @@ fun AllTransactionsListScreen(
 
 @Composable
 fun AllTransactionsSuccessScreen(
-    allTransactions: List<Transaction>
+    allTransactionsWithAccount: List<TransactionWithAccount>
 ) {
-    if (allTransactions.isEmpty()) {
+    if (allTransactionsWithAccount.isEmpty()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -105,14 +107,14 @@ fun AllTransactionsSuccessScreen(
         )
     } else {
         AllTransactionList(
-            allTransactions = allTransactions
+            allTransactionWithAccount = allTransactionsWithAccount
         )
     }
 }
 
 @Composable
 fun AllTransactionList(
-    allTransactions: List<Transaction>
+    allTransactionWithAccount: List<TransactionWithAccount>
 ) {
     val currencyVisualTransformation by remember(calculation = {
         mutableStateOf(CurrencyVisualTransformation(currencyCode = "USD"))
@@ -120,21 +122,26 @@ fun AllTransactionList(
 
     LazyColumn(
         content = {
-            items(items = allTransactions) { transaction ->
+            items(items = allTransactionWithAccount) { transactionWithAccount ->
 
                 val transactionAmount: String = currencyVisualTransformation
-                    .filter(AnnotatedString(text = transaction.amount.toString()))
+                    .filter(AnnotatedString(text = transactionWithAccount.transaction.amount.toString()))
+                    .text
+                    .toString()
+
+                val accountAmount: String = currencyVisualTransformation
+                    .filter(AnnotatedString(text = transactionWithAccount.account.amount.toString()))
                     .text
                     .toString()
 
                 val transactionUIValues: TransactionUIValues = getTransactionUI(
-                    paymentAccountTypeEnum = PaymentAccountTypeEnum.CREDIT,
-                    paymentAccountName = "CMR Falabella",
-                    paymentAccountAmount = "$280,000",
-                    transactionType = TransactionTypeEnum.fromId(transaction.transactionType),
-                    transactionCategory = TransactionCategoryEnum.fromId(transaction.categoryType),
-                    transactionName = transaction.name,
-                    transactionDate = TransactionFormatDateUseCase.provideAllTransactionStringDate(transaction.createAt),
+                    accountTypeEnum = transactionWithAccount.account.type,
+                    accountName = transactionWithAccount.account.name,
+                    accountAmount = accountAmount,
+                    transactionType = transactionWithAccount.transaction.type,
+                    transactionCategory = transactionWithAccount.transaction.category,
+                    transactionName = transactionWithAccount.transaction.name,
+                    transactionDate = AllTransactionFormatDateUseCase(transactionWithAccount.transaction.createAt),
                     transactionAmount = transactionAmount
                 )
 

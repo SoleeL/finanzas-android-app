@@ -15,17 +15,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
-import com.soleel.finanzas.core.common.enums.PaymentAccountTypeEnum
+import com.soleel.finanzas.core.common.enums.AccountTypeEnum
 import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.TransactionCard
 import com.soleel.finanzas.core.ui.template.TransactionCreateTopAppBar
 import com.soleel.finanzas.core.ui.uivalues.getTransactionUI
-import com.soleel.finanzas.core.model.PaymentAccount
+import com.soleel.finanzas.core.model.Account
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.feature.transactioncreate.TransactionCreateViewModel
 import com.soleel.finanzas.feature.transactioncreate.TransactionUiCreate
 import com.soleel.finanzas.feature.transactioncreate.TransactionUiEvent
+import java.util.Date
 
 
 @Composable
@@ -54,13 +55,13 @@ fun TransactionTypeScreenPreview() {
         onCancelClick = {},
         onBackClick = {},
         transactionUiCreate = TransactionUiCreate(
-            com.soleel.finanzas.core.model.PaymentAccount(
+            Account(
                 id = "2",
                 name = "Cuenta corriente falabella",
                 amount = 400000,
-                createAt = 1708709787983L,
-                updatedAt = 1708709787983L,
-                accountType = PaymentAccountTypeEnum.CREDIT.id
+                createAt = Date(),
+                updatedAt = Date(),
+                type = AccountTypeEnum.CREDIT
             )
         ),
         onTransactionCreateUiEvent = {},
@@ -99,7 +100,7 @@ fun TransactionTypeScreen(
 //                        modifier = Modifier
 //                            .fillMaxWidth(0.9f)
 //                            .height(64.dp),
-////                        enabled = 0 != paymentAccountUiCreate.type,
+////                        enabled = 0 != AccountUiCreate.type,
 //                        content = { Text(text = "Avanzar a seleccion de categoria") }
 //                    )
 //                }
@@ -138,8 +139,8 @@ fun SelectTransactionType(
         TransactionTypeEnum.entries
     })
 
-    val paymentAccountAmount: String = currencyVisualTransformation
-        .filter(AnnotatedString(text = transactionUiCreate.paymentAccount.amount.toString()))
+    val accountAmount: String = currencyVisualTransformation
+        .filter(AnnotatedString(text = transactionUiCreate.account.amount.toString()))
         .text
         .toString()
 
@@ -151,9 +152,9 @@ fun SelectTransactionType(
                 itemContent = { transactionType ->
                     TransactionCard(
                         transactionUIValues = getTransactionUI(
-                            paymentAccountTypeEnum = PaymentAccountTypeEnum.fromId(transactionUiCreate.paymentAccount.accountType),
-                            paymentAccountName = transactionUiCreate.paymentAccount.name,
-                            paymentAccountAmount = paymentAccountAmount,
+                            accountTypeEnum = transactionUiCreate.account.type,
+                            accountName = transactionUiCreate.account.name,
+                            accountAmount = accountAmount,
                             transactionType = TransactionTypeEnum.fromId(transactionType.id)
                         ),
                         onClick = {

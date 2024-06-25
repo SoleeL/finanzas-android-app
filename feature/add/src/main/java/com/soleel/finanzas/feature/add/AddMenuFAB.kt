@@ -33,8 +33,8 @@ fun FabMenuHidePreview() {
         hideExtendAddMenu = {},
         hideTransactionsTab = {},
         hideBottomBar = {},
-        toCreatePaymentAccount = {},
-        toCreateTransaction = {},
+        toAccountCreate = {},
+        toTransactionCreate = {},
         viewModel = AddMenuFABViewModelMock()
     )
 }
@@ -49,8 +49,8 @@ fun FabMenuShowPreview() {
         hideExtendAddMenu = {},
         hideTransactionsTab = {},
         hideBottomBar = {},
-        toCreatePaymentAccount = {},
-        toCreateTransaction = {},
+        toAccountCreate = {},
+        toTransactionCreate = {},
         viewModel = AddMenuFABViewModelMock()
     )
 }
@@ -63,11 +63,11 @@ fun AddMenuFAB(
     hideExtendAddMenu: () -> Unit,
     hideTransactionsTab: () -> Unit,
     hideBottomBar: () -> Unit,
-    toCreatePaymentAccount: () -> Unit,
-    toCreateTransaction: () -> Unit,
+    toAccountCreate: () -> Unit,
+    toTransactionCreate: () -> Unit,
     viewModel: AddMenuFABViewModel = hiltViewModel()
 ) {
-    val paymentAccountsUiState: AddUiState by viewModel.addUiState.collectAsState()
+    val accountsUiState: AddUiState by viewModel.addUiState.collectAsState()
 
 //    val statusMenu: MutableState<Boolean> = remember { mutableStateOf(false) }
 
@@ -77,10 +77,10 @@ fun AddMenuFAB(
                 Column(
                     horizontalAlignment = Alignment.End,
                     content = {
-                        if (false == paymentAccountsUiState.isPaymentAccountEmpty) {
+                        if (false == accountsUiState.isAccountEmpty) {
                             ItemMenuFAB(
                                 onClick = {
-                                    toCreateTransaction()
+                                    toTransactionCreate()
                                     hideFloatingAddMenu()
                                     hideTransactionsTab()
                                     hideBottomBar()
@@ -91,7 +91,7 @@ fun AddMenuFAB(
                         }
                         ItemMenuFAB(
                             onClick = {
-                                toCreatePaymentAccount()
+                                toAccountCreate()
                                 hideFloatingAddMenu()
                                 hideTransactionsTab()
                                 hideBottomBar()

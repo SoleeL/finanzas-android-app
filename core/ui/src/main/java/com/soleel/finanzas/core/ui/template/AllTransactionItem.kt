@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.soleel.finanzas.core.common.enums.PaymentAccountTypeEnum
+import com.soleel.finanzas.core.common.enums.AccountTypeEnum
 import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
 import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.ui.uivalues.TransactionUIValues
@@ -31,9 +31,9 @@ import com.soleel.finanzas.core.ui.uivalues.getTransactionUI
 fun AllTransactionItemINCOMEPreview() {
     AllTransactionItem(
         transactionUIValues = getTransactionUI(
-            paymentAccountTypeEnum = PaymentAccountTypeEnum.CREDIT,
-            paymentAccountName = "CMR Falabella",
-            paymentAccountAmount = "$300.000",
+            accountTypeEnum = AccountTypeEnum.CREDIT,
+            accountName = "CMR Falabella",
+            accountAmount = "$300.000",
             transactionType = TransactionTypeEnum.INCOME,
             transactionCategory = TransactionCategoryEnum.INCOME_TRANSFER,
             transactionName = "Transferencia a juan",
@@ -49,9 +49,9 @@ fun AllTransactionItemINCOMEPreview() {
 fun AllTransactionItemEXPENDITUREPreview() {
     AllTransactionItem(
         transactionUIValues = getTransactionUI(
-            paymentAccountTypeEnum = PaymentAccountTypeEnum.CREDIT,
-            paymentAccountName = "CMR Falabella",
-            paymentAccountAmount = "$300.000",
+            accountTypeEnum = AccountTypeEnum.CREDIT,
+            accountName = "CMR Falabella",
+            accountAmount = "$300.000",
             transactionType = TransactionTypeEnum.EXPENDITURE,
             transactionCategory = TransactionCategoryEnum.EXPENDITURE_GIFT,
             transactionName = "Juego en steam a juan",
@@ -139,7 +139,7 @@ fun AllTransactionItemDetail(
                             )
 
                             Text(
-                                text = transactionUIValues.paymentAccount.type.name,
+                                text = transactionUIValues.account.type.name,
                                 color = transactionUIValues.category.letterColor,
                                 style = MaterialTheme.typography.bodyMedium
                             )

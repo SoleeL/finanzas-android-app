@@ -3,16 +3,16 @@ package com.soleel.finanzas.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
-import com.soleel.finanzas.feature.paymentaccountcreate.navigation.navigateToPaymentAccountAmountRoute
-import com.soleel.finanzas.feature.paymentaccountcreate.navigation.navigateToPaymentAccountNameRoute
-import com.soleel.finanzas.feature.paymentaccountcreate.navigation.paymentAccountCreateGraph
-import com.soleel.finanzas.feature.paymentaccounts.navigation.accountsScreen
+import com.soleel.finanzas.feature.accountcreate.navigation.navigateToAccountAmountRoute
+import com.soleel.finanzas.feature.accountcreate.navigation.navigateToAccountNameRoute
+import com.soleel.finanzas.feature.accountcreate.navigation.accountCreateGraph
+import com.soleel.finanzas.feature.accounts.navigation.accountsScreen
 import com.soleel.finanzas.feature.profile.navigation.profileScreen
 import com.soleel.finanzas.feature.stats.navigation.statsScreen
 import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionAmountRoute
 import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionCategoryRoute
 import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionNameRoute
-import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionPaymentAccountRoute
+import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionAccountRoute
 import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionTypeRoute
 import com.soleel.finanzas.feature.transactioncreate.navigation.transactionCreateGraph
 import com.soleel.finanzas.feature.transactions.navigation.transactionGraph
@@ -50,7 +50,7 @@ fun FinanzasNavHost(
                 finishApp = appState::finishApp
             )
 
-            paymentAccountCreateGraph(
+            accountCreateGraph(
                 navController = navController,
                 showTransactionsTab = appState::showTransactionsTab,
                 showBottomBar = appState::showBottomBar,
@@ -59,8 +59,8 @@ fun FinanzasNavHost(
                 onBackClick = navController::popBackStack,
                 onCancelClick = appState::showCancelAlert,
                 onSaveClick = appState::backToHome,
-                fromTypeToName = navController::navigateToPaymentAccountNameRoute,
-                fromNameToAmount = navController::navigateToPaymentAccountAmountRoute
+                fromTypeToName = navController::navigateToAccountNameRoute,
+                fromNameToAmount = navController::navigateToAccountAmountRoute
             )
 
             transactionCreateGraph(
@@ -72,8 +72,8 @@ fun FinanzasNavHost(
                 onBackClick = navController::popBackStack,
                 onCancelClick = appState::showCancelAlert,
                 onSaveClick = appState::backToHome,
-                fromInitToPaymentAccount = navController::navigateToTransactionPaymentAccountRoute,
-                fromPaymentAccountToType = navController::navigateToTransactionTypeRoute,
+                fromInitToAccount = navController::navigateToTransactionAccountRoute,
+                fromAccountToType = navController::navigateToTransactionTypeRoute,
                 fromTypeToCategory = navController::navigateToTransactionCategoryRoute,
                 fromCategoryToName = navController::navigateToTransactionNameRoute,
                 fromNameToAmount = navController::navigateToTransactionAmountRoute,

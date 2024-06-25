@@ -22,7 +22,7 @@ import com.soleel.finanzas.core.ui.R
 @Composable
 fun TransactionCreateTopAppBarPreview() {
     TransactionCreateTopAppBar(
-        subTitle = R.string.payment_account_type_top_app_bar_subtitle
+        subTitle = R.string.account_type_top_app_bar_subtitle
     ) {}
 }
 

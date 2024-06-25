@@ -5,16 +5,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.soleel.finanzas.core.common.enums.AccountTypeEnum
 import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.common.result.Result
 import com.soleel.finanzas.core.common.result.asResult
 import com.soleel.finanzas.core.common.retryflow.RetryableFlowTrigger
 import com.soleel.finanzas.core.common.retryflow.retryableFlow
-import com.soleel.finanzas.data.paymentaccount.interfaces.IPaymentAccountLocalDataSource
-import com.soleel.finanzas.core.model.PaymentAccount
+import com.soleel.finanzas.data.account.interfaces.IAccountLocalDataSource
+import com.soleel.finanzas.core.model.Account
 import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
 import com.soleel.finanzas.domain.validation.validator.NameValidator
-import com.soleel.finanzas.domain.validation.validator.PaymentAccountTypeValidator
+import com.soleel.finanzas.domain.validation.validator.AccountTypeValidator
 import com.soleel.finanzas.domain.validation.validator.TransactionAmountValidator
 import com.soleel.finanzas.domain.validation.validator.TransactionCategoryValidator
 import com.soleel.finanzas.domain.validation.validator.TransactionTypeValidator
@@ -26,14 +27,20 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.util.Date
 import javax.inject.Inject
 
 
 data class TransactionUiCreate(
-    val paymentAccount: com.soleel.finanzas.core.model.PaymentAccount = com.soleel.finanzas.core.model.PaymentAccount(
-        id = "", name = "", amount = 0, createAt = 0, updatedAt = 0, accountType = 0
+    val account: Account = Account(
+        id = "",
+        name = "",
+        amount = 0,
+        createAt = Date(),
+        updatedAt = Date(),
+        type = AccountTypeEnum.CREDIT
     ),
-    val paymentAccountError: Int? = null,
+    val accountError: Int? = null,
 
     val transactionType: Int = 0,
     val transactionTypeError: Int? = null,
@@ -51,7 +58,7 @@ data class TransactionUiCreate(
 )
 
 sealed class TransactionUiEvent {
-    data class PaymentAccountChanged(val paymentAccount: com.soleel.finanzas.core.model.PaymentAccount) : TransactionUiEvent()
+    data class AccountChanged(val Account: Account) : TransactionUiEvent()
     data class TransactionTypeChanged(val transactionType: Int) : TransactionUiEvent()
     data class TransactionCategoryChanged(val transactionCategory: Int) : TransactionUiEvent()
     data class TransactionNameChanged(val transactionName: String) : TransactionUiEvent()
@@ -60,82 +67,82 @@ sealed class TransactionUiEvent {
     data object Submit : TransactionUiEvent()
 }
 
-sealed interface PaymentAccountsUiState {
-    data class Success(val paymentAccounts: List<com.soleel.finanzas.core.model.PaymentAccount>) : PaymentAccountsUiState
-    data object Error : PaymentAccountsUiState
-    data object Loading : PaymentAccountsUiState
+sealed interface AccountsUiState {
+    data class Success(val accounts: List<Account>) : AccountsUiState
+    data object Error : AccountsUiState
+    data object Loading : AccountsUiState
 }
 
-sealed class PaymentAccountsUiEvent {
-    data object Retry : PaymentAccountsUiEvent()
+sealed class AccountsUiEvent {
+    data object Retry : AccountsUiEvent()
 }
 
 
 @HiltViewModel
 class TransactionCreateViewModel @Inject constructor(
-    private val paymentAccountRepository: IPaymentAccountLocalDataSource,
+    private val AccountRepository: IAccountLocalDataSource,
     private val transactionRepository: ITransactionLocalDataSource,
     private val retryableFlowTrigger: RetryableFlowTrigger
 ) : ViewModel() {
 
     var transactionUiCreate by mutableStateOf(TransactionUiCreate())
-    private var initialPaymentAccountAmount = 0
+    private var initialAccountAmount = 0
 
-    private val paymentAccountValidator = PaymentAccountTypeValidator()
+    private val accountValidator = AccountTypeValidator()
     private val transactionTypeValidator = TransactionTypeValidator()
     private val transactionCategoryValidator = TransactionCategoryValidator()
     private val transactionNameValidator = NameValidator()
     private val transactionAmountValidator = TransactionAmountValidator()
 
-    private val _paymentAccountsUiState: Flow<PaymentAccountsUiState> = retryableFlowTrigger
+    private val _accountsUiState: Flow<AccountsUiState> = retryableFlowTrigger
         .retryableFlow(flowProvider = {
-            paymentAccountUiState(paymentAccountRepository = paymentAccountRepository)
+            accountUiState(AccountRepository = AccountRepository)
         })
 
-    val paymentAccountsUiState: StateFlow<PaymentAccountsUiState> = _paymentAccountsUiState.stateIn(
+    val accountsUiState: StateFlow<AccountsUiState> = _accountsUiState.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
-        initialValue = PaymentAccountsUiState.Loading
+        initialValue = AccountsUiState.Loading
     )
 
-    private fun paymentAccountUiState(
-        paymentAccountRepository: IPaymentAccountLocalDataSource,
-    ): Flow<PaymentAccountsUiState> {
-        return paymentAccountRepository.getPaymentAccountsWithTotalAmount()
+    private fun accountUiState(
+        AccountRepository: IAccountLocalDataSource,
+    ): Flow<AccountsUiState> {
+        return AccountRepository.getAccountsWithTotalAmount()
             .asResult()
             .map(transform = this::getData)
     }
 
     private fun getData(
-        itemsPaymentAccount: Result<List<com.soleel.finanzas.core.model.PaymentAccount>>
-    ): PaymentAccountsUiState {
-        return when (itemsPaymentAccount) {
-            is Result.Success -> PaymentAccountsUiState.Success(itemsPaymentAccount.data)
-            is Result.Error -> PaymentAccountsUiState.Error
-            is Result.Loading -> PaymentAccountsUiState.Loading
+        itemsAccount: Result<List<Account>>
+    ): AccountsUiState {
+        return when (itemsAccount) {
+            is Result.Success -> AccountsUiState.Success(itemsAccount.data)
+            is Result.Error -> AccountsUiState.Error
+            is Result.Loading -> AccountsUiState.Loading
         }
     }
 
 
-//    private fun paymentAccountUiState(
-//        paymentAccountRepository: IPaymentAccountLocalDataSource,
-//    ): Flow<PaymentAccountsUiState> {
+//    private fun AccountUiState(
+//        AccountRepository: IAccountLocalDataSource,
+//    ): Flow<AccountsUiState> {
 //        return flow {
-//            emit(PaymentAccountsUiState.Loading)
+//            emit(AccountsUiState.Loading)
 //
 //            delay(2000)
 //
-//            val itemsPaymentAccount = paymentAccountRepository.getPaymentAccountsWithTotalAmount()
+//            val itemsAccount = AccountRepository.getAccountsWithTotalAmount()
 //                .asResult()
 //                .map {  getData(it)}
 //
-//            emitAll(itemsPaymentAccount)
+//            emitAll(itemsAccount)
 //        }
 //    }
 
-    fun onPaymentAccountsUiEvent(event: PaymentAccountsUiEvent) {
+    fun onAccountsUiEvent(event: AccountsUiEvent) {
         when (event) {
-            is PaymentAccountsUiEvent.Retry -> {
+            is AccountsUiEvent.Retry -> {
                 retryableFlowTrigger.retry()
             }
         }
@@ -143,10 +150,10 @@ class TransactionCreateViewModel @Inject constructor(
 
     fun onTransactionCreateUiEvent(event: TransactionUiEvent) {
         when (event) {
-            is TransactionUiEvent.PaymentAccountChanged -> {
+            is TransactionUiEvent.AccountChanged -> {
                 // README: Campo objetivo
                 transactionUiCreate = transactionUiCreate.copy(
-                    paymentAccount = event.paymentAccount
+                    account = event.Account
                 )
 
                 // README: Campos afectados
@@ -157,7 +164,7 @@ class TransactionCreateViewModel @Inject constructor(
                     transactionCategoryError = null
                 )
 
-                validatePaymentAccount()
+                validateAccount()
             }
 
             is TransactionUiEvent.TransactionTypeChanged -> {
@@ -191,11 +198,11 @@ class TransactionCreateViewModel @Inject constructor(
             is TransactionUiEvent.TransactionAmountChanged -> {
                 transactionUiCreate = transactionUiCreate.copy(transactionAmount = event.transactionAmount)
                 validateTransactionAmount()
-                paymentAccountAmountRecalculate()
+                AccountAmountRecalculate()
             }
 
             is TransactionUiEvent.Submit -> {
-                if (validatePaymentAccount()
+                if (validateAccount()
                     && validateTransactionType()
                     && validateTransactionCategory()
                     && validateTransactionName()
@@ -207,14 +214,12 @@ class TransactionCreateViewModel @Inject constructor(
         }
     }
 
-    private fun validatePaymentAccount(): Boolean {
-        val paymentAccountResult = paymentAccountValidator.execute(
-            input = transactionUiCreate.paymentAccount
-        )
+    private fun validateAccount(): Boolean {
+        val accountResult = accountValidator.execute(input = transactionUiCreate.account.type)
         transactionUiCreate = transactionUiCreate.copy(
-            paymentAccountError = paymentAccountResult.errorMessage
+            accountError = accountResult.errorMessage
         )
-        return paymentAccountResult.successful
+        return accountResult.successful
     }
 
     private fun validateTransactionType(): Boolean {
@@ -249,7 +254,7 @@ class TransactionCreateViewModel @Inject constructor(
     private fun validateTransactionAmount(): Boolean {
         val input = Triple<Int, Int, Int>(
             first = transactionUiCreate.transactionAmount,
-            second = transactionUiCreate.paymentAccount.amount,
+            second = transactionUiCreate.account.amount,
             third = transactionUiCreate.transactionType
         )
 
@@ -261,15 +266,15 @@ class TransactionCreateViewModel @Inject constructor(
         return amountResult.successful
     }
 
-    private fun paymentAccountAmountRecalculate() {
-        if (0 == initialPaymentAccountAmount) {
-            initialPaymentAccountAmount = transactionUiCreate.paymentAccount.amount
+    private fun AccountAmountRecalculate() {
+        if (0 == initialAccountAmount) {
+            initialAccountAmount = transactionUiCreate.account.amount
         }
 
-        transactionUiCreate.paymentAccount.amount = when (transactionUiCreate.transactionType) {
-            TransactionTypeEnum.INCOME.id -> initialPaymentAccountAmount + transactionUiCreate.transactionAmount
-            TransactionTypeEnum.EXPENDITURE.id -> initialPaymentAccountAmount - transactionUiCreate.transactionAmount
-            else -> initialPaymentAccountAmount
+        transactionUiCreate.account.amount = when (transactionUiCreate.transactionType) {
+            TransactionTypeEnum.INCOME.id -> initialAccountAmount + transactionUiCreate.transactionAmount
+            TransactionTypeEnum.EXPENDITURE.id -> initialAccountAmount - transactionUiCreate.transactionAmount
+            else -> initialAccountAmount
         }
     }
 
@@ -282,7 +287,7 @@ class TransactionCreateViewModel @Inject constructor(
                     amount = transactionUiCreate.transactionAmount,
                     transactionType = transactionUiCreate.transactionType,
                     transactionCategory = transactionUiCreate.transactionCategory,
-                    paymentAccountId = transactionUiCreate.paymentAccount.id
+                    accountId = transactionUiCreate.account.id
                 )
 
                 transactionUiCreate = transactionUiCreate.copy(

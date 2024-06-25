@@ -14,8 +14,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import androidx.tracing.trace
-import com.soleel.finanzas.feature.paymentaccountcreate.navigation.navigateToPaymentAccountCreateGraph
-import com.soleel.finanzas.feature.paymentaccounts.navigation.navigateToAccounts
+import com.soleel.finanzas.feature.accountcreate.navigation.navigateToAccountCreateGraph
+import com.soleel.finanzas.feature.accounts.navigation.navigateToAccounts
 import com.soleel.finanzas.feature.profile.navigation.navigateToProfile
 import com.soleel.finanzas.feature.stats.navigation.navigateToStats
 import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionCreateGraph
@@ -27,7 +27,7 @@ import com.soleel.finanzas.feature.transactions.navigation.navigationToMonthlyTr
 import com.soleel.finanzas.feature.transactions.navigation.navigationToWeeklyTransactionsListRoute
 import com.soleel.finanzas.feature.transactions.navigation.transactionsGraph
 import com.soleel.finanzas.navigation.destination.TopLevelDestination
-import com.soleel.finanzas.navigation.destination.TopLevelDestination.PAYMENT_ACCOUNTS
+import com.soleel.finanzas.navigation.destination.TopLevelDestination.ACCOUNTS
 import com.soleel.finanzas.navigation.destination.TopLevelDestination.PROFILE
 import com.soleel.finanzas.navigation.destination.TopLevelDestination.STATS
 import com.soleel.finanzas.navigation.destination.TopLevelDestination.TRANSACTIONS
@@ -129,7 +129,7 @@ class FinanzasAppState(
                 when (topLevelDestination) {
                     TRANSACTIONS -> navController.navigationToAllTransactionsListRoute(topLevelNavOptions)
 
-                    PAYMENT_ACCOUNTS -> navController.navigateToAccounts(topLevelNavOptions)
+                    ACCOUNTS -> navController.navigateToAccounts(topLevelNavOptions)
 
                     STATS -> navController.navigateToStats(topLevelNavOptions)
 
@@ -187,8 +187,8 @@ class FinanzasAppState(
         (context as Activity).finish()
     }
 
-    fun navigateToPaymentAccountCreate() {
-        navController.navigateToPaymentAccountCreateGraph()
+    fun navigateToAccountCreate() {
+        navController.navigateToAccountCreateGraph()
     }
 
     fun navigateToTransactionCreate() {

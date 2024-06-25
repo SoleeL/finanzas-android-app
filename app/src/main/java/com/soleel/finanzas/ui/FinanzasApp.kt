@@ -81,8 +81,8 @@ fun FinanzasApp(
                             hideExtendAddMenu = appState::hideExtendAddMenu,
                             hideTransactionsTab = appState::hideTransactionsTab,
                             hideBottomBar = appState::hideBottomBar,
-                            toCreatePaymentAccount = appState::navigateToPaymentAccountCreate,
-                            toCreateTransaction = appState::navigateToTransactionCreate
+                            toAccountCreate = appState::navigateToAccountCreate,
+                            toTransactionCreate = appState::navigateToTransactionCreate
                         )
                     }
                 )

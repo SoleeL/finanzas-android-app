@@ -27,18 +27,19 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.soleel.finanzas.core.common.enums.PaymentAccountTypeEnum
+import com.soleel.finanzas.core.common.enums.AccountTypeEnum
 import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
 import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.TransactionCard
 import com.soleel.finanzas.core.ui.template.TransactionCreateTopAppBar
 import com.soleel.finanzas.core.ui.uivalues.getTransactionUI
-import com.soleel.finanzas.core.model.PaymentAccount
+import com.soleel.finanzas.core.model.Account
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.feature.transactioncreate.TransactionCreateViewModel
 import com.soleel.finanzas.feature.transactioncreate.TransactionUiCreate
 import com.soleel.finanzas.feature.transactioncreate.TransactionUiEvent
+import java.util.Date
 
 
 @Composable
@@ -68,13 +69,13 @@ fun TransactionNameScreenPreview() {
         onCancelClick = {},
         onBackClick = {},
         transactionUiCreate = TransactionUiCreate(
-            paymentAccount = com.soleel.finanzas.core.model.PaymentAccount(
+            account = Account(
                 id = "2",
                 name = "Cuenta corriente falabella",
                 amount = 400000,
-                createAt = 1708709787983L,
-                updatedAt = 1708709787983L,
-                accountType = PaymentAccountTypeEnum.CREDIT.id
+                createAt = Date(),
+                updatedAt = Date(),
+                type = AccountTypeEnum.CREDIT
             ),
             transactionType = TransactionTypeEnum.EXPENDITURE.id,
             transactionCategory = TransactionCategoryEnum.EXPENDITURE_GIFT.id
@@ -131,8 +132,8 @@ fun TransactionNameScreen(
                 mutableStateOf(CurrencyVisualTransformation(currencyCode = "USD"))
             })
 
-            val paymentAccountAmount: String = currencyVisualTransformation
-                .filter(AnnotatedString(text = transactionUiCreate.paymentAccount.amount.toString()))
+            val AccountAmount: String = currencyVisualTransformation
+                .filter(AnnotatedString(text = transactionUiCreate.account.amount.toString()))
                 .text
                 .toString()
 
@@ -143,9 +144,9 @@ fun TransactionNameScreen(
                 content = {
                     TransactionCard(
                         transactionUIValues = getTransactionUI(
-                            paymentAccountTypeEnum = PaymentAccountTypeEnum.fromId(transactionUiCreate.paymentAccount.accountType),
-                            paymentAccountName = transactionUiCreate.paymentAccount.name,
-                            paymentAccountAmount = paymentAccountAmount,
+                            accountTypeEnum = transactionUiCreate.account.type,
+                            accountName = transactionUiCreate.account.name,
+                            accountAmount = AccountAmount,
                             transactionType = TransactionTypeEnum.fromId(transactionUiCreate.transactionType),
                             transactionCategory = TransactionCategoryEnum.fromId(transactionUiCreate.transactionCategory),
                             transactionName = transactionUiCreate.transactionName,

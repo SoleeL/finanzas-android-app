@@ -13,14 +13,14 @@ import com.soleel.finanzas.feature.transactioncreate.TransactionCreateViewModel
 import com.soleel.finanzas.feature.transactioncreate.screen.TransactionAmountRoute
 import com.soleel.finanzas.feature.transactioncreate.screen.TransactionCategoryRoute
 import com.soleel.finanzas.feature.transactioncreate.screen.TransactionNameRoute
-import com.soleel.finanzas.feature.transactioncreate.screen.TransactionPaymentAccountRoute
+import com.soleel.finanzas.feature.transactioncreate.screen.TransactionAccountRoute
 import com.soleel.finanzas.feature.transactioncreate.screen.TransactionTypeRoute
 
 
 const val transactionCreateGraph = "transaction_create_graph"
 
 const val transactionCreateRoute = "transaction_create_route"
-const val transactionPaymentAccountRoute = "transaction_payment_account_route"
+const val transactionAccountRoute = "transaction__account_route"
 const val transactionTypeRoute = "transaction_type_route"
 const val transactionCategoryRoute = "transaction_category_route"
 const val transactionNameRoute = "transaction_name_route"
@@ -30,8 +30,8 @@ fun NavController.navigateToTransactionCreateGraph(navOptions: NavOptions? = nul
     this.navigate(transactionCreateGraph, navOptions)
 }
 
-fun NavController.navigateToTransactionPaymentAccountRoute(navOptions: NavOptions? = null) {
-    this.navigate(transactionPaymentAccountRoute, navOptions)
+fun NavController.navigateToTransactionAccountRoute(navOptions: NavOptions? = null) {
+    this.navigate(transactionAccountRoute, navOptions)
 }
 
 fun NavController.navigateToTransactionTypeRoute(navOptions: NavOptions? = null) {
@@ -59,8 +59,8 @@ fun NavGraphBuilder.transactionCreateGraph(
     onBackClick: () -> Unit,
     onCancelClick: () -> Unit,
     onSaveClick: () -> Unit,
-    fromInitToPaymentAccount: () -> Unit,
-    fromPaymentAccountToType: () -> Unit,
+    fromInitToAccount: () -> Unit,
+    fromAccountToType: () -> Unit,
     fromTypeToCategory: () -> Unit,
     fromCategoryToName: () -> Unit,
     fromNameToAmount: () -> Unit
@@ -77,12 +77,12 @@ fun NavGraphBuilder.transactionCreateGraph(
                 showBottomBar = showBottomBar,
                 showFloatingAddMenu = showFloatingAddMenu,
                 onBackClick = onBackClick,
-                fromInitToPaymentAccount = fromInitToPaymentAccount
+                fromInitToAccount = fromInitToAccount
             )
-            transactionPaymentAccountRoute(
+            transactionAccountRoute(
                 navController = navController,
                 onCancelClick = onCancelClick,
-                fromPaymentAccountToType = fromPaymentAccountToType
+                fromAccountToType = fromAccountToType
             )
             transactionTypeRoute(
                 navController = navController,
@@ -122,7 +122,7 @@ fun NavGraphBuilder.transactionCreateRoute(
     showBottomBar: () -> Unit,
     showFloatingAddMenu: () -> Unit,
     onBackClick: () -> Unit,
-    fromInitToPaymentAccount: () -> Unit
+    fromInitToAccount: () -> Unit
 ) {
     composable(
         route = transactionCreateRoute,
@@ -144,20 +144,20 @@ fun NavGraphBuilder.transactionCreateRoute(
                 showBottomBar = showBottomBar,
                 showFloatingAddMenu = showFloatingAddMenu,
                 onBackClick = onBackClick,
-                fromInitToPaymentAccount = fromInitToPaymentAccount,
+                fromInitToAccount = fromInitToAccount,
                 viewModel = viewModel
             )
         }
     )
 }
 
-fun NavGraphBuilder.transactionPaymentAccountRoute(
+fun NavGraphBuilder.transactionAccountRoute(
     navController: NavHostController,
     onCancelClick: () -> Unit,
-    fromPaymentAccountToType: () -> Unit
+    fromAccountToType: () -> Unit
 ) {
     composable(
-        route = transactionPaymentAccountRoute,
+        route = transactionAccountRoute,
         content = {
 
             val parentEntry = remember(
@@ -171,9 +171,9 @@ fun NavGraphBuilder.transactionPaymentAccountRoute(
                 viewModelStoreOwner = parentEntry
             )
 
-            TransactionPaymentAccountRoute(
+            TransactionAccountRoute(
                 onCancelClick = onCancelClick,
-                fromPaymentAccountToType = fromPaymentAccountToType,
+                fromAccountToType = fromAccountToType,
                 viewModel = viewModel
             )
         }

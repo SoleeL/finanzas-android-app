@@ -34,10 +34,10 @@ internal fun TransactionCreateRoute(
     showBottomBar: () -> Unit,
     showFloatingAddMenu: () -> Unit,
     onBackClick: () -> Unit,
-    fromInitToPaymentAccount: () -> Unit,
+    fromInitToAccount: () -> Unit,
     viewModel: TransactionCreateViewModel = hiltViewModel()
 ) {
-    val paymentAccountsUiState by viewModel.paymentAccountsUiState.collectAsStateWithLifecycle()
+    val AccountsUiState by viewModel.accountsUiState.collectAsStateWithLifecycle()
 
     TransactionCreateScreen(
         modifier = modifier,
@@ -45,9 +45,9 @@ internal fun TransactionCreateRoute(
         showBottomBar = showBottomBar,
         showFloatingAddMenu = showFloatingAddMenu,
         onBackClick = onBackClick,
-        fromInitToPaymentAccount = fromInitToPaymentAccount,
-        paymentAccountsUiState = paymentAccountsUiState,
-        onPaymentAccountsUiEvent = viewModel::onPaymentAccountsUiEvent
+        fromInitToAccount = fromInitToAccount,
+        AccountsUiState = AccountsUiState,
+        onAccountsUiEvent = viewModel::onAccountsUiEvent
     )
 }
 
@@ -59,9 +59,9 @@ private fun TransactionCreateScreen(
     showBottomBar: () -> Unit,
     showFloatingAddMenu: () -> Unit,
     onBackClick: () -> Unit,
-    fromInitToPaymentAccount: () -> Unit,
-    paymentAccountsUiState: PaymentAccountsUiState,
-    onPaymentAccountsUiEvent: (PaymentAccountsUiEvent) -> Unit
+    fromInitToAccount: () -> Unit,
+    AccountsUiState: AccountsUiState,
+    onAccountsUiEvent: (AccountsUiEvent) -> Unit
 ) {
 
     BackHandler(
@@ -85,15 +85,15 @@ private fun TransactionCreateScreen(
             )
         },
         content = {
-            when (paymentAccountsUiState) {
-                is PaymentAccountsUiState.Success -> fromInitToPaymentAccount()
+            when (AccountsUiState) {
+                is AccountsUiState.Success -> fromInitToAccount()
 
-                is PaymentAccountsUiState.Error -> TransactionCreateErrorScreen(
+                is AccountsUiState.Error -> TransactionCreateErrorScreen(
                     modifier = modifier,
-                    onRetry = { onPaymentAccountsUiEvent(PaymentAccountsUiEvent.Retry) }
+                    onRetry = { onAccountsUiEvent(AccountsUiEvent.Retry) }
                 )
 
-                is PaymentAccountsUiState.Loading -> TransactionCreateLoadingScreen()
+                is AccountsUiState.Loading -> TransactionCreateLoadingScreen()
             }
         }
     )

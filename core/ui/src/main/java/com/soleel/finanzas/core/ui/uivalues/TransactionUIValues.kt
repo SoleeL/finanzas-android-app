@@ -1,12 +1,12 @@
 package com.soleel.finanzas.core.ui.uivalues
 
-import com.soleel.finanzas.core.common.enums.PaymentAccountTypeEnum
+import com.soleel.finanzas.core.common.enums.AccountTypeEnum
 import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
 import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
 
 
 data class TransactionUIValues(
-    val paymentAccount: PaymentAccountUIValues,
+    val account: AccountUIValues,
     val type: TransactionTypeUIValues,
     val category: TransactionCategoryUIValues?,
     val name: String,
@@ -15,19 +15,19 @@ data class TransactionUIValues(
 )
 
 fun getTransactionUI(
-    paymentAccountTypeEnum: PaymentAccountTypeEnum,
-    paymentAccountName: String,
-    paymentAccountAmount: String,
+    accountTypeEnum: AccountTypeEnum,
+    accountName: String,
+    accountAmount: String,
     transactionType: TransactionTypeEnum,
     transactionCategory: TransactionCategoryEnum? = null,
     transactionName: String = "",
     transactionAmount: String = "",
     transactionDate: String = ""
 ): TransactionUIValues {
-    val paymentAccountUI: PaymentAccountUIValues = getPaymentAccountUI(
-        paymentAccountTypeEnum = paymentAccountTypeEnum,
-        paymentAccountName = paymentAccountName,
-        paymentAccountAmount = paymentAccountAmount
+    val accountUI: AccountUIValues = getAccountUI(
+        accountTypeEnum = accountTypeEnum,
+        accountName = accountName,
+        accountAmount = accountAmount
     )
 
     val transactionTypeUI: TransactionTypeUIValues = getTransactionTypeUI(
@@ -40,7 +40,7 @@ fun getTransactionUI(
     )
 
     val transactionUI: TransactionUIValues = TransactionUIValues(
-        paymentAccount = paymentAccountUI,
+        account = accountUI,
         type = transactionTypeUI,
         category = transactionCategoryUI,
         name = transactionName.ifEmpty(defaultValue = { "Gasto en ..." }),

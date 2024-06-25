@@ -52,7 +52,7 @@ class TransactionRepository @Inject constructor(
         amount: Int,
         transactionType: Int,
         transactionCategory: Int,
-        paymentAccountId: String
+        accountId: String
     ): String {
 
         val id = withContext(
@@ -69,7 +69,7 @@ class TransactionRepository @Inject constructor(
             updatedAt = System.currentTimeMillis(),
             transactionType = transactionType,
             categoryType = transactionCategory,
-            paymentAccountId = paymentAccountId
+            accountId = accountId
         )
 
         withContext(
@@ -87,14 +87,14 @@ class TransactionRepository @Inject constructor(
         transactionAmount: Int,
         transactionDescription: String,
         transactionCreateAt: Long,
-        paymentAccountId: Int,
+        accountId: Int,
         typeTransactionId: Int,
         categoryId: Int
     ) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteAllTransactions(paymentAccountId: String) {
+    override suspend fun deleteAllTransactions(accountId: String) {
         TODO("Not yet implemented")
     }
 

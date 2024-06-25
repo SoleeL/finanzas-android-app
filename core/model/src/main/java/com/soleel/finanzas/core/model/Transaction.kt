@@ -13,5 +13,5 @@ data class Transaction(
     val updatedAt: Date,
     val type: TransactionTypeEnum,
     val category: TransactionCategoryEnum,
-    val paymentAccountId: String
+    val accountId: String
 )

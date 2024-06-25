@@ -16,7 +16,7 @@ fun TransactionEntity.toModel(): Transaction {
         updatedAt = Date(this.updatedAt),
         type = TransactionTypeEnum.fromId(id = this.transactionType),
         category = TransactionCategoryEnum.fromId(id = this.categoryType),
-        paymentAccountId = this.paymentAccountId
+        accountId = this.accountId
     )
 }
 

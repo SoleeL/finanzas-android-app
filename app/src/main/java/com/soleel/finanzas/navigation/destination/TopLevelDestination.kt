@@ -15,7 +15,7 @@ enum class TopLevelDestination(
         titleTextId = "Transacciones",
     ),
 
-    PAYMENT_ACCOUNTS(
+    ACCOUNTS(
         selectedIcon = R.drawable.ic_accounts,
         unselectedIcon = R.drawable.ic_accounts,
         iconTextId = "Accounts",
