@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.soleel.finanzas.feature.transactions.TransactionsErrorScreen
 import com.soleel.finanzas.feature.transactions.TransactionsLoadingScreen
+import com.soleel.finanzas.feature.transactions.TransactionsSumUiState
 import com.soleel.finanzas.feature.transactions.TransactionsUiEvent
-import com.soleel.finanzas.feature.transactions.TransactionsUiState
 import com.soleel.finanzas.feature.transactions.TransactionsViewModel
 
 @Composable
@@ -29,12 +29,12 @@ internal fun MonthlyTransactionsListRoute(
     finishApp: (Context) -> Unit,
     viewModel: TransactionsViewModel = hiltViewModel()
 ) {
-    val transactionsUiState: TransactionsUiState by viewModel.transactionsUiState.collectAsState()
+    val monthlyTransactionsSumUiState: TransactionsSumUiState by viewModel.monthlyTransactionsUiState.collectAsState()
 
     MonthlyTransactionsListScreen(
         modifier = modifier,
         finishApp = finishApp,
-        transactionsUiState = transactionsUiState,
+        monthlyTransactionsSumUiState = monthlyTransactionsSumUiState,
         onTransactionsUiEvent = viewModel::onTransactionsUiEvent
     )
 }
@@ -43,7 +43,7 @@ internal fun MonthlyTransactionsListRoute(
 fun MonthlyTransactionsListScreen(
     modifier: Modifier,
     finishApp: (Context) -> Unit,
-    transactionsUiState: TransactionsUiState,
+    monthlyTransactionsSumUiState: TransactionsSumUiState,
     onTransactionsUiEvent: (TransactionsUiEvent) -> Unit
 ) {
 
@@ -57,15 +57,15 @@ fun MonthlyTransactionsListScreen(
         }
     )
 
-    when (transactionsUiState) {
-        is TransactionsUiState.Success -> MonthlyTransactionsSuccessScreen()
+    when (monthlyTransactionsSumUiState) {
+        is TransactionsSumUiState.Success -> MonthlyTransactionsSuccessScreen()
 
-        is TransactionsUiState.Error -> TransactionsErrorScreen(
+        is TransactionsSumUiState.Error -> TransactionsErrorScreen(
             modifier = modifier,
             onRetry = { onTransactionsUiEvent(TransactionsUiEvent.Retry) }
         )
 
-        is TransactionsUiState.Loading -> TransactionsLoadingScreen()
+        is TransactionsSumUiState.Loading -> TransactionsLoadingScreen()
     }
 
 }

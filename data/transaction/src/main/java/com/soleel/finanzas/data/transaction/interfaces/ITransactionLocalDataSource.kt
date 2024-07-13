@@ -11,6 +11,8 @@ interface ITransactionLocalDataSource {
 
     fun getTransactions(): Flow<List<Transaction>>
 
+    fun getTransactionsByCreatedOrder(): Flow<List<Transaction>>
+
     fun getTransactionsWithForceUpdate(forceUpdate: Boolean = false): List<Transaction>
 
     suspend fun refreshTransactions()

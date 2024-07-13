@@ -1,7 +1,6 @@
 package com.soleel.finanzas.feature.transactions.screen
 
 import android.content.Context
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,16 +22,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.soleel.finanzas.core.model.TransactionWithAccount
+import com.soleel.finanzas.core.model.TransactionsGroup
 import com.soleel.finanzas.core.ui.template.AllTransactionItem
 import com.soleel.finanzas.core.ui.uivalues.TransactionUIValues
 import com.soleel.finanzas.core.ui.uivalues.getTransactionUI
 import com.soleel.finanzas.domain.formatdate.AllTransactionFormatDateUseCase
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.feature.transactions.TransactionsErrorScreen
+import com.soleel.finanzas.feature.transactions.TransactionsGroupUiState
 import com.soleel.finanzas.feature.transactions.TransactionsLoadingScreen
 import com.soleel.finanzas.feature.transactions.TransactionsUiEvent
-import com.soleel.finanzas.feature.transactions.TransactionsUiState
 import com.soleel.finanzas.feature.transactions.TransactionsViewModel
 
 @Composable
@@ -41,12 +40,12 @@ internal fun AllTransactionsListRoute(
     finishApp: (Context) -> Unit,
     viewModel: TransactionsViewModel = hiltViewModel()
 ) {
-    val transactionsUiState: TransactionsUiState by viewModel.transactionsUiState.collectAsState()
+    val allTransactionsGroupUiState: TransactionsGroupUiState by viewModel.allTransactionsUiState.collectAsState()
 
     AllTransactionsListScreen(
         modifier = modifier,
         finishApp = finishApp,
-        transactionsUiState = transactionsUiState,
+        allTransactionsGroupUiState = allTransactionsGroupUiState,
         onTransactionsUiEvent = viewModel::onTransactionsUiEvent
     )
 }
@@ -55,7 +54,7 @@ internal fun AllTransactionsListRoute(
 fun AllTransactionsListScreen(
     modifier: Modifier,
     finishApp: (Context) -> Unit,
-    transactionsUiState: TransactionsUiState,
+    allTransactionsGroupUiState: TransactionsGroupUiState,
     onTransactionsUiEvent: (TransactionsUiEvent) -> Unit
 ) {
 
@@ -68,23 +67,23 @@ fun AllTransactionsListScreen(
         }
     )
 
-    when (transactionsUiState) {
-        is TransactionsUiState.Success -> AllTransactionsSuccessScreen(transactionsUiState.allTransactionsWithAccount)
+    when (allTransactionsGroupUiState) {
+        is TransactionsGroupUiState.Success -> AllTransactionsSuccessScreen(allTransactionsGroupUiState.transactionsGroup)
 
-        is TransactionsUiState.Error -> TransactionsErrorScreen(
+        is TransactionsGroupUiState.Error -> TransactionsErrorScreen(
             modifier = modifier,
             onRetry = { onTransactionsUiEvent(TransactionsUiEvent.Retry) }
         )
 
-        is TransactionsUiState.Loading -> TransactionsLoadingScreen()
+        is TransactionsGroupUiState.Loading -> TransactionsLoadingScreen()
     }
 }
 
 @Composable
 fun AllTransactionsSuccessScreen(
-    allTransactionsWithAccount: List<TransactionWithAccount>
+    allTransactionsGroup: List<TransactionsGroup>
 ) {
-    if (allTransactionsWithAccount.isEmpty()) {
+    if (allTransactionsGroup.isEmpty()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -102,14 +101,14 @@ fun AllTransactionsSuccessScreen(
         )
     } else {
         AllTransactionList(
-            allTransactionWithAccount = allTransactionsWithAccount
+            allTransactionsGroup = allTransactionsGroup
         )
     }
 }
 
 @Composable
 fun AllTransactionList(
-    allTransactionWithAccount: List<TransactionWithAccount>
+    allTransactionsGroup: List<TransactionsGroup>
 ) {
     val currencyVisualTransformation by remember(calculation = {
         mutableStateOf(CurrencyVisualTransformation(currencyCode = "USD"))
@@ -117,26 +116,26 @@ fun AllTransactionList(
 
     LazyColumn(
         content = {
-            items(items = allTransactionWithAccount) { transactionWithAccount ->
+            items(items = allTransactionsGroup) { transactionsGroup ->
 
                 val transactionAmount: String = currencyVisualTransformation
-                    .filter(AnnotatedString(text = transactionWithAccount.transaction.amount.toString()))
+                    .filter(AnnotatedString(text = transactionsGroup.transaction.amount.toString()))
                     .text
                     .toString()
 
                 val accountAmount: String = currencyVisualTransformation
-                    .filter(AnnotatedString(text = transactionWithAccount.account.amount.toString()))
+                    .filter(AnnotatedString(text = transactionsGroup.account.amount.toString()))
                     .text
                     .toString()
 
                 val transactionUIValues: TransactionUIValues = getTransactionUI(
-                    accountTypeEnum = transactionWithAccount.account.type,
-                    accountName = transactionWithAccount.account.name,
+                    accountTypeEnum = transactionsGroup.account.type,
+                    accountName = transactionsGroup.account.name,
                     accountAmount = accountAmount,
-                    transactionType = transactionWithAccount.transaction.type,
-                    transactionCategory = transactionWithAccount.transaction.category,
-                    transactionName = transactionWithAccount.transaction.name,
-                    transactionDate = AllTransactionFormatDateUseCase(transactionWithAccount.transaction.createAt),
+                    transactionType = transactionsGroup.transaction.type,
+                    transactionCategory = transactionsGroup.transaction.category,
+                    transactionName = transactionsGroup.transaction.name,
+                    transactionDate = AllTransactionFormatDateUseCase(transactionsGroup.transaction.createAt),
                     transactionAmount = transactionAmount
                 )
 

@@ -58,7 +58,7 @@ data class TransactionUiCreate(
 )
 
 sealed class TransactionUiEvent {
-    data class AccountChanged(val Account: Account) : TransactionUiEvent()
+    data class AccountChanged(val account: Account) : TransactionUiEvent()
     data class TransactionTypeChanged(val transactionType: Int) : TransactionUiEvent()
     data class TransactionCategoryChanged(val transactionCategory: Int) : TransactionUiEvent()
     data class TransactionNameChanged(val transactionName: String) : TransactionUiEvent()
@@ -80,7 +80,7 @@ sealed class AccountsUiEvent {
 
 @HiltViewModel
 class TransactionCreateViewModel @Inject constructor(
-    private val AccountRepository: IAccountLocalDataSource,
+    private val accountRepository: IAccountLocalDataSource,
     private val transactionRepository: ITransactionLocalDataSource,
     private val retryableFlowTrigger: RetryableFlowTrigger
 ) : ViewModel() {
@@ -96,7 +96,7 @@ class TransactionCreateViewModel @Inject constructor(
 
     private val _accountsUiState: Flow<AccountsUiState> = retryableFlowTrigger
         .retryableFlow(flowProvider = {
-            accountUiState(AccountRepository = AccountRepository)
+            accountUiState(accountRepository = accountRepository)
         })
 
     val accountsUiState: StateFlow<AccountsUiState> = _accountsUiState.stateIn(
@@ -106,9 +106,9 @@ class TransactionCreateViewModel @Inject constructor(
     )
 
     private fun accountUiState(
-        AccountRepository: IAccountLocalDataSource,
+        accountRepository: IAccountLocalDataSource,
     ): Flow<AccountsUiState> {
-        return AccountRepository.getAccountsWithTotalAmount()
+        return accountRepository.getAccountsWithTotalAmount()
             .asResult()
             .map(transform = this::getData)
     }
@@ -153,7 +153,7 @@ class TransactionCreateViewModel @Inject constructor(
             is TransactionUiEvent.AccountChanged -> {
                 // README: Campo objetivo
                 transactionUiCreate = transactionUiCreate.copy(
-                    account = event.Account
+                    account = event.account
                 )
 
                 // README: Campos afectados

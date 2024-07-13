@@ -17,7 +17,10 @@ interface TransactionDAO {
     suspend fun insert(transaction: TransactionEntity)
 
     @Query("SELECT * FROM transaction_table")
-    fun getAllTransaction(): Flow<List<TransactionEntity>>
+    fun getTransactions(): Flow<List<TransactionEntity>>
+
+    @Query("SELECT * FROM transaction_table ORDER BY create_at DESC")
+    fun getTransactionsByCreatedOrder(): Flow<List<TransactionEntity>>
 
     @Query("SELECT * FROM transaction_table WHERE id = :id")
     fun getTransactionForTransactionId(id: String): Flow<TransactionEntity>
