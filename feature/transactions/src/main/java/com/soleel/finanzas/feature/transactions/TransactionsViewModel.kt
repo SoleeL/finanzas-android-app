@@ -7,7 +7,7 @@ import com.soleel.finanzas.core.common.result.asResult
 import com.soleel.finanzas.core.common.retryflow.RetryableFlowTrigger
 import com.soleel.finanzas.core.common.retryflow.retryableFlow
 import com.soleel.finanzas.core.model.TransactionWithAccount
-import com.soleel.finanzas.domain.transactions.GetAllTransactionsWithAccountUseCase
+import com.soleel.finanzas.domain.transactions.GetAllTransactionsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -32,7 +32,7 @@ sealed class TransactionsUiEvent {
 
 @HiltViewModel
 class TransactionsViewModel @Inject constructor(
-    private val getAllTransactionsWithAccountUseCase: GetAllTransactionsWithAccountUseCase,
+    private val getAllTransactionsWithAccountUseCase: GetAllTransactionsUseCase,
     private val retryableFlowTrigger: RetryableFlowTrigger,
 ) : ViewModel() {
 
