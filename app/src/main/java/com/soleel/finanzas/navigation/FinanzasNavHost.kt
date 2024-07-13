@@ -15,8 +15,8 @@ import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransa
 import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionNameRoute
 import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionTypeRoute
 import com.soleel.finanzas.feature.transactioncreate.navigation.transactionCreateGraph
+import com.soleel.finanzas.feature.transactions.navigation.TRANSACTIONS_GRAPH
 import com.soleel.finanzas.feature.transactions.navigation.transactionGraph
-import com.soleel.finanzas.feature.transactions.navigation.transactionsGraph
 import com.soleel.finanzas.ui.FinanzasAppState
 
 
@@ -24,7 +24,7 @@ import com.soleel.finanzas.ui.FinanzasAppState
 fun FinanzasNavHost(
     appState: FinanzasAppState,
     modifier: Modifier = Modifier,
-    startDestination: String = transactionsGraph,
+    startDestination: String = TRANSACTIONS_GRAPH,
 ) {
     val navController = appState.navController
 

@@ -1,11 +1,11 @@
 package com.soleel.finanzas.domain.transactions
 
 import com.soleel.finanzas.core.model.SummaryTransaction
+import com.soleel.finanzas.core.model.SummaryTransactions
 import com.soleel.finanzas.core.model.Transaction
-import com.soleel.finanzas.core.model.TransactionsSum
 import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
-import com.soleel.finanzas.domain.transactions.utils.sumExpenditure
-import com.soleel.finanzas.domain.transactions.utils.sumIncome
+import com.soleel.finanzas.domain.transactions.utils.summaryExpenditure
+import com.soleel.finanzas.domain.transactions.utils.summaryIncome
 import com.soleel.finanzas.domain.transactions.utils.toExpenditureNameTransactionYear
 import com.soleel.finanzas.domain.transactions.utils.toIncomeNameTransactionYear
 import com.soleel.finanzas.domain.transactions.utils.toYearDate
@@ -16,24 +16,24 @@ import javax.inject.Inject
 class GetAnnuallyTransactionsUseCase @Inject constructor(
     private val transactionRepository: ITransactionLocalDataSource
 ) {
-    operator fun invoke(): Flow<List<TransactionsSum>> = transactionRepository.getTransactionsByCreatedOrder()
-        .mapToSumByYear()
+    operator fun invoke(): Flow<List<SummaryTransactions>> = transactionRepository.getTransactionsByCreatedOrder()
+        .mapToSummaryByYear()
 }
 
-private fun Flow<List<Transaction>>.mapToSumByYear(): Flow<List<TransactionsSum>> {
+private fun Flow<List<Transaction>>.mapToSummaryByYear(): Flow<List<SummaryTransactions>> {
     return this.map(transform = { transactions ->
         transactions
             .groupBy(keySelector = { it.createAt.toYearDate() })
             .map(transform = { (yearDate, yearTransactions) ->
-                TransactionsSum(
+                SummaryTransactions(
                     date = yearDate,
                     income = SummaryTransaction(
                         name = yearDate.toIncomeNameTransactionYear(),
-                        amount = yearTransactions.sumIncome(),
+                        amount = yearTransactions.summaryIncome(),
                     ),
                     expenditure = SummaryTransaction(
                         name = yearDate.toExpenditureNameTransactionYear(),
-                        amount = yearTransactions.sumExpenditure(),
+                        amount = yearTransactions.summaryExpenditure(),
                     )
                 )
             })

@@ -186,7 +186,7 @@ fun SelectAccount(
                         onClick = {
                             onTransactionCreateUiEvent(
                                 TransactionUiEvent.AccountChanged(
-                                    Account = account
+                                    account = account
                                 )
                             )
                             fromAccountToType()

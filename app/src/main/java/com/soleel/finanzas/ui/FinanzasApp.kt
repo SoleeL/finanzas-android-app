@@ -25,7 +25,7 @@ import com.soleel.finanzas.feature.add.AddMenuFAB
 import com.soleel.finanzas.feature.cancelalert.CancelAlertDialog
 import com.soleel.finanzas.navigation.FinanzasNavHost
 import com.soleel.finanzas.navigation.destination.TopLevelDestination
-import com.soleel.finanzas.navigation.destination.TransactionsLevelDestination
+import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

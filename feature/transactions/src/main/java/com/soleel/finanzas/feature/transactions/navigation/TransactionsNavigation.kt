@@ -1,80 +1,74 @@
 package com.soleel.finanzas.feature.transactions.navigation
 
 import android.content.Context
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination
 import com.soleel.finanzas.feature.transactions.screen.AllTransactionsListRoute
-import com.soleel.finanzas.feature.transactions.screen.AnnuallyTransactionsListRoute
-import com.soleel.finanzas.feature.transactions.screen.DailyTransactionsListRoute
-import com.soleel.finanzas.feature.transactions.screen.MonthlyTransactionsListRoute
-import com.soleel.finanzas.feature.transactions.screen.WeeklyTransactionsListRoute
+import com.soleel.finanzas.feature.transactions.screen.SummaryPeriodTransactionsListRoute
+import java.net.URLDecoder
+import java.net.URLEncoder
+import kotlin.text.Charsets.UTF_8
 
+private val URL_CHARACTER_ENCODING = UTF_8.name()
 
-const val transactionsGraph = "transactions_graph"
+const val TRANSACTIONS_GRAPH = "transactions_graph"
+const val ALL_TRANSACTIONS_LIST_ROUTE = "$TRANSACTIONS_GRAPH/all_transactions_list_route"
 
-const val allTransactionsListRoute = "$transactionsGraph/all_transactions_list_route"
-const val dailyTransactionsListRoute = "$transactionsGraph/daily_transactions_list_route"
-const val weeklyTransactionsListRoute = "$transactionsGraph/weekly_transactions_list_route"
-const val monthlyTransactionsListRoute = "$transactionsGraph/monthly_transactions_list_route"
-const val annuallyTransactionsListRoute = "$transactionsGraph/annually_transactions_list_route"
-
-//fun NavController.navigationToTransactionGraph(navOptions: NavOptions? = null) {
-//    this.navigate(transactionsGraph, navOptions)
-//}
+const val SUMMARY_PERIOD_ARG = "summaryPeriod"
 
 fun NavController.navigationToAllTransactionsListRoute(navOptions: NavOptions? = null) {
-    this.navigate(allTransactionsListRoute, navOptions)
+    this.navigate(TRANSACTIONS_GRAPH, navOptions)
 }
 
-fun NavController.navigationToDailyTransactionsListRoute(navOptions: NavOptions? = null) {
-    this.navigate(dailyTransactionsListRoute, navOptions)
+internal class TransactionsArgs(val summaryPeriod: TransactionsLevelDestination) {
+    constructor(savedStateHandle: SavedStateHandle) :
+            this(
+                summaryPeriod = TransactionsLevelDestination.fromTitle(
+                    URLDecoder.decode(
+                        checkNotNull(savedStateHandle[SUMMARY_PERIOD_ARG]),
+                        URL_CHARACTER_ENCODING
+                    )
+                )
+            )
 }
 
-fun NavController.navigationToWeeklyTransactionsListRoute(navOptions: NavOptions? = null) {
-    this.navigate(weeklyTransactionsListRoute, navOptions)
+fun NavController.navigationToSummaryPeriodTransactionsListRoute(
+    summaryPeriod: TransactionsLevelDestination,
+    navOptions: NavOptions? = null
+) {
+    this.navigate(createSummaryPeriodRoute(summaryPeriod))
 }
 
-fun NavController.navigationToMonthlyTransactionsListRoute(navOptions: NavOptions? = null) {
-    this.navigate(monthlyTransactionsListRoute, navOptions)
-}
-
-fun NavController.navigationToAnnuallyTransactionsListRoute(navOptions: NavOptions? = null) {
-    this.navigate(annuallyTransactionsListRoute, navOptions)
+fun createSummaryPeriodRoute(summaryPeriod: TransactionsLevelDestination): String {
+    val encodedId = URLEncoder.encode(summaryPeriod.title, URL_CHARACTER_ENCODING)
+    return "$TRANSACTIONS_GRAPH/$encodedId"
 }
 
 fun NavGraphBuilder.transactionGraph(
     finishApp: (Context) -> Unit
 ) {
     navigation(
-        startDestination = allTransactionsListRoute,
-        route = transactionsGraph,
+        startDestination = ALL_TRANSACTIONS_LIST_ROUTE,
+        route = TRANSACTIONS_GRAPH,
         builder = {
             allTransactionsListRoute(finishApp = finishApp)
-            dailyTransactionsListRoute(finishApp = finishApp)
-            weeklyTransactionListRoute(finishApp = finishApp)
-            monthlyTransactionListRoute(finishApp = finishApp)
-            annuallyTransactionListRoute(finishApp = finishApp)
+            summaryPeriodTransactionsListRoute(finishApp = finishApp)
         }
     )
 }
-
-//fun NavGraphBuilder.transactionsRoute() {
-//    composable(
-//        route = transactionsRoute,
-//        content = {
-//            TransactionsRoute()
-//        }
-//    )
-//}
 
 fun NavGraphBuilder.allTransactionsListRoute(
     finishApp: (Context) -> Unit
 ) {
     composable(
-        route = allTransactionsListRoute,
+        route = ALL_TRANSACTIONS_LIST_ROUTE,
         content = {
             AllTransactionsListRoute(
                 finishApp = finishApp
@@ -83,52 +77,19 @@ fun NavGraphBuilder.allTransactionsListRoute(
     )
 }
 
-fun NavGraphBuilder.dailyTransactionsListRoute(
+fun NavGraphBuilder.summaryPeriodTransactionsListRoute(
     finishApp: (Context) -> Unit
 ) {
     composable(
-        route = dailyTransactionsListRoute,
-        content = {
-            DailyTransactionsListRoute(
-                finishApp = finishApp
+        route = "$TRANSACTIONS_GRAPH/$SUMMARY_PERIOD_ARG",
+        arguments = listOf(
+            navArgument(
+                name = SUMMARY_PERIOD_ARG,
+                builder = { type = NavType.StringType }
             )
-        }
-    )
-}
-
-fun NavGraphBuilder.weeklyTransactionListRoute(
-    finishApp: (Context) -> Unit
-) {
-    composable(
-        route = weeklyTransactionsListRoute,
+        ),
         content = {
-            WeeklyTransactionsListRoute(
-                finishApp = finishApp
-            )
-        }
-    )
-}
-
-fun NavGraphBuilder.monthlyTransactionListRoute(
-    finishApp: (Context) -> Unit
-) {
-    composable(
-        route = monthlyTransactionsListRoute,
-        content = {
-            MonthlyTransactionsListRoute(
-                finishApp = finishApp
-            )
-        }
-    )
-}
-
-fun NavGraphBuilder.annuallyTransactionListRoute(
-    finishApp: (Context) -> Unit
-) {
-    composable(
-        route = annuallyTransactionsListRoute,
-        content = {
-            AnnuallyTransactionsListRoute(
+            SummaryPeriodTransactionsListRoute(
                 finishApp = finishApp
             )
         }

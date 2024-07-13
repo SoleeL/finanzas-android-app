@@ -19,19 +19,16 @@ import com.soleel.finanzas.feature.accounts.navigation.navigateToAccounts
 import com.soleel.finanzas.feature.profile.navigation.navigateToProfile
 import com.soleel.finanzas.feature.stats.navigation.navigateToStats
 import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionCreateGraph
-import com.soleel.finanzas.feature.transactions.navigation.allTransactionsListRoute
+import com.soleel.finanzas.feature.transactions.navigation.ALL_TRANSACTIONS_LIST_ROUTE
+import com.soleel.finanzas.feature.transactions.navigation.TRANSACTIONS_GRAPH
+import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination
 import com.soleel.finanzas.feature.transactions.navigation.navigationToAllTransactionsListRoute
-import com.soleel.finanzas.feature.transactions.navigation.navigationToAnnuallyTransactionsListRoute
-import com.soleel.finanzas.feature.transactions.navigation.navigationToDailyTransactionsListRoute
-import com.soleel.finanzas.feature.transactions.navigation.navigationToMonthlyTransactionsListRoute
-import com.soleel.finanzas.feature.transactions.navigation.navigationToWeeklyTransactionsListRoute
-import com.soleel.finanzas.feature.transactions.navigation.transactionsGraph
+import com.soleel.finanzas.feature.transactions.navigation.navigationToSummaryPeriodTransactionsListRoute
 import com.soleel.finanzas.navigation.destination.TopLevelDestination
 import com.soleel.finanzas.navigation.destination.TopLevelDestination.ACCOUNTS
 import com.soleel.finanzas.navigation.destination.TopLevelDestination.PROFILE
 import com.soleel.finanzas.navigation.destination.TopLevelDestination.STATS
 import com.soleel.finanzas.navigation.destination.TopLevelDestination.TRANSACTIONS
-import com.soleel.finanzas.navigation.destination.TransactionsLevelDestination
 import kotlinx.coroutines.CoroutineScope
 
 
@@ -102,7 +99,7 @@ class FinanzasAppState(
     @Composable
     fun getCurrentTopLevelDestination(): TopLevelDestination? {
         return when (getCurrentDestination()?.route) {
-            transactionsGraph -> TRANSACTIONS
+            TRANSACTIONS_GRAPH -> TRANSACTIONS
             else -> null
         }
     }
@@ -163,21 +160,29 @@ class FinanzasAppState(
                         transactionsLevelNavOptions
                     )
 
-                    TransactionsLevelDestination.DAILY_TRANSACTIONS -> navController.navigationToDailyTransactionsListRoute(
-                        transactionsLevelNavOptions
+                    TransactionsLevelDestination.DAILY_TRANSACTIONS,
+                    TransactionsLevelDestination.WEEKLY_TRANSACTIONS,
+                    TransactionsLevelDestination.MONTHLY_TRANSACTIONS,
+                    TransactionsLevelDestination.ANNUALLY_TRANSACTIONS  -> navController.navigationToSummaryPeriodTransactionsListRoute(
+                        summaryPeriod = transactionsLevelDestination,
+                        navOptions = transactionsLevelNavOptions
                     )
 
-                    TransactionsLevelDestination.WEEKLY_TRANSACTIONS -> navController.navigationToWeeklyTransactionsListRoute(
-                        transactionsLevelNavOptions
-                    )
-
-                    TransactionsLevelDestination.MONTHLY_TRANSACTIONS -> navController.navigationToMonthlyTransactionsListRoute(
-                        transactionsLevelNavOptions
-                    )
-
-                    TransactionsLevelDestination.ANNUALLY_TRANSACTIONS -> navController.navigationToAnnuallyTransactionsListRoute(
-                        transactionsLevelNavOptions
-                    )
+//                    TransactionsLevelDestination.DAILY_TRANSACTIONS -> navController.navigationToDailyTransactionsListRoute(
+//                        transactionsLevelNavOptions
+//                    )
+//
+//                    TransactionsLevelDestination.WEEKLY_TRANSACTIONS -> navController.navigationToWeeklyTransactionsListRoute(
+//                        transactionsLevelNavOptions
+//                    )
+//
+//                    TransactionsLevelDestination.MONTHLY_TRANSACTIONS -> navController.navigationToMonthlyTransactionsListRoute(
+//                        transactionsLevelNavOptions
+//                    )
+//
+//                    TransactionsLevelDestination.ANNUALLY_TRANSACTIONS -> navController.navigationToAnnuallyTransactionsListRoute(
+//                        transactionsLevelNavOptions
+//                    )
                 }
             }
         )
@@ -196,7 +201,7 @@ class FinanzasAppState(
     }
 
     fun backToHome() {
-        navController.popBackStack(route = allTransactionsListRoute, inclusive = false)
+        navController.popBackStack(route = ALL_TRANSACTIONS_LIST_ROUTE, inclusive = false)
     }
 
     fun shouldShowTransactionsTab(): Boolean {

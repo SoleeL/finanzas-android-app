@@ -17,33 +17,33 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.soleel.finanzas.feature.transactions.SummaryTransactionsUiState
 import com.soleel.finanzas.feature.transactions.TransactionsErrorScreen
 import com.soleel.finanzas.feature.transactions.TransactionsLoadingScreen
-import com.soleel.finanzas.feature.transactions.TransactionsSumUiState
 import com.soleel.finanzas.feature.transactions.TransactionsUiEvent
 import com.soleel.finanzas.feature.transactions.TransactionsViewModel
 
 @Composable
-internal fun AnnuallyTransactionsListRoute(
+internal fun SummaryPeriodTransactionsListRoute(
     modifier: Modifier = Modifier,
     finishApp: (Context) -> Unit,
     viewModel: TransactionsViewModel = hiltViewModel()
 ) {
-    val annuallyTransactionsSumUiState: TransactionsSumUiState by viewModel.annuallyTransactionsUiState.collectAsState()
+    val summaryTransactionsUiState: SummaryTransactionsUiState by viewModel.summaryTransactionsUiState.collectAsState()
 
-    AnnuallyTransactionsListScreen(
+    DailyTransactionsListScreen(
         modifier = modifier,
         finishApp = finishApp,
-        annuallyTransactionsSumUiState = annuallyTransactionsSumUiState,
+        summaryTransactionsUiState = summaryTransactionsUiState,
         onTransactionsUiEvent = viewModel::onTransactionsUiEvent
     )
 }
 
 @Composable
-fun AnnuallyTransactionsListScreen(
+fun DailyTransactionsListScreen(
     modifier: Modifier,
     finishApp: (Context) -> Unit,
-    annuallyTransactionsSumUiState: TransactionsSumUiState,
+    summaryTransactionsUiState: SummaryTransactionsUiState,
     onTransactionsUiEvent: (TransactionsUiEvent) -> Unit
 ) {
 
@@ -57,25 +57,24 @@ fun AnnuallyTransactionsListScreen(
         }
     )
 
-    when (annuallyTransactionsSumUiState) {
-        is TransactionsSumUiState.Success -> AnnuallyTransactionsSuccessScreen()
+    when (summaryTransactionsUiState) {
+        is SummaryTransactionsUiState.Success -> DailyTransactionsSuccessScreen()
 
-        is TransactionsSumUiState.Error -> TransactionsErrorScreen(
+        is SummaryTransactionsUiState.Error -> TransactionsErrorScreen(
             modifier = modifier,
             onRetry = { onTransactionsUiEvent(TransactionsUiEvent.Retry) }
         )
 
-        is TransactionsSumUiState.Loading -> TransactionsLoadingScreen()
+        is SummaryTransactionsUiState.Loading -> TransactionsLoadingScreen()
     }
-
 }
 
 @Composable
-fun AnnuallyTransactionsSuccessScreen() {
+fun DailyTransactionsSuccessScreen() {
     BackHandler(
         enabled = true,
         onBack = {
-            Log.d("finanzas", "AnnuallyTransactionsSuccessScreen: back press")
+            Log.d("finanzas", "DailyTransactionsSuccessScreen: back press")
             // TODO:
         }
     )
@@ -83,14 +82,16 @@ fun AnnuallyTransactionsSuccessScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .wrapContentSize(Alignment.Center)
-    ) {
-        Text(
-            text = "Annually Transactions List Screen",
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            textAlign = TextAlign.Center,
-            fontSize = 20.sp
-        )
-    }
+            .wrapContentSize(Alignment.Center),
+        content = {
+            Text(
+                text = "Daily Transactions List Screen",
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                textAlign = TextAlign.Center,
+                fontSize = 20.sp
+            )
+        }
+    )
 }
+
