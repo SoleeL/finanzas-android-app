@@ -19,11 +19,9 @@ import com.soleel.finanzas.feature.accounts.navigation.navigateToAccounts
 import com.soleel.finanzas.feature.profile.navigation.navigateToProfile
 import com.soleel.finanzas.feature.stats.navigation.navigateToStats
 import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionCreateGraph
-import com.soleel.finanzas.feature.transactions.navigation.ALL_TRANSACTIONS_LIST_ROUTE
-import com.soleel.finanzas.feature.transactions.navigation.TRANSACTIONS_GRAPH
+import com.soleel.finanzas.feature.transactions.navigation.TRANSACTIONS_ROUTE
 import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination
-import com.soleel.finanzas.feature.transactions.navigation.navigationToAllTransactionsListRoute
-import com.soleel.finanzas.feature.transactions.navigation.navigationToSummaryPeriodTransactionsListRoute
+import com.soleel.finanzas.feature.transactions.navigation.navigationToTransactionsRoute
 import com.soleel.finanzas.navigation.destination.TopLevelDestination
 import com.soleel.finanzas.navigation.destination.TopLevelDestination.ACCOUNTS
 import com.soleel.finanzas.navigation.destination.TopLevelDestination.PROFILE
@@ -99,7 +97,7 @@ class FinanzasAppState(
     @Composable
     fun getCurrentTopLevelDestination(): TopLevelDestination? {
         return when (getCurrentDestination()?.route) {
-            TRANSACTIONS_GRAPH -> TRANSACTIONS
+            TRANSACTIONS_ROUTE -> TRANSACTIONS
             else -> null
         }
     }
@@ -124,7 +122,10 @@ class FinanzasAppState(
                 )
 
                 when (topLevelDestination) {
-                    TRANSACTIONS -> navController.navigationToAllTransactionsListRoute(topLevelNavOptions)
+                    TRANSACTIONS -> navController.navigationToTransactionsRoute(
+                        transactionsLevelDestination = TransactionsLevelDestination.ALL,
+                        navOptions = topLevelNavOptions
+                    )
 
                     ACCOUNTS -> navController.navigateToAccounts(topLevelNavOptions)
 
@@ -155,35 +156,10 @@ class FinanzasAppState(
                     }
                 )
 
-                when (transactionsLevelDestination) {
-                    TransactionsLevelDestination.ALL_TRANSACTIONS -> navController.navigationToAllTransactionsListRoute(
-                        transactionsLevelNavOptions
-                    )
-
-                    TransactionsLevelDestination.DAILY_TRANSACTIONS,
-                    TransactionsLevelDestination.WEEKLY_TRANSACTIONS,
-                    TransactionsLevelDestination.MONTHLY_TRANSACTIONS,
-                    TransactionsLevelDestination.ANNUALLY_TRANSACTIONS  -> navController.navigationToSummaryPeriodTransactionsListRoute(
-                        summaryPeriod = transactionsLevelDestination,
-                        navOptions = transactionsLevelNavOptions
-                    )
-
-//                    TransactionsLevelDestination.DAILY_TRANSACTIONS -> navController.navigationToDailyTransactionsListRoute(
-//                        transactionsLevelNavOptions
-//                    )
-//
-//                    TransactionsLevelDestination.WEEKLY_TRANSACTIONS -> navController.navigationToWeeklyTransactionsListRoute(
-//                        transactionsLevelNavOptions
-//                    )
-//
-//                    TransactionsLevelDestination.MONTHLY_TRANSACTIONS -> navController.navigationToMonthlyTransactionsListRoute(
-//                        transactionsLevelNavOptions
-//                    )
-//
-//                    TransactionsLevelDestination.ANNUALLY_TRANSACTIONS -> navController.navigationToAnnuallyTransactionsListRoute(
-//                        transactionsLevelNavOptions
-//                    )
-                }
+                navController.navigationToTransactionsRoute(
+                    transactionsLevelDestination = transactionsLevelDestination,
+                    navOptions = transactionsLevelNavOptions
+                )
             }
         )
     }
@@ -201,7 +177,10 @@ class FinanzasAppState(
     }
 
     fun backToHome() {
-        navController.popBackStack(route = ALL_TRANSACTIONS_LIST_ROUTE, inclusive = false)
+        navController.popBackStack(
+            route = "$TRANSACTIONS_ROUTE/${TransactionsLevelDestination.ALL.title}",
+            inclusive = false
+        )
     }
 
     fun shouldShowTransactionsTab(): Boolean {

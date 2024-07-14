@@ -12,10 +12,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -24,12 +23,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,35 +44,20 @@ import com.soleel.finanzas.core.model.Account
 import com.soleel.finanzas.core.model.Transaction
 import com.soleel.finanzas.core.model.TransactionWithAccount
 import com.soleel.finanzas.core.model.TransactionsGroup
-import com.soleel.finanzas.core.ui.R
-import com.soleel.finanzas.core.ui.template.AllTransactionItemDetail
 import com.soleel.finanzas.core.ui.theme.TransactionTypeExpenditureBackgroundColor
 import com.soleel.finanzas.core.ui.theme.TransactionTypeIncomeBackgroundColor
 import com.soleel.finanzas.core.ui.theme.TransactionTypeLetterColor
+import com.soleel.finanzas.domain.formatdate.AllTransactionFormatDateUseCase
+import com.soleel.finanzas.domain.formatdate.AllTransactionsGroupDateUseCase
+import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
+import com.soleel.finanzas.feature.transactions.SummaryTransactionsUiState
 import com.soleel.finanzas.feature.transactions.TransactionsErrorScreen
 import com.soleel.finanzas.feature.transactions.TransactionsGroupUiState
 import com.soleel.finanzas.feature.transactions.TransactionsLoadingScreen
 import com.soleel.finanzas.feature.transactions.TransactionsUiEvent
 import com.soleel.finanzas.feature.transactions.TransactionsViewModel
-import java.text.SimpleDateFormat
+import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination
 import java.util.Date
-import java.util.Locale
-
-@Composable
-internal fun AllTransactionsListRoute(
-    modifier: Modifier = Modifier,
-    finishApp: (Context) -> Unit,
-    viewModel: TransactionsViewModel = hiltViewModel()
-) {
-    val allTransactionsGroupUiState: TransactionsGroupUiState by viewModel.allTransactionsUiState.collectAsState()
-
-    AllTransactionsListScreen(
-        modifier = modifier,
-        finishApp = finishApp,
-        allTransactionsGroupUiState = allTransactionsGroupUiState,
-        onTransactionsUiEvent = viewModel::onTransactionsUiEvent
-    )
-}
 
 @Composable
 fun AllTransactionsListScreen(
@@ -700,7 +686,10 @@ fun AllTransactionsSuccessScreen(
 fun AllTransactionList(
     allTransactionsGroup: List<TransactionsGroup>
 ) {
-    val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
+    val currencyVisualTransformation by remember(calculation = {
+        mutableStateOf(CurrencyVisualTransformation(currencyCode = "USD"))
+    })
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -709,28 +698,52 @@ fun AllTransactionList(
                 action = { group ->
                     stickyHeader(
                         content = {
-                            Row(
-                                modifier = Modifier.fillMaxSize(),
-                                horizontalArrangement = Arrangement.Start,
-                                content = {
-                                    Text(
-                                        text = simpleDateFormat.format(group.date),
-                                        style = TextStyle(fontWeight = FontWeight.Bold),
-                                        modifier = Modifier
-                                            .padding(vertical = 8.dp, horizontal = 16.dp)
-                                    )
-                                }
-                            )
+                            TransactionsGroupDate(date = group.date)
                         }
                     )
 
-                    itemsIndexed(
+                    items(
                         items = group.transactionsWithAccount,
-                        itemContent = { index, transactionWithAccount ->
+                        itemContent = { transactionWithAccount ->
+
+                            val transactionType: TransactionTypeEnum =
+                                transactionWithAccount.transaction.type
+
+                            val transactionTypeIcon: Int = transactionType.icon
+                            val transactionTypeName: String = transactionType.value
+                            val transactionTypeColor: Color =
+                                if (TransactionTypeEnum.INCOME == transactionType)
+                                    TransactionTypeIncomeBackgroundColor
+                                else
+                                    TransactionTypeExpenditureBackgroundColor
+
+                            val transactionCategoryIcon: Int = transactionWithAccount.transaction.category.icon
+                            val transactionName: String = transactionWithAccount.transaction.name
+                            val transactionHour: String = AllTransactionFormatDateUseCase(
+                                transactionWithAccount.transaction.createAt
+                            )
+                            val transactionAmount: String = currencyVisualTransformation
+                                .filter(
+                                    AnnotatedString(
+                                        text = transactionWithAccount
+                                            .account
+                                            .amount
+                                            .toString()
+                                    )
+                                )
+                                .text
+                                .toString()
+                            val accountTypeName: String = transactionWithAccount.account.type.value
+
                             TransactionItem(
-                                currentIndex = index,
-                                lastIndex = group.transactionsWithAccount.lastIndex,
-                                transactionWithAccount = transactionWithAccount,
+                                transactionTypeIcon = transactionTypeIcon,
+                                transactionTypeName = transactionTypeName,
+                                transactionTypeColor = transactionTypeColor,
+                                transactionCategoryIcon = transactionCategoryIcon,
+                                transactionName = transactionName,
+                                transactionHour = transactionHour,
+                                transactionAmount = transactionAmount,
+                                accountTypeName = accountTypeName,
                                 onClick = {}
                             )
                         }
@@ -742,10 +755,33 @@ fun AllTransactionList(
 }
 
 @Composable
+fun TransactionsGroupDate(
+    date: Date
+) {
+    Row(
+        modifier = Modifier.fillMaxSize(),
+        horizontalArrangement = Arrangement.Start,
+        content = {
+            Text(
+                text = AllTransactionsGroupDateUseCase(date),
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier
+                    .padding(vertical = 8.dp, horizontal = 16.dp)
+            )
+        }
+    )
+}
+
+@Composable
 fun TransactionItem(
-    currentIndex: Int,
-    lastIndex: Int,
-    transactionWithAccount: TransactionWithAccount,
+    transactionTypeIcon: Int,
+    transactionTypeName: String,
+    transactionTypeColor: Color,
+    transactionCategoryIcon: Int,
+    transactionName: String,
+    transactionHour: String,
+    transactionAmount: String,
+    accountTypeName: String,
     onClick: () -> Unit
 ) {
     ElevatedCard(
@@ -757,20 +793,32 @@ fun TransactionItem(
             defaultElevation = 6.dp
         ),
         content = {
-            TransactionTypeRow(transactionTypeEnum = transactionWithAccount.transaction.type)
-            TransactionDetailRow(transactionWithAccount = transactionWithAccount)
+            TransactionTypeRow(
+                transactionTypeIcon = transactionTypeIcon,
+                transactionTypeName = transactionTypeName,
+                transactionTypeColor = transactionTypeColor
+            )
+            TransactionDetailRow(
+                transactionCategoryIcon = transactionCategoryIcon,
+                transactionName = transactionName,
+                transactionHour = transactionHour,
+                transactionAmount = transactionAmount,
+                accountTypeName = accountTypeName
+            )
         }
     )
 }
 
 @Composable
 fun TransactionTypeRow(
-    transactionTypeEnum: TransactionTypeEnum
+    transactionTypeIcon: Int,
+    transactionTypeName: String,
+    transactionTypeColor: Color
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = if (TransactionTypeEnum.INCOME == transactionTypeEnum) TransactionTypeIncomeBackgroundColor else TransactionTypeExpenditureBackgroundColor)
+            .background(color = transactionTypeColor)
             .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {
@@ -778,13 +826,13 @@ fun TransactionTypeRow(
                 verticalAlignment = Alignment.CenterVertically,
                 content = {
                     Icon(
-                        painter = painterResource(id = if (TransactionTypeEnum.INCOME == transactionTypeEnum) R.drawable.ic_income else R.drawable.ic_expenditure),
+                        painter = painterResource(id = transactionTypeIcon),
                         contentDescription = "Transaction type",
                         modifier = Modifier.size(16.dp),
                         tint = TransactionTypeLetterColor
                     )
                     Text(
-                        text = transactionTypeEnum.value.uppercase(Locale.getDefault()),
+                        text = transactionTypeName,
                         modifier = Modifier.padding(start = 8.dp),
                         color = TransactionTypeLetterColor,
                         style = MaterialTheme.typography.labelSmall
@@ -797,18 +845,22 @@ fun TransactionTypeRow(
 
 @Composable
 fun TransactionDetailRow(
-    transactionWithAccount: TransactionWithAccount
+    transactionCategoryIcon: Int,
+    transactionName: String,
+    transactionHour: String,
+    transactionAmount: String,
+    accountTypeName: String
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 8.dp),
+            .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         content = {
             Column(
                 content = {
                     Icon(
-                        painter = painterResource(id = if (TransactionTypeEnum.INCOME == transactionWithAccount.transaction.type) R.drawable.ic_income else R.drawable.ic_expenditure),
+                        painter = painterResource(id = transactionCategoryIcon),
                         contentDescription = "Transaction type",
                         modifier = Modifier.size(36.dp)
                     )
@@ -823,12 +875,12 @@ fun TransactionDetailRow(
                     Column(
                         content = {
                             Text(
-                                text = transactionWithAccount.transaction.name,
+                                text = transactionName,
                                 style = MaterialTheme.typography.titleMedium
                             )
 
                             Text(
-                                text = transactionWithAccount.transaction.createAt.toString(),
+                                text = transactionHour,
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
@@ -838,12 +890,12 @@ fun TransactionDetailRow(
                         horizontalAlignment = Alignment.End,
                         content = {
                             Text(
-                                text = transactionWithAccount.transaction.amount.toString(),
+                                text = transactionAmount,
                                 style = MaterialTheme.typography.titleMedium
                             )
 
                             Text(
-                                text = transactionWithAccount.account.type.name,
+                                text = accountTypeName,
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }

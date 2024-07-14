@@ -31,7 +31,7 @@ import com.soleel.finanzas.feature.transactions.navigation.destination.Transacti
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun FinanzasApp(
-    appState: FinanzasAppState = rememberFinanzasAppState()
+    appState: FinanzasAppState
 ) {
     Scaffold(
         modifier = Modifier,

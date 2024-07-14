@@ -1,28 +1,31 @@
 package com.soleel.finanzas.core.common.enums
 
+import com.soleel.finanzas.core.common.R
+
 enum class TransactionCategoryEnum(
     val id: Int,
-    val value: String
+    val value: String,
+    val icon: Int
 ) {
-    INCOME_TRANSFER(id = 11, value = "Transferencia"),
-    INCOME_SALARY(id = 12, value = "Sueldo"),
-    INCOME_SERVICE(id = 13, value = "Servicio prestados"),
-    INCOME_SALES(id = 14, value = "Ventas"),
+    INCOME_TRANSFER(id = 11, value = "Transferencia", icon = R.drawable.ic_income_transfer),
+    INCOME_SALARY(id = 12, value = "Sueldo", icon = R.drawable.ic_income_salary),
+    INCOME_SERVICE(id = 13, value = "Servicio prestados", icon = R.drawable.ic_income_service),
+    INCOME_SALES(id = 14, value = "Ventas", icon = R.drawable.ic_income_sales),
     // Considerar donacion como bono
-    INCOME_BONUS(id = 15, value = "Bono"),
-    INCOME_REFUND(id = 16, value = "Reembolso"),
+    INCOME_BONUS(id = 15, value = "Bono", icon = R.drawable.ic_income_bonus),
+    INCOME_REFUND(id = 16, value = "Reembolso", icon = R.drawable.ic_income_refund),
     // Considerar pago de cuota y aumento de credito, como aumento del amount de la linea de credito
-    INCOME_OTHER(id = 17, value = "Otro"),
+    INCOME_OTHER(id = 17, value = "Otro", icon = R.drawable.ic_income_other),
 
-    EXPENDITURE_TRANSFER(id = 21, value = "Transferencia"),
-    EXPENDITURE_MARKET(id = 22, value = "Despensa"),
+    EXPENDITURE_TRANSFER(id = 21, value = "Transferencia", icon = R.drawable.ic_expenditure_transfer),
+    EXPENDITURE_MARKET(id = 22, value = "Despensa", icon = R.drawable.ic_expenditure_market),
     // Considera: Transporte, Salud
-    EXPENDITURE_SERVICE(id = 23, value = "Servicio obtenidos"),
+    EXPENDITURE_SERVICE(id = 23, value = "Servicio obtenidos", icon = R.drawable.ic_expenditure_service),
     // Considera la compra de cosas para la casa
-    EXPENDITURE_ACQUISITION(id = 24, value = "Adquisicion"),
-    EXPENDITURE_LEASURE(id = 25, value = "Ocio"),
-    EXPENDITURE_GIFT(id = 26, value = "Regalo"),
-    EXPENDITURE_OTHER(id = 27, value = "Otro");
+    EXPENDITURE_ACQUISITION(id = 24, value = "Adquisicion", icon = R.drawable.ic_expenditure_acquisition),
+    EXPENDITURE_LEASURE(id = 25, value = "Ocio", icon = R.drawable.ic_expenditure_leasure),
+    EXPENDITURE_GIFT(id = 26, value = "Regalo", icon = R.drawable.ic_expenditure_gift),
+    EXPENDITURE_OTHER(id = 27, value = "Otro", icon = R.drawable.ic_expenditure_other);
 
     companion object {
         fun fromId(id: Int): TransactionCategoryEnum {

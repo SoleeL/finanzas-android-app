@@ -62,7 +62,7 @@ class TransactionsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val transactionsArgs: TransactionsArgs = TransactionsArgs(savedStateHandle)
-    private val summaryPeriod: TransactionsLevelDestination = transactionsArgs.summaryPeriod
+    val summaryPeriod: TransactionsLevelDestination = transactionsArgs.summaryPeriod
 
     private val _allTransactionsUiState: Flow<TransactionsGroupUiState> = retryableFlowTrigger
         .retryableFlow(flowProvider = { getFlowAllTransactions() })
@@ -93,10 +93,10 @@ class TransactionsViewModel @Inject constructor(
 
     private fun getFlowTransactionsSum(): Flow<SummaryTransactionsUiState> {
         return (when (summaryPeriod) {
-            TransactionsLevelDestination.DAILY_TRANSACTIONS -> getDailyTransactionsUseCase()
-            TransactionsLevelDestination.WEEKLY_TRANSACTIONS -> getWeeklyTransactionsUseCase()
-            TransactionsLevelDestination.MONTHLY_TRANSACTIONS -> getMonthlyTransactionsUseCase()
-            TransactionsLevelDestination.ANNUALLY_TRANSACTIONS -> getAnnuallyTransactionsUseCase()
+            TransactionsLevelDestination.DAILY -> getDailyTransactionsUseCase()
+            TransactionsLevelDestination.WEEKLY -> getWeeklyTransactionsUseCase()
+            TransactionsLevelDestination.MONTHLY -> getMonthlyTransactionsUseCase()
+            TransactionsLevelDestination.ANNUALLY -> getAnnuallyTransactionsUseCase()
             else -> flowOf(emptyList())
         })
             .asResult()

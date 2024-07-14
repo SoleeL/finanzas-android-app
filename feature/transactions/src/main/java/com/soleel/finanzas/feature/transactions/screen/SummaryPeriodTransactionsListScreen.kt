@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -24,23 +22,7 @@ import com.soleel.finanzas.feature.transactions.TransactionsUiEvent
 import com.soleel.finanzas.feature.transactions.TransactionsViewModel
 
 @Composable
-internal fun SummaryPeriodTransactionsListRoute(
-    modifier: Modifier = Modifier,
-    finishApp: (Context) -> Unit,
-    viewModel: TransactionsViewModel = hiltViewModel()
-) {
-    val summaryTransactionsUiState: SummaryTransactionsUiState by viewModel.summaryTransactionsUiState.collectAsState()
-
-    DailyTransactionsListScreen(
-        modifier = modifier,
-        finishApp = finishApp,
-        summaryTransactionsUiState = summaryTransactionsUiState,
-        onTransactionsUiEvent = viewModel::onTransactionsUiEvent
-    )
-}
-
-@Composable
-fun DailyTransactionsListScreen(
+fun SummaryPeriodTransactionsListScreen(
     modifier: Modifier,
     finishApp: (Context) -> Unit,
     summaryTransactionsUiState: SummaryTransactionsUiState,

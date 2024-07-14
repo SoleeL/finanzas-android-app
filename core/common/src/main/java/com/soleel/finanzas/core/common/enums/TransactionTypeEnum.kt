@@ -1,12 +1,15 @@
 package com.soleel.finanzas.core.common.enums
 
+import com.soleel.finanzas.core.common.R
+
 
 enum class TransactionTypeEnum(
     val id: Int,
-    val value: String
+    val value: String,
+    val icon: Int
 ) {
-    INCOME(id = 1, value = "Ingreso"),
-    EXPENDITURE(id = 2, value = "Gasto");
+    INCOME(id = 1, value = "Ingreso", icon = R.drawable.ic_income),
+    EXPENDITURE(id = 2, value = "Gasto", icon = R.drawable.ic_expenditure);
 
     companion object {
         fun fromId(id: Int): TransactionTypeEnum {

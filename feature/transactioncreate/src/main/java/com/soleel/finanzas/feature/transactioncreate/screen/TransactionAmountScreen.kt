@@ -159,7 +159,7 @@ fun TransactionAmountScreen(
                 mutableStateOf(CurrencyVisualTransformation(currencyCode = "USD"))
             })
 
-            val AccountAmount: String = currencyVisualTransformation
+            val accountAmount: String = currencyVisualTransformation
                 .filter(AnnotatedString(text = transactionUiCreate.account.amount.toString()))
                 .text
                 .toString()
@@ -178,7 +178,7 @@ fun TransactionAmountScreen(
                         transactionUIValues = getTransactionUI(
                             accountTypeEnum = AccountTypeEnum.fromId(transactionUiCreate.account.type.id),
                             accountName = transactionUiCreate.account.name,
-                            accountAmount = AccountAmount,
+                            accountAmount = accountAmount,
                             transactionType = TransactionTypeEnum.fromId(transactionUiCreate.transactionType),
                             transactionCategory = TransactionCategoryEnum.fromId(transactionUiCreate.transactionCategory),
                             transactionName = transactionUiCreate.transactionName,

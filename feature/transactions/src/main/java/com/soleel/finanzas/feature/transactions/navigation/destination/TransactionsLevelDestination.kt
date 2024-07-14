@@ -4,27 +4,27 @@ enum class TransactionsLevelDestination(
     val title: String,
     val summaryTitle: String
 ) {
-    ALL_TRANSACTIONS(
+    ALL(
         title = "Todas",
         summaryTitle = "T"
     ),
 
-    DAILY_TRANSACTIONS(
+    DAILY(
         title = "Dia",
         summaryTitle = "D"
     ),
 
-    WEEKLY_TRANSACTIONS(
+    WEEKLY(
         title = "Semana",
         summaryTitle = "S"
     ),
 
-    MONTHLY_TRANSACTIONS(
+    MONTHLY(
         title = "Mes",
         summaryTitle = "M"
     ),
 
-    ANNUALLY_TRANSACTIONS(
+    ANNUALLY(
         title = "Año",
         summaryTitle = "A"
     );
@@ -34,7 +34,11 @@ enum class TransactionsLevelDestination(
             val transactionsLevelDestination: TransactionsLevelDestination? = TransactionsLevelDestination
                 .entries
                 .find(predicate = { it.title == title })
-            return transactionsLevelDestination ?: DAILY_TRANSACTIONS
+            return transactionsLevelDestination ?: ALL
+        }
+
+        fun TransactionsLevelDestination.lowercase(): String {
+            return this.toString().lowercase()
         }
     }
 }

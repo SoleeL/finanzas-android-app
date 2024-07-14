@@ -7,7 +7,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.soleel.finanzas.feature.accounts.AccountsRoute
 
-const val accountsRoute = "_accounts_route"
+const val accountsRoute = "accounts_route"
 
 fun NavController.navigateToAccounts(navOptions: NavOptions? = null) {
     this.navigate(accountsRoute, navOptions)
