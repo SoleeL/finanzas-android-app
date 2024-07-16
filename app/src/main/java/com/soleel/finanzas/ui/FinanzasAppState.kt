@@ -21,7 +21,7 @@ import com.soleel.finanzas.feature.stats.navigation.navigateToStats
 import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionCreateGraph
 import com.soleel.finanzas.feature.transactions.navigation.TRANSACTIONS_ROUTE
 import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination
-import com.soleel.finanzas.feature.transactions.navigation.navigationToTransactionsRoute
+import com.soleel.finanzas.feature.transactions.navigation.navigateToTransactions
 import com.soleel.finanzas.navigation.destination.TopLevelDestination
 import com.soleel.finanzas.navigation.destination.TopLevelDestination.ACCOUNTS
 import com.soleel.finanzas.navigation.destination.TopLevelDestination.PROFILE
@@ -122,16 +122,13 @@ class FinanzasAppState(
                 )
 
                 when (topLevelDestination) {
-                    TRANSACTIONS -> navController.navigationToTransactionsRoute(
-                        transactionsLevelDestination = TransactionsLevelDestination.ALL,
-                        navOptions = topLevelNavOptions
-                    )
+                    TRANSACTIONS -> navController.navigateToTransactions(navOptions = topLevelNavOptions)
 
-                    ACCOUNTS -> navController.navigateToAccounts(topLevelNavOptions)
+                    ACCOUNTS -> navController.navigateToAccounts(navOptions = topLevelNavOptions)
 
-                    STATS -> navController.navigateToStats(topLevelNavOptions)
+                    STATS -> navController.navigateToStats(navOptions = topLevelNavOptions)
 
-                    PROFILE -> navController.navigateToProfile(topLevelNavOptions)
+                    PROFILE -> navController.navigateToProfile(navOptions = topLevelNavOptions)
                 }
             }
         )
@@ -141,31 +138,12 @@ class FinanzasAppState(
         return TransactionsLevelDestination.entries
     }
 
-    fun navigateToTransactionsLevelDestination(transactionsLevelDestination: TransactionsLevelDestination) {
-        trace(
-            label = "Navigation: ${transactionsLevelDestination.name}",
-            block = {
-                val transactionsLevelNavOptions = navOptions(
-                    optionsBuilder = {
-                        popUpTo(
-                            id = navController.graph.findStartDestination().id,
-                            popUpToBuilder = { saveState = true }
-                        )
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                )
-
-                navController.navigationToTransactionsRoute(
-                    transactionsLevelDestination = transactionsLevelDestination,
-                    navOptions = transactionsLevelNavOptions
-                )
-            }
-        )
-    }
-
     fun finishApp(context: Context) {
         (context as Activity).finish()
+    }
+
+    fun navigateToTransactions(transactionsLevelDestination: TransactionsLevelDestination) {
+        navController.navigateToTransactions(transactionsLevelDestination = transactionsLevelDestination)
     }
 
     fun navigateToAccountCreate() {
@@ -178,7 +156,7 @@ class FinanzasAppState(
 
     fun backToHome() {
         navController.popBackStack(
-            route = "$TRANSACTIONS_ROUTE/${TransactionsLevelDestination.ALL.title}",
+            route = TRANSACTIONS_ROUTE,
             inclusive = false
         )
     }

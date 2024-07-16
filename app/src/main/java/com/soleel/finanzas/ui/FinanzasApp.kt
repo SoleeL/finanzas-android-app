@@ -23,9 +23,9 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.soleel.finanzas.feature.add.AddMenuFAB
 import com.soleel.finanzas.feature.cancelalert.CancelAlertDialog
+import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination
 import com.soleel.finanzas.navigation.FinanzasNavHost
 import com.soleel.finanzas.navigation.destination.TopLevelDestination
-import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -36,15 +36,15 @@ fun FinanzasApp(
     Scaffold(
         modifier = Modifier,
         topBar = {
-//            TransactionsTopAppBar(
-//                title = transactionsState.getTitleDestination(),
-//                toTimePeriodSelection = transactionsState.navigateToTimePeriodSelection(),
-//                toSearch = transactionsState.navigateToSearch()
-//            )
+            //            TransactionsTopAppBar(
+            //                title = transactionsState.getTitleDestination(),
+            //                toTimePeriodSelection = transactionsState.navigateToTimePeriodSelection(),
+            //                toSearch = transactionsState.navigateToSearch()
+            //            )
             if (appState.shouldShowTransactionsTab()) {
                 TransactionsTab(
                     destinations = appState.transactionsLevelDestinations(),
-                    onNavigateToDestination = appState::navigateToTransactionsLevelDestination,
+                    onNavigateToDestination = appState::navigateToTransactions,
                     currentDestination = appState.getCurrentDestination()
                 )
             }
@@ -124,7 +124,6 @@ private fun TransactionsTabPreview(
 
 @Composable
 private fun TransactionsTab(
-    modifier: Modifier = Modifier,
     destinations: List<TransactionsLevelDestination>,
     onNavigateToDestination: (TransactionsLevelDestination) -> Unit,
     currentDestination: NavDestination?,
@@ -146,6 +145,13 @@ private fun TransactionsTab(
             }
         }
     )
+}
+
+private fun NavDestination?.getTransactionsLevelIndex(): Int {
+    val topLevelDestination = TransactionsLevelDestination.entries.find(predicate = { destination ->
+        this?.route?.contains(destination.name, ignoreCase = true) ?: false
+    })
+    return topLevelDestination?.ordinal ?: 0
 }
 
 @Composable
@@ -191,24 +197,17 @@ private fun FinanzasBottomBar(
     )
 }
 
-private fun NavDestination?.getTransactionsLevelIndex(): Int {
-    val topLevelDestination = TransactionsLevelDestination.entries.find(predicate = { destination ->
-        this?.route?.contains(destination.name, ignoreCase = true) ?: false
-    })
-    return topLevelDestination?.ordinal ?: 0
-}
-
-private fun NavDestination?.isTransactionsLevelDestinationInHierarchy(index: Int): Boolean {
-    return this?.hierarchy?.any(
-        predicate = {
-            it.route?.contains(
-                other = TransactionsLevelDestination.entries[index].name,
-                ignoreCase = true
-            ) ?: false
-        }
-    ) ?: false
-}
-
+//private fun NavDestination?.isTransactionsLevelDestinationInHierarchy(index: Int): Boolean {
+//    return this?.hierarchy?.any(
+//        predicate = {
+//            it.route?.contains(
+//                other = TransactionsLevelDestination.entries[index].name,
+//                ignoreCase = true
+//            ) ?: false
+//        }
+//    ) ?: false
+//}
+//
 
 private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLevelDestination): Boolean {
     return this?.hierarchy?.any(

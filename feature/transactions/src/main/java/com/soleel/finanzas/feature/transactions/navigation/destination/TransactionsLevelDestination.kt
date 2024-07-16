@@ -33,7 +33,7 @@ enum class TransactionsLevelDestination(
         fun fromTitle(title: String): TransactionsLevelDestination {
             val transactionsLevelDestination: TransactionsLevelDestination? = TransactionsLevelDestination
                 .entries
-                .find(predicate = { it.title == title })
+                .find(predicate = { it.name == title.uppercase() })
             return transactionsLevelDestination ?: ALL
         }
 

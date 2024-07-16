@@ -15,11 +15,9 @@ import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransa
 import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionNameRoute
 import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionTypeRoute
 import com.soleel.finanzas.feature.transactioncreate.navigation.transactionCreateGraph
-import com.soleel.finanzas.feature.transactions.navigation.SUMMARY_PERIOD_ARG
 import com.soleel.finanzas.feature.transactions.navigation.TRANSACTIONS_ROUTE
-import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination
-import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination.Companion.lowercase
-import com.soleel.finanzas.feature.transactions.navigation.transactionsScreen
+import com.soleel.finanzas.feature.transactions.navigation.navigateToTransactions
+import com.soleel.finanzas.feature.transactions.navigation.transactionGraph
 import com.soleel.finanzas.ui.FinanzasAppState
 
 
@@ -27,7 +25,7 @@ import com.soleel.finanzas.ui.FinanzasAppState
 fun FinanzasNavHost(
     appState: FinanzasAppState,
     modifier: Modifier = Modifier,
-    startDestination: String = "$TRANSACTIONS_ROUTE/{$SUMMARY_PERIOD_ARG}",
+    startDestination: String = TRANSACTIONS_ROUTE,
 ) {
     val navController = appState.navController
 
@@ -36,7 +34,8 @@ fun FinanzasNavHost(
         startDestination = startDestination,
         modifier = modifier,
         builder = {
-            transactionsScreen(
+            transactionGraph(
+                navController::navigateToTransactions,
                 finishApp = appState::finishApp
             )
 

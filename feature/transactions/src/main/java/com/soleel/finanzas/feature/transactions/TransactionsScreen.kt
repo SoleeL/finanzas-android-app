@@ -53,7 +53,6 @@ internal fun TransactionsListRoute(
     }
 }
 
-
 @Composable
 fun TransactionsErrorScreen(
     modifier: Modifier = Modifier,
