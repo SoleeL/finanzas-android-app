@@ -9,23 +9,30 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.soleel.finanzas.feature.transactions.TransactionsListRoute
 import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination
 import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination.Companion.lowercase
+import com.soleel.finanzas.feature.transactions.screen.AllTransactionsListRoute
+import com.soleel.finanzas.feature.transactions.screen.SummaryPeriodTransactionsListRoute
 import java.net.URLDecoder
 import java.net.URLEncoder
 import kotlin.text.Charsets.UTF_8
 
 private val URL_CHARACTER_ENCODING = UTF_8.name()
 
-const val TRANSACTIONS_ROUTE = "transactions_route" // Las rutas con _
+const val TRANSACTIONS_ROUTE = "transactions"
+
+const val ALL_TRANSACTIONS_ROUTE = "$TRANSACTIONS_ROUTE/all"
+const val DAILY_TRANSACTIONS_ROUTE = "$TRANSACTIONS_ROUTE/daily"
+const val WEEKLY_TRANSACTIONS_ROUTE = "$TRANSACTIONS_ROUTE/weekly"
+const val MONTHLY_TRANSACTIONS_ROUTE = "$TRANSACTIONS_ROUTE/monthly"
+const val ANNUALLY_TRANSACTIONS_ROUTE = "$TRANSACTIONS_ROUTE/annually"
 
 const val SUMMARY_PERIOD_ARG = "summaryPeriod" // Los argumentos son con camellcase
 
 internal class TransactionsArgs(val summaryPeriod: TransactionsLevelDestination) {
     constructor(savedStateHandle: SavedStateHandle) :
             this(
-                summaryPeriod = TransactionsLevelDestination.fromTitle(
+                summaryPeriod = TransactionsLevelDestination.fromName(
                     URLDecoder.decode(
                         checkNotNull(savedStateHandle[SUMMARY_PERIOD_ARG]),
                         URL_CHARACTER_ENCODING
@@ -34,19 +41,25 @@ internal class TransactionsArgs(val summaryPeriod: TransactionsLevelDestination)
             )
 }
 
-fun NavController.navigateToTransactions(
-    transactionsLevelDestination: TransactionsLevelDestination = TransactionsLevelDestination.ALL,
+fun NavController.navigateToAllTransactions(
+    navOptions: NavOptions? = null
+) {
+    this.navigate(ALL_TRANSACTIONS_ROUTE, navOptions)
+}
+
+fun NavController.navigateToSummaryPeriodTransactions(
+    transactionsLevelDestination: TransactionsLevelDestination,
     navOptions: NavOptions? = null
 ) {
     this.navigate(createRoute(subRoute = transactionsLevelDestination.lowercase()), navOptions)
 }
 
-fun createRoute(subRoute: String): String {
+private fun createRoute(subRoute: String): String {
     val encodedSubRoute = URLEncoder.encode(subRoute, URL_CHARACTER_ENCODING)
     return "$TRANSACTIONS_ROUTE/$encodedSubRoute"
 }
 
-fun NavGraphBuilder.transactionGraph(
+fun NavGraphBuilder.transactionsGraph(
     finishApp: (Context) -> Unit
 ) {
     navigation(
@@ -54,43 +67,118 @@ fun NavGraphBuilder.transactionGraph(
         route = TRANSACTIONS_ROUTE,
         builder = {
             allTransactionsScreen(finishApp = finishApp)
-            transactionsScreen(finishApp = finishApp)
+            dailyTransactionsScreen(finishApp = finishApp)
+            weeklyTransactionsScreen(finishApp = finishApp)
+            monthlyTransactionsScreen(finishApp = finishApp)
+            annuallyTransactionsScreen(finishApp = finishApp)
         }
     )
 }
 
-fun NavGraphBuilder.allTransactionsScreen(
+private fun NavGraphBuilder.allTransactionsScreen(
     finishApp: (Context) -> Unit
 ) {
     composable(
-        route = "$TRANSACTIONS_ROUTE/all",
+        route = ALL_TRANSACTIONS_ROUTE,
         arguments = listOf(
             navArgument(
                 name = SUMMARY_PERIOD_ARG,
-                builder = { type = NavType.StringType; defaultValue = "all" }
+                builder = {
+                    type = NavType.StringType; defaultValue =
+                    TransactionsLevelDestination.ALL.lowercase()
+                }
             )
         ),
         content = {
-            TransactionsListRoute(
+            AllTransactionsListRoute(
                 finishApp = finishApp
             )
         }
     )
 }
 
-fun NavGraphBuilder.transactionsScreen(
+private fun NavGraphBuilder.dailyTransactionsScreen(
     finishApp: (Context) -> Unit
 ) {
     composable(
-        route = "$TRANSACTIONS_ROUTE/{$SUMMARY_PERIOD_ARG}",
+        route = DAILY_TRANSACTIONS_ROUTE,
         arguments = listOf(
             navArgument(
                 name = SUMMARY_PERIOD_ARG,
-                builder = { type = NavType.StringType }
+                builder = {
+                    type = NavType.StringType; defaultValue =
+                    TransactionsLevelDestination.DAILY.lowercase()
+                }
             )
         ),
         content = {
-            TransactionsListRoute(
+            SummaryPeriodTransactionsListRoute(
+                finishApp = finishApp
+            )
+        }
+    )
+}
+
+private fun NavGraphBuilder.weeklyTransactionsScreen(
+    finishApp: (Context) -> Unit
+) {
+    composable(
+        route = WEEKLY_TRANSACTIONS_ROUTE,
+        arguments = listOf(
+            navArgument(
+                name = SUMMARY_PERIOD_ARG,
+                builder = {
+                    type = NavType.StringType; defaultValue =
+                    TransactionsLevelDestination.WEEKLY.lowercase()
+                }
+            )
+        ),
+        content = {
+            SummaryPeriodTransactionsListRoute(
+                finishApp = finishApp
+            )
+        }
+    )
+}
+
+private fun NavGraphBuilder.monthlyTransactionsScreen(
+    finishApp: (Context) -> Unit
+) {
+    composable(
+        route = MONTHLY_TRANSACTIONS_ROUTE,
+        arguments = listOf(
+            navArgument(
+                name = SUMMARY_PERIOD_ARG,
+                builder = {
+                    type = NavType.StringType; defaultValue =
+                    TransactionsLevelDestination.MONTHLY.lowercase()
+                }
+            )
+        ),
+        content = {
+            SummaryPeriodTransactionsListRoute(
+                finishApp = finishApp
+            )
+        }
+    )
+}
+
+private fun NavGraphBuilder.annuallyTransactionsScreen(
+    finishApp: (Context) -> Unit
+) {
+    composable(
+        route = ANNUALLY_TRANSACTIONS_ROUTE,
+        arguments = listOf(
+            navArgument(
+                name = SUMMARY_PERIOD_ARG,
+                builder = {
+                    type = NavType.StringType; defaultValue =
+                    TransactionsLevelDestination.ANNUALLY.lowercase()
+                }
+            )
+        ),
+        content = {
+            SummaryPeriodTransactionsListRoute(
                 finishApp = finishApp
             )
         }

@@ -21,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,6 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.soleel.finanzas.core.common.enums.AccountTypeEnum
 import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
 import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
@@ -52,7 +54,25 @@ import com.soleel.finanzas.feature.transactions.TransactionsErrorScreen
 import com.soleel.finanzas.feature.transactions.TransactionsGroupUiState
 import com.soleel.finanzas.feature.transactions.TransactionsLoadingScreen
 import com.soleel.finanzas.feature.transactions.TransactionsUiEvent
+import com.soleel.finanzas.feature.transactions.TransactionsViewModel
 import java.util.Date
+
+
+@Composable
+internal fun AllTransactionsListRoute(
+    modifier: Modifier = Modifier,
+    finishApp: (Context) -> Unit,
+    viewModel: TransactionsViewModel = hiltViewModel()
+) {
+    val allTransactionsGroupUiState: TransactionsGroupUiState by viewModel.allTransactionsUiState.collectAsState()
+
+    AllTransactionsListScreen(
+        modifier = modifier,
+        finishApp = finishApp,
+        allTransactionsGroupUiState = allTransactionsGroupUiState,
+        onTransactionsUiEvent = viewModel::onTransactionsUiEvent,
+    )
+}
 
 @Composable
 fun AllTransactionsListScreen(

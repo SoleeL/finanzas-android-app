@@ -30,7 +30,7 @@ enum class TransactionsLevelDestination(
     );
 
     companion object {
-        fun fromTitle(title: String): TransactionsLevelDestination {
+        fun fromName(title: String): TransactionsLevelDestination {
             val transactionsLevelDestination: TransactionsLevelDestination? = TransactionsLevelDestination
                 .entries
                 .find(predicate = { it.name == title.uppercase() })

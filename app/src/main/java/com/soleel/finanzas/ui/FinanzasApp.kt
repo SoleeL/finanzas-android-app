@@ -1,7 +1,6 @@
 package com.soleel.finanzas.ui
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +22,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.soleel.finanzas.feature.add.AddMenuFAB
 import com.soleel.finanzas.feature.cancelalert.CancelAlertDialog
+import com.soleel.finanzas.feature.transactions.navigation.SUMMARY_PERIOD_ARG
 import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination
 import com.soleel.finanzas.navigation.FinanzasNavHost
 import com.soleel.finanzas.navigation.destination.TopLevelDestination
@@ -128,17 +128,17 @@ private fun TransactionsTab(
     onNavigateToDestination: (TransactionsLevelDestination) -> Unit,
     currentDestination: NavDestination?,
 ) {
-    val currentDestinationIndex: Int = currentDestination.getTransactionsLevelIndex()
+    val currentTransactionsLevel: TransactionsLevelDestination = currentDestination?.getTransactionsLevel() ?: TransactionsLevelDestination.ALL
+
     TabRow(
-        selectedTabIndex = currentDestinationIndex,
+        selectedTabIndex = currentTransactionsLevel.ordinal,
         tabs = {
-            destinations.forEachIndexed { index, title ->
+            destinations.forEachIndexed { index, transactionsLevel ->
                 Tab(
-                    text = { Text(title.summaryTitle) },
-                    selected = currentDestinationIndex == index,
+                    text = { Text(transactionsLevel.summaryTitle) },
+                    selected = currentTransactionsLevel.ordinal == index,
                     enabled = true,
                     onClick = {
-                        Log.d("TransactionsTab", "Tab clicked: ${title.summaryTitle}")
                         onNavigateToDestination(TransactionsLevelDestination.entries[index])
                     },
                 )
@@ -147,11 +147,9 @@ private fun TransactionsTab(
     )
 }
 
-private fun NavDestination?.getTransactionsLevelIndex(): Int {
-    val topLevelDestination = TransactionsLevelDestination.entries.find(predicate = { destination ->
-        this?.route?.contains(destination.name, ignoreCase = true) ?: false
-    })
-    return topLevelDestination?.ordinal ?: 0
+fun NavDestination.getTransactionsLevel(): TransactionsLevelDestination {
+    val summaryPeriodArg: String = this.arguments[SUMMARY_PERIOD_ARG]?.defaultValue.toString()
+    return TransactionsLevelDestination.fromName(summaryPeriodArg)
 }
 
 @Composable
@@ -196,18 +194,6 @@ private fun FinanzasBottomBar(
         }
     )
 }
-
-//private fun NavDestination?.isTransactionsLevelDestinationInHierarchy(index: Int): Boolean {
-//    return this?.hierarchy?.any(
-//        predicate = {
-//            it.route?.contains(
-//                other = TransactionsLevelDestination.entries[index].name,
-//                ignoreCase = true
-//            ) ?: false
-//        }
-//    ) ?: false
-//}
-//
 
 private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLevelDestination): Boolean {
     return this?.hierarchy?.any(

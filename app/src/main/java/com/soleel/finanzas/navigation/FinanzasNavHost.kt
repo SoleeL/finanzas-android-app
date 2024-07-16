@@ -16,8 +16,7 @@ import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransa
 import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionTypeRoute
 import com.soleel.finanzas.feature.transactioncreate.navigation.transactionCreateGraph
 import com.soleel.finanzas.feature.transactions.navigation.TRANSACTIONS_ROUTE
-import com.soleel.finanzas.feature.transactions.navigation.navigateToTransactions
-import com.soleel.finanzas.feature.transactions.navigation.transactionGraph
+import com.soleel.finanzas.feature.transactions.navigation.transactionsGraph
 import com.soleel.finanzas.ui.FinanzasAppState
 
 
@@ -34,8 +33,7 @@ fun FinanzasNavHost(
         startDestination = startDestination,
         modifier = modifier,
         builder = {
-            transactionGraph(
-                navController::navigateToTransactions,
+            transactionsGraph(
                 finishApp = appState::finishApp
             )
 

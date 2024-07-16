@@ -21,7 +21,8 @@ import com.soleel.finanzas.feature.stats.navigation.navigateToStats
 import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionCreateGraph
 import com.soleel.finanzas.feature.transactions.navigation.TRANSACTIONS_ROUTE
 import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination
-import com.soleel.finanzas.feature.transactions.navigation.navigateToTransactions
+import com.soleel.finanzas.feature.transactions.navigation.navigateToAllTransactions
+import com.soleel.finanzas.feature.transactions.navigation.navigateToSummaryPeriodTransactions
 import com.soleel.finanzas.navigation.destination.TopLevelDestination
 import com.soleel.finanzas.navigation.destination.TopLevelDestination.ACCOUNTS
 import com.soleel.finanzas.navigation.destination.TopLevelDestination.PROFILE
@@ -122,7 +123,7 @@ class FinanzasAppState(
                 )
 
                 when (topLevelDestination) {
-                    TRANSACTIONS -> navController.navigateToTransactions(navOptions = topLevelNavOptions)
+                    TRANSACTIONS -> navController.navigateToAllTransactions(navOptions = topLevelNavOptions)
 
                     ACCOUNTS -> navController.navigateToAccounts(navOptions = topLevelNavOptions)
 
@@ -138,12 +139,52 @@ class FinanzasAppState(
         return TransactionsLevelDestination.entries
     }
 
+//    fun navigateToTransactionsLevelDestination(transactionsLevelDestination: TransactionsLevelDestination) {
+//        trace(
+//            label = "Navigation: ${transactionsLevelDestination.name}",
+//            block = {
+//                val transactionsLevelNavOptions = navOptions(
+//                    optionsBuilder = {
+//                        popUpTo(
+//                            id = navController.graph.findStartDestination().id,
+//                            popUpToBuilder = { saveState = true }
+//                        )
+//                        launchSingleTop = true
+//                        restoreState = true
+//                    }
+//                )
+//
+//                when (transactionsLevelDestination) {
+//                    TransactionsLevelDestination.ALL -> navController.navigateToAllTransactions(
+//                        navOptions = transactionsLevelNavOptions
+//                    )
+//
+//                    TransactionsLevelDestination.DAILY -> navController.navigateToDailyTransactions(
+//                        navOptions = transactionsLevelNavOptions
+//                    )
+//
+//                    TransactionsLevelDestination.WEEKLY -> navController.navigateToWeeklyTransactions(
+//                        navOptions = transactionsLevelNavOptions
+//                    )
+//
+//                    TransactionsLevelDestination.MONTHLY -> navController.navigateToMonthlyTransactions(
+//                        navOptions = transactionsLevelNavOptions
+//                    )
+//
+//                    TransactionsLevelDestination.ANNUALLY -> navController.navigateToAnnuallyTransactions(
+//                        navOptions = transactionsLevelNavOptions
+//                    )
+//                }
+//            }
+//        )
+//    }
+
     fun finishApp(context: Context) {
         (context as Activity).finish()
     }
 
     fun navigateToTransactions(transactionsLevelDestination: TransactionsLevelDestination) {
-        navController.navigateToTransactions(transactionsLevelDestination = transactionsLevelDestination)
+        navController.navigateToSummaryPeriodTransactions(transactionsLevelDestination = transactionsLevelDestination)
     }
 
     fun navigateToAccountCreate() {
