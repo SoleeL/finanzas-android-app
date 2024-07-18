@@ -7,8 +7,8 @@ import com.soleel.finanzas.core.common.result.Result
 import com.soleel.finanzas.core.common.result.asResult
 import com.soleel.finanzas.core.common.retryflow.RetryableFlowTrigger
 import com.soleel.finanzas.core.common.retryflow.retryableFlow
-import com.soleel.finanzas.core.model.SummaryTransactions
 import com.soleel.finanzas.core.model.TransactionsGroup
+import com.soleel.finanzas.core.model.TransactionsSummary
 import com.soleel.finanzas.domain.transactions.GetAllTransactionsUseCase
 import com.soleel.finanzas.domain.transactions.GetAnnuallyTransactionsUseCase
 import com.soleel.finanzas.domain.transactions.GetDailyTransactionsUseCase
@@ -28,20 +28,20 @@ import javax.inject.Inject
 
 sealed interface TransactionsGroupUiState {
     data class Success(
-        val transactionsGroup: List<TransactionsGroup>
+        val transactionsGroupList: List<TransactionsGroup>
     ) : TransactionsGroupUiState
 
     data object Error : TransactionsGroupUiState
     data object Loading : TransactionsGroupUiState
 }
 
-sealed interface SummaryTransactionsUiState {
+sealed interface TransactionsSummaryUiState {
     data class Success(
-        val summaryTransactions: List<SummaryTransactions>
-    ) : SummaryTransactionsUiState
+        val transactionsSummaryList: List<TransactionsSummary>
+    ) : TransactionsSummaryUiState
 
-    data object Error : SummaryTransactionsUiState
-    data object Loading : SummaryTransactionsUiState
+    data object Error : TransactionsSummaryUiState
+    data object Loading : TransactionsSummaryUiState
 }
 
 sealed class TransactionsUiEvent {
@@ -76,7 +76,7 @@ class TransactionsViewModel @Inject constructor(
     private fun getTransactionsGroupData(transactionsGroup: Result<List<TransactionsGroup>>): TransactionsGroupUiState {
         return when (transactionsGroup) {
             is Result.Loading -> TransactionsGroupUiState.Loading
-            is Result.Success -> TransactionsGroupUiState.Success(transactionsGroup = transactionsGroup.data)
+            is Result.Success -> TransactionsGroupUiState.Success(transactionsGroupList = transactionsGroup.data)
             else -> TransactionsGroupUiState.Error
         }
     }
@@ -88,10 +88,10 @@ class TransactionsViewModel @Inject constructor(
             initialValue = TransactionsGroupUiState.Loading
         )
 
-    private val _summaryTransactionsUiState: Flow<SummaryTransactionsUiState> = retryableFlowTrigger
+    private val _transactionsSummaryUiState: Flow<TransactionsSummaryUiState> = retryableFlowTrigger
         .retryableFlow(flowProvider = { getFlowTransactionsSum() })
 
-    private fun getFlowTransactionsSum(): Flow<SummaryTransactionsUiState> {
+    private fun getFlowTransactionsSum(): Flow<TransactionsSummaryUiState> {
         return (when (summaryPeriod) {
             TransactionsLevelDestination.DAILY -> getDailyTransactionsUseCase()
             TransactionsLevelDestination.WEEKLY -> getWeeklyTransactionsUseCase()
@@ -103,19 +103,19 @@ class TransactionsViewModel @Inject constructor(
             .map(transform = { this.getTransactionsSumData(it) })
     }
 
-    private fun getTransactionsSumData(summaryTransactions: Result<List<SummaryTransactions>>): SummaryTransactionsUiState {
+    private fun getTransactionsSumData(summaryTransactions: Result<List<TransactionsSummary>>): TransactionsSummaryUiState {
         return when (summaryTransactions) {
-            is Result.Loading -> SummaryTransactionsUiState.Loading
-            is Result.Success -> SummaryTransactionsUiState.Success(summaryTransactions = summaryTransactions.data)
-            else -> SummaryTransactionsUiState.Error
+            is Result.Loading -> TransactionsSummaryUiState.Loading
+            is Result.Success -> TransactionsSummaryUiState.Success(transactionsSummaryList = summaryTransactions.data)
+            else -> TransactionsSummaryUiState.Error
         }
     }
 
-    val summaryTransactionsUiState: StateFlow<SummaryTransactionsUiState> =
-        _summaryTransactionsUiState.stateIn(
+    val transactionsSummaryUiState: StateFlow<TransactionsSummaryUiState> =
+        _transactionsSummaryUiState.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
-            initialValue = SummaryTransactionsUiState.Loading
+            initialValue = TransactionsSummaryUiState.Loading
         )
 
     fun onTransactionsUiEvent(event: TransactionsUiEvent) {

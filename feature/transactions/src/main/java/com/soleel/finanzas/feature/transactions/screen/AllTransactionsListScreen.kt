@@ -75,7 +75,7 @@ internal fun AllTransactionsListRoute(
 }
 
 @Composable
-fun AllTransactionsListScreen(
+private fun AllTransactionsListScreen(
     modifier: Modifier,
     finishApp: (Context) -> Unit,
     allTransactionsGroupUiState: TransactionsGroupUiState,
@@ -84,13 +84,15 @@ fun AllTransactionsListScreen(
 
     val context: Context = LocalContext.current
 
-    BackHandler(enabled = true, onBack = {
-        finishApp(context)
-    })
+    BackHandler(
+        enabled = true,
+        onBack = {
+            finishApp(context)
+        })
 
     when (allTransactionsGroupUiState) {
         is TransactionsGroupUiState.Success -> AllTransactionsSuccessScreen(
-            allTransactionsGroupUiState.transactionsGroup
+            allTransactionsGroup = allTransactionsGroupUiState.transactionsGroupList
         )
 
         is TransactionsGroupUiState.Error -> TransactionsErrorScreen(
@@ -104,7 +106,7 @@ fun AllTransactionsListScreen(
 
 @Composable
 @Preview
-fun AllTransactionsSuccessScreenPreview() {
+private fun AllTransactionsSuccessScreenPreview() {
     Column(modifier = Modifier.background(color = Color.White), content = {
         AllTransactionsSuccessScreen(
             allTransactionsGroup = listOf(
@@ -633,7 +635,7 @@ fun AllTransactionsSuccessScreenPreview() {
 }
 
 @Composable
-fun AllTransactionsSuccessScreen(
+private fun AllTransactionsSuccessScreen(
     allTransactionsGroup: List<TransactionsGroup>
 ) {
     if (allTransactionsGroup.isEmpty()) {
@@ -650,64 +652,71 @@ fun AllTransactionsSuccessScreen(
             )
         })
     } else {
-        AllTransactionList(allTransactionsGroup = allTransactionsGroup)
+        AllTransactionList(transactionsGroup = allTransactionsGroup)
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun AllTransactionList(
-    allTransactionsGroup: List<TransactionsGroup>
+private fun AllTransactionList(
+    transactionsGroup: List<TransactionsGroup>
 ) {
 
     val currencyVisualTransformation by remember(calculation = {
         mutableStateOf(CurrencyVisualTransformation(currencyCode = "USD"))
     })
 
-    LazyColumn(modifier = Modifier.fillMaxSize(), content = {
-        allTransactionsGroup.forEach(action = { group ->
-            stickyHeader(content = {
-                TransactionsGroupDate(date = group.date)
-            })
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        content = {
+            transactionsGroup.forEach(
+                action = { group ->
+                    stickyHeader(content = {
+                        TransactionsGroupDate(date = group.date)
+                    })
 
-            items(items = group.transactionsWithAccount, itemContent = { transactionWithAccount ->
+                    items(
+                        items = group.transactionsWithAccount,
+                        itemContent = { transactionWithAccount ->
 
-                val transactionType: TransactionTypeEnum = transactionWithAccount.transaction.type
+                            val transactionType: TransactionTypeEnum =
+                                transactionWithAccount.transaction.type
 
-                val transactionTypeIcon: Int = transactionType.icon
-                val transactionTypeName: String = transactionType.value
-                val transactionTypeColor: Color =
-                    if (TransactionTypeEnum.INCOME == transactionType) TransactionTypeIncomeBackgroundColor
-                    else TransactionTypeExpenditureBackgroundColor
+                            val transactionTypeIcon: Int = transactionType.icon
+                            val transactionTypeName: String = transactionType.value
+                            val transactionTypeColor: Color =
+                                if (TransactionTypeEnum.INCOME == transactionType) TransactionTypeIncomeBackgroundColor
+                                else TransactionTypeExpenditureBackgroundColor
 
-                val transactionCategoryIcon: Int = transactionWithAccount.transaction.category.icon
-                val transactionName: String = transactionWithAccount.transaction.name
-                val transactionHour: String = AllTransactionFormatDateUseCase(
-                    transactionWithAccount.transaction.createAt
-                )
-                val transactionAmount: String = currencyVisualTransformation.filter(
-                    AnnotatedString(
-                        text = transactionWithAccount.account.amount.toString()
-                    )
-                ).text.toString()
-                val accountTypeName: String = transactionWithAccount.account.type.value
+                            val transactionCategoryIcon: Int =
+                                transactionWithAccount.transaction.category.icon
+                            val transactionName: String = transactionWithAccount.transaction.name
+                            val transactionHour: String = AllTransactionFormatDateUseCase(
+                                transactionWithAccount.transaction.createAt
+                            )
+                            val transactionAmount: String = currencyVisualTransformation.filter(
+                                AnnotatedString(
+                                    text = transactionWithAccount.account.amount.toString()
+                                )
+                            ).text.toString()
+                            val accountTypeName: String = transactionWithAccount.account.type.value
 
-                TransactionItem(transactionTypeIcon = transactionTypeIcon,
-                    transactionTypeName = transactionTypeName,
-                    transactionTypeColor = transactionTypeColor,
-                    transactionCategoryIcon = transactionCategoryIcon,
-                    transactionName = transactionName,
-                    transactionHour = transactionHour,
-                    transactionAmount = transactionAmount,
-                    accountTypeName = accountTypeName,
-                    onClick = {})
-            })
+                            TransactionGroupItem(transactionTypeIcon = transactionTypeIcon,
+                                transactionTypeName = transactionTypeName,
+                                transactionTypeColor = transactionTypeColor,
+                                transactionCategoryIcon = transactionCategoryIcon,
+                                transactionName = transactionName,
+                                transactionHour = transactionHour,
+                                transactionAmount = transactionAmount,
+                                accountTypeName = accountTypeName,
+                                onClick = {})
+                        })
+                })
         })
-    })
 }
 
 @Composable
-fun TransactionsGroupDate(
+private fun TransactionsGroupDate(
     date: Date
 ) {
     Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.Start, content = {
@@ -720,7 +729,7 @@ fun TransactionsGroupDate(
 }
 
 @Composable
-fun TransactionItem(
+private fun TransactionGroupItem(
     transactionTypeIcon: Int,
     transactionTypeName: String,
     transactionTypeColor: Color,
@@ -755,7 +764,7 @@ fun TransactionItem(
 }
 
 @Composable
-fun TransactionTypeRow(
+private fun TransactionTypeRow(
     transactionTypeIcon: Int, transactionTypeName: String, transactionTypeColor: Color
 ) {
     Column(modifier = Modifier
@@ -782,7 +791,7 @@ fun TransactionTypeRow(
 }
 
 @Composable
-fun TransactionDetailRow(
+private fun TransactionDetailRow(
     transactionCategoryIcon: Int,
     transactionName: String,
     transactionHour: String,
