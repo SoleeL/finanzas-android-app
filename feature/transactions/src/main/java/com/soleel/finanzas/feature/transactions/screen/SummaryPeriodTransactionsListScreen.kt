@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -132,6 +133,7 @@ private fun TransactionsSummaryList(
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(bottom = 72.dp),
         content = {
             transactionsSummaryList.forEach(
                 action = { summary ->
@@ -144,25 +146,27 @@ private fun TransactionsSummaryList(
                     items(
                         items = summary.transactions,
                         itemContent = { transactionSummary ->
-                            val summaryExpenditureAmount: String =
-                                currencyVisualTransformation.filter(
-                                    AnnotatedString(
-                                        text = transactionSummary.amount.toString()
-                                    )
-                                ).text.toString()
+                            if (0 != transactionSummary.amount) {
+                                val summaryExpenditureAmount: String =
+                                    currencyVisualTransformation.filter(
+                                        AnnotatedString(
+                                            text = transactionSummary.amount.toString()
+                                        )
+                                    ).text.toString()
 
-                            val typeColor: Color =
-                                if (TransactionTypeEnum.INCOME == transactionSummary.type)
-                                    TransactionTypeIncomeBackgroundColor else TransactionTypeExpenditureBackgroundColor
+                                val typeColor: Color =
+                                    if (TransactionTypeEnum.INCOME == transactionSummary.type)
+                                        TransactionTypeIncomeBackgroundColor else TransactionTypeExpenditureBackgroundColor
 
-                            TransactionSummaryItem(
-                                typeIcon = transactionSummary.type.icon,
-                                typeName = transactionSummary.type.value,
-                                typeColor = typeColor,
-                                name = transactionSummary.name,
-                                amount = summaryExpenditureAmount,
-                                onClick = {}
-                            )
+                                TransactionSummaryItem(
+                                    typeIcon = transactionSummary.type.icon,
+                                    typeName = transactionSummary.type.value,
+                                    typeColor = typeColor,
+                                    name = transactionSummary.name,
+                                    amount = summaryExpenditureAmount,
+                                    onClick = {}
+                                )
+                            }
                         }
                     )
                 }
@@ -175,13 +179,19 @@ private fun TransactionsSummaryList(
 private fun TransactionsGroupDate(
     date: Date
 ) {
-    Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.Start, content = {
-        Text(
-            text = AllTransactionsGroupDateUseCase(date),
-            style = MaterialTheme.typography.labelMedium,
-            modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
-        )
-    })
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color.White),
+        horizontalArrangement = Arrangement.Start,
+        content = {
+            Text(
+                text = AllTransactionsGroupDateUseCase(date),
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
+            )
+        }
+    )
 }
 
 @Composable

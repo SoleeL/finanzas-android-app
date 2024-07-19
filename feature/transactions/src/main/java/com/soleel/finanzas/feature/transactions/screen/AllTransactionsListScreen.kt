@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -639,18 +641,20 @@ private fun AllTransactionsSuccessScreen(
     allTransactionsGroup: List<TransactionsGroup>
 ) {
     if (allTransactionsGroup.isEmpty()) {
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .wrapContentSize(Alignment.Center), content = {
-            Text(
-                text = "No existen transacciones actualmente.",
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                textAlign = TextAlign.Center,
-                fontSize = 16.sp
-            )
-        })
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentSize(Alignment.Center),
+            content = {
+                Text(
+                    text = "No existen transacciones actualmente.",
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp
+                )
+            })
     } else {
         AllTransactionList(transactionsGroup = allTransactionsGroup)
     }
@@ -668,12 +672,15 @@ private fun AllTransactionList(
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(bottom = 72.dp),
         content = {
             transactionsGroup.forEach(
                 action = { group ->
-                    stickyHeader(content = {
-                        TransactionsGroupDate(date = group.date)
-                    })
+                    stickyHeader(
+                        content = {
+                            TransactionsGroupDate(date = group.date)
+                        }
+                    )
 
                     items(
                         items = group.transactionsWithAccount,
@@ -696,7 +703,7 @@ private fun AllTransactionList(
                             )
                             val transactionAmount: String = currencyVisualTransformation.filter(
                                 AnnotatedString(
-                                    text = transactionWithAccount.account.amount.toString()
+                                    text = transactionWithAccount.transaction.amount.toString()
                                 )
                             ).text.toString()
                             val accountTypeName: String = transactionWithAccount.account.type.value
@@ -709,23 +716,32 @@ private fun AllTransactionList(
                                 transactionHour = transactionHour,
                                 transactionAmount = transactionAmount,
                                 accountTypeName = accountTypeName,
-                                onClick = {})
-                        })
-                })
-        })
+                                onClick = {}
+                            )
+                        }
+                    )
+                }
+            )
+        }
+    )
 }
 
 @Composable
 private fun TransactionsGroupDate(
     date: Date
 ) {
-    Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.Start, content = {
-        Text(
-            text = AllTransactionsGroupDateUseCase(date),
-            style = MaterialTheme.typography.labelMedium,
-            modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
-        )
-    })
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color.White),
+        horizontalArrangement = Arrangement.Start,
+        content = {
+            Text(
+                text = AllTransactionsGroupDateUseCase(date),
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
+            )
+        })
 }
 
 @Composable

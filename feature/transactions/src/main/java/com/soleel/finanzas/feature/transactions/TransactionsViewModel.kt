@@ -17,11 +17,14 @@ import com.soleel.finanzas.domain.transactions.GetWeeklyTransactionsUseCase
 import com.soleel.finanzas.feature.transactions.navigation.TransactionsArgs
 import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.delayFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
@@ -82,6 +85,7 @@ class TransactionsViewModel @Inject constructor(
     }
 
     val allTransactionsUiState: StateFlow<TransactionsGroupUiState> = _allTransactionsUiState
+        .onStart(action = { delay(500) })
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
@@ -111,8 +115,9 @@ class TransactionsViewModel @Inject constructor(
         }
     }
 
-    val transactionsSummaryUiState: StateFlow<TransactionsSummaryUiState> =
-        _transactionsSummaryUiState.stateIn(
+    val transactionsSummaryUiState: StateFlow<TransactionsSummaryUiState> = _transactionsSummaryUiState
+        .onStart(action = { delay(500) })
+        .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
             initialValue = TransactionsSummaryUiState.Loading
