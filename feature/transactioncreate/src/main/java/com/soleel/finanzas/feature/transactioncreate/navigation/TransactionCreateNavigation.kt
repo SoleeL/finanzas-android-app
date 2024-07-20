@@ -20,7 +20,7 @@ import com.soleel.finanzas.feature.transactioncreate.screen.TransactionTypeRoute
 const val transactionCreateGraph = "transaction_create_graph"
 
 const val transactionCreateRoute = "transaction_create_route"
-const val transactionAccountRoute = "transaction__account_route"
+const val transactionAccountRoute = "transaction_account_route"
 const val transactionTypeRoute = "transaction_type_route"
 const val transactionCategoryRoute = "transaction_category_route"
 const val transactionNameRoute = "transaction_name_route"

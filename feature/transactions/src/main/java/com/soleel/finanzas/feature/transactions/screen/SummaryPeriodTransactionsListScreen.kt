@@ -139,7 +139,7 @@ private fun TransactionsSummaryList(
                 action = { summary ->
                     stickyHeader(
                         content = {
-                            TransactionsGroupDate(date = summary.date)
+                            TransactionsGroupDate(dateName = summary.dateName)
                         }
                     )
 
@@ -177,7 +177,7 @@ private fun TransactionsSummaryList(
 
 @Composable
 private fun TransactionsGroupDate(
-    date: Date
+    dateName: String
 ) {
     Row(
         modifier = Modifier
@@ -186,7 +186,7 @@ private fun TransactionsGroupDate(
         horizontalArrangement = Arrangement.Start,
         content = {
             Text(
-                text = AllTransactionsGroupDateUseCase(date),
+                text = dateName,
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
             )

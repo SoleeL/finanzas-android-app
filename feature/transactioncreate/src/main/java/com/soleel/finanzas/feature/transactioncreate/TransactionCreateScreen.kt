@@ -37,7 +37,7 @@ internal fun TransactionCreateRoute(
     fromInitToAccount: () -> Unit,
     viewModel: TransactionCreateViewModel = hiltViewModel()
 ) {
-    val AccountsUiState by viewModel.accountsUiState.collectAsStateWithLifecycle()
+    val accountsUiState by viewModel.accountsUiState.collectAsStateWithLifecycle()
 
     TransactionCreateScreen(
         modifier = modifier,
@@ -46,7 +46,7 @@ internal fun TransactionCreateRoute(
         showFloatingAddMenu = showFloatingAddMenu,
         onBackClick = onBackClick,
         fromInitToAccount = fromInitToAccount,
-        AccountsUiState = AccountsUiState,
+        accountsUiState = accountsUiState,
         onAccountsUiEvent = viewModel::onAccountsUiEvent
     )
 }
@@ -60,7 +60,7 @@ private fun TransactionCreateScreen(
     showFloatingAddMenu: () -> Unit,
     onBackClick: () -> Unit,
     fromInitToAccount: () -> Unit,
-    AccountsUiState: AccountsUiState,
+    accountsUiState: AccountsUiState,
     onAccountsUiEvent: (AccountsUiEvent) -> Unit
 ) {
 
@@ -85,7 +85,7 @@ private fun TransactionCreateScreen(
             )
         },
         content = {
-            when (AccountsUiState) {
+            when (accountsUiState) {
                 is AccountsUiState.Success -> fromInitToAccount()
 
                 is AccountsUiState.Error -> TransactionCreateErrorScreen(

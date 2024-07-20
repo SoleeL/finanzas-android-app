@@ -9,6 +9,14 @@ import java.time.temporal.WeekFields
 import java.util.Date
 import java.util.Locale
 
+fun Date.toLocalDate(): LocalDate {
+    return this.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+}
+
+fun LocalDate.toDate(): Date {
+    return Date.from(this.atStartOfDay(ZoneId.systemDefault()).toInstant())
+}
+
 fun Date.toDayDate(): Date {
     return this.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toDate()
 }
@@ -28,57 +36,54 @@ fun Date.toYearDate(): Date {
     return localDate.with(TemporalAdjusters.firstDayOfYear()).toDate()
 }
 
-fun LocalDate.toDate(): Date {
-    return Date.from(this.atStartOfDay(ZoneId.systemDefault()).toInstant())
-}
-
-fun Date.toLocalDate(): LocalDate {
-    return this.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-}
-
-fun Date.getWeekOfMonth(): Int {
+fun Date.toNameDaysOfWeek(): String {
     val localDate = this.toLocalDate()
-    val weekFields = WeekFields.of(Locale("es"))
-    return localDate.get(weekFields.weekOfMonth())
+    val monthName = localDate.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
+    return "Semana del ${localDate.dayOfMonth} de $monthName del ${localDate.year}"
 }
 
-fun Date.getMonthName(): String {
+fun Date.toNameWeekOfMonth(): String {
     val localDate = this.toLocalDate()
-    return localDate.month.getDisplayName(TextStyle.FULL, Locale("es"))
+    val monthName = localDate.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
+    return "$monthName del ${localDate.year}"
 }
 
-fun Date.toIncomeNameTransactionDay(): String {
+fun Date.toNameMonthOfYear(): String {
+    return "${this.toLocalDate().year}"
+}
+
+fun Date.toNameTransactionDay(): String {
     val localDate: LocalDate = this.toLocalDate()
-    val dayOfWeek = localDate.dayOfWeek.getDisplayName(TextStyle.FULL, Locale("es"))
-    return "Ingresos del $dayOfWeek"
+    val dayOfWeek = localDate.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
+    return "${localDate.dayOfMonth} - $dayOfWeek"
 }
 
-fun Date.toExpenditureNameTransactionDay(): String {
-    val localDate: LocalDate = this.toLocalDate()
-    val dayOfWeek = localDate.dayOfWeek.getDisplayName(TextStyle.FULL, Locale("es"))
-    return "Gastos del $dayOfWeek"
+fun Date.toNameTransactionWeek(): String {
+    val localDate = this.toLocalDate()
+
+    val weekDay = localDate.dayOfMonth
+    val monthName = localDate.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
+    val weekFields = WeekFields.of(Locale.getDefault())
+    val weekOfMonth = localDate.get(weekFields.weekOfMonth())
+
+    return "$weekDay de $monthName - ${weekOfMonth.toOrdinal()} semana"
 }
 
-fun Date.toIncomeNameTransactionWeek(): String {
-    val weekOfMonth = this.getWeekOfMonth()
-    val monthName = this.getMonthName()
-    return "Ingresos de la semana $weekOfMonth de $monthName"
+fun Int.toOrdinal(): String {
+    return when (this) {
+        1 -> "1era"
+        2 -> "2da"
+        3 -> "3era"
+        4 -> "4ta"
+        5 -> "5ta"
+        else -> "$this"
+    }
 }
 
-fun Date.toExpenditureNameTransactionWeek(): String {
-    val weekOfMonth = this.getWeekOfMonth()
-    val monthName = this.getMonthName()
-    return "Gastos de la semana $weekOfMonth de $monthName"
-}
-
-fun Date.toIncomeNameTransactionMonth(): String {
-    val monthName = this.getMonthName()
-    return "Ingresos de $monthName"
-}
-
-fun Date.toExpenditureNameTransactionMonth(): String {
-    val monthName = this.getMonthName()
-    return "Gastos de $monthName"
+fun Date.toNameTransactionMonth(): String {
+    val localDate = this.toLocalDate()
+    val monthName = localDate.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
+    return monthName
 }
 
 fun Date.toIncomeNameTransactionYear(): String {

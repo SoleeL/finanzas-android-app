@@ -7,41 +7,40 @@ import com.soleel.finanzas.core.model.TransactionsSummary
 import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
 import com.soleel.finanzas.domain.transactions.utils.summaryExpenditure
 import com.soleel.finanzas.domain.transactions.utils.summaryIncome
-import com.soleel.finanzas.domain.transactions.utils.toDayDate
-import com.soleel.finanzas.domain.transactions.utils.toNameDaysOfWeek
-import com.soleel.finanzas.domain.transactions.utils.toNameTransactionDay
+import com.soleel.finanzas.domain.transactions.utils.toMonthDate
+import com.soleel.finanzas.domain.transactions.utils.toNameTransactionWeek
+import com.soleel.finanzas.domain.transactions.utils.toNameWeekOfMonth
 import com.soleel.finanzas.domain.transactions.utils.toWeekDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GetDaysOfWeekTransactionsUseCase @Inject constructor(
+class GetWeeklyOfMonthTransactionsUseCase @Inject constructor(
     private val transactionRepository: ITransactionLocalDataSource
 ) {
-    operator fun invoke(): Flow<List<TransactionsSummary>> =
-        transactionRepository.getTransactionsByCreatedOrder()
-            .mapToSummaryByDaysOfWeek()
+    operator fun invoke(): Flow<List<TransactionsSummary>> = transactionRepository.getTransactionsByCreatedOrder()
+        .mapToSummaryByWeeksOfMonth()
 }
 
-private fun Flow<List<Transaction>>.mapToSummaryByDaysOfWeek(): Flow<List<TransactionsSummary>> {
+private fun Flow<List<Transaction>>.mapToSummaryByWeeksOfMonth(): Flow<List<TransactionsSummary>> {
     return this.map(transform = { transactions ->
         transactions
-            .groupBy(keySelector = { it.createAt.toWeekDate() })
-            .map(transform = { (weekDate, weekTransactions) ->
+            .groupBy(keySelector = { it.createAt.toMonthDate() })
+            .map(transform = { (monthDate, monthTransactions) ->
                 TransactionsSummary(
-                    dateName = weekDate.toNameDaysOfWeek(),
-                    transactions = weekTransactions
-                        .groupBy(keySelector = { it.createAt.toDayDate() })
-                        .flatMap(transform = { (dayDate, dayTransactions) ->
+                    dateName = monthDate.toNameWeekOfMonth(),
+                    transactions = monthTransactions
+                        .groupBy(keySelector = { it.createAt.toWeekDate() })
+                        .flatMap(transform = { (weekDate, weekTransactions) ->
                             listOf(
                                 TransactionSummary(
-                                    name = dayDate.toNameTransactionDay(),
-                                    amount = dayTransactions.summaryIncome(),
+                                    name = weekDate.toNameTransactionWeek(),
+                                    amount = weekTransactions.summaryIncome(),
                                     type = TransactionTypeEnum.INCOME
                                 ),
                                 TransactionSummary(
-                                    name = dayDate.toNameTransactionDay(),
-                                    amount = dayTransactions.summaryExpenditure(),
+                                    name = weekDate.toNameTransactionWeek(),
+                                    amount = weekTransactions.summaryExpenditure(),
                                     type = TransactionTypeEnum.EXPENDITURE
                                 )
                             )

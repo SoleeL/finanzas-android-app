@@ -11,8 +11,8 @@ import com.soleel.finanzas.core.model.TransactionsGroup
 import com.soleel.finanzas.core.model.TransactionsSummary
 import com.soleel.finanzas.domain.transactions.GetAllTransactionsUseCase
 import com.soleel.finanzas.domain.transactions.GetDaysOfWeekTransactionsUseCase
-import com.soleel.finanzas.domain.transactions.GetMonthlyTransactionsUseCase
-import com.soleel.finanzas.domain.transactions.GetWeeklyTransactionsUseCase
+import com.soleel.finanzas.domain.transactions.GetMonthlyOfYearTransactionsUseCase
+import com.soleel.finanzas.domain.transactions.GetWeeklyOfMonthTransactionsUseCase
 import com.soleel.finanzas.feature.transactions.navigation.TransactionsArgs
 import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -55,8 +55,8 @@ class TransactionsViewModel @Inject constructor(
 
     private val getAllTransactionsUseCase: GetAllTransactionsUseCase,
     private val getDaysOfWeekTransactionsUseCase: GetDaysOfWeekTransactionsUseCase,
-    private val getWeeklyTransactionsUseCase: GetWeeklyTransactionsUseCase,
-    private val getMonthlyTransactionsUseCase: GetMonthlyTransactionsUseCase,
+    private val getWeeklyOfMonthTransactionsUseCase: GetWeeklyOfMonthTransactionsUseCase,
+    private val getMonthlyOfYearTransactionsUseCase: GetMonthlyOfYearTransactionsUseCase,
 
     private val retryableFlowTrigger: RetryableFlowTrigger,
 ) : ViewModel() {
@@ -95,8 +95,8 @@ class TransactionsViewModel @Inject constructor(
     private fun getFlowTransactionsSum(): Flow<TransactionsSummaryUiState> {
         return (when (summaryPeriod) {
             TransactionsLevelDestination.DAILY -> getDaysOfWeekTransactionsUseCase()
-            TransactionsLevelDestination.WEEKLY -> getWeeklyTransactionsUseCase()
-            TransactionsLevelDestination.MONTHLY -> getMonthlyTransactionsUseCase()
+            TransactionsLevelDestination.WEEKLY -> getWeeklyOfMonthTransactionsUseCase()
+            TransactionsLevelDestination.MONTHLY -> getMonthlyOfYearTransactionsUseCase()
             else -> flowOf(emptyList())
         })
             .asResult()
