@@ -65,7 +65,7 @@ class TransactionsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val transactionsArgs: TransactionsArgs = TransactionsArgs(savedStateHandle)
-    val summaryPeriod: TransactionsLevelDestination = transactionsArgs.summaryPeriod
+    private val summaryPeriod: TransactionsLevelDestination = transactionsArgs.summaryPeriod
 
     private val _allTransactionsUiState: Flow<TransactionsGroupUiState> = retryableFlowTrigger
         .retryableFlow(flowProvider = { getFlowAllTransactions() })

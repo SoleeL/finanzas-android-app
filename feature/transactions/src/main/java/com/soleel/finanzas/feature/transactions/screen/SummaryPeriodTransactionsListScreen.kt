@@ -182,7 +182,7 @@ private fun TransactionsGroupDate(
     Row(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color.White),
+            .background(color = MaterialTheme.colorScheme.background),
         horizontalArrangement = Arrangement.Start,
         content = {
             Text(
@@ -209,7 +209,7 @@ private fun TransactionSummaryItem(
             .padding(8.dp)
             .clickable(onClick = onClick),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp
+            defaultElevation = 4.dp
         ),
         content = {
             TransactionTypeRow(
@@ -276,11 +276,13 @@ private fun TransactionDetailRow(
                     .padding(start = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 content = {
-                    Column(content = {
-                        Text(
-                            text = transactionName, style = MaterialTheme.typography.titleMedium
-                        )
-                    })
+                    Column(
+                        content = {
+                            Text(
+                                text = transactionName, style = MaterialTheme.typography.titleMedium
+                            )
+                        }
+                    )
 
                     Column(
                         horizontalAlignment = Alignment.End,

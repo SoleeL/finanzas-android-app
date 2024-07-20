@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -346,7 +345,9 @@ private fun AllTransactionsSuccessScreenPreview() {
                             )
                         )
                     )
-                ), TransactionsGroup(
+                ),
+
+                TransactionsGroup(
                     date = Date(1641164400000), // Fecha 2 (por ejemplo: 2 de enero de 2022)
                     transactionsWithAccount = listOf(
                         TransactionWithAccount(
@@ -654,7 +655,8 @@ private fun AllTransactionsSuccessScreen(
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp
                 )
-            })
+            }
+        )
     } else {
         AllTransactionList(transactionsGroup = allTransactionsGroup)
     }
@@ -733,7 +735,7 @@ private fun TransactionsGroupDate(
     Row(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color.White),
+            .background(color = MaterialTheme.colorScheme.background),
         horizontalArrangement = Arrangement.Start,
         content = {
             Text(
@@ -741,7 +743,8 @@ private fun TransactionsGroupDate(
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
             )
-        })
+        }
+    )
 }
 
 @Composable
@@ -756,13 +759,12 @@ private fun TransactionGroupItem(
     accountTypeName: String,
     onClick: () -> Unit
 ) {
-    ElevatedCard(modifier = Modifier
-        .fillMaxWidth()
-        .padding(8.dp)
-        .clickable(onClick = onClick),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp
-        ),
+    ElevatedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable(onClick = onClick),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         content = {
             TransactionTypeRow(
                 transactionTypeIcon = transactionTypeIcon,
@@ -776,34 +778,40 @@ private fun TransactionGroupItem(
                 transactionAmount = transactionAmount,
                 accountTypeName = accountTypeName
             )
-        })
+        }
+    )
 }
 
 @Composable
 private fun TransactionTypeRow(
     transactionTypeIcon: Int, transactionTypeName: String, transactionTypeColor: Color
 ) {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .background(color = transactionTypeColor)
-        .padding(8.dp),
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = transactionTypeColor)
+            .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {
-            Row(verticalAlignment = Alignment.CenterVertically, content = {
-                Icon(
-                    painter = painterResource(id = transactionTypeIcon),
-                    contentDescription = "Transaction type",
-                    modifier = Modifier.size(16.dp),
-                    tint = TransactionTypeLetterColor
-                )
-                Text(
-                    text = transactionTypeName,
-                    modifier = Modifier.padding(start = 8.dp),
-                    color = TransactionTypeLetterColor,
-                    style = MaterialTheme.typography.labelSmall
-                )
-            })
-        })
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                content = {
+                    Icon(
+                        painter = painterResource(id = transactionTypeIcon),
+                        contentDescription = "Transaction type",
+                        modifier = Modifier.size(16.dp),
+                        tint = TransactionTypeLetterColor
+                    )
+                    Text(
+                        text = transactionTypeName,
+                        modifier = Modifier.padding(start = 8.dp),
+                        color = TransactionTypeLetterColor,
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+            )
+        }
+    )
 }
 
 @Composable
@@ -814,9 +822,10 @@ private fun TransactionDetailRow(
     transactionAmount: String,
     accountTypeName: String
 ) {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .padding(8.dp),
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         content = {
             Column(content = {
@@ -826,30 +835,42 @@ private fun TransactionDetailRow(
                     modifier = Modifier.size(36.dp)
                 )
             })
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 8.dp),
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 content = {
-                    Column(content = {
-                        Text(
-                            text = transactionName, style = MaterialTheme.typography.titleMedium
-                        )
+                    Column(
+                        content = {
+                            Text(
+                                text = transactionName,
+                                style = MaterialTheme.typography.titleMedium
+                            )
 
-                        Text(
-                            text = transactionHour, style = MaterialTheme.typography.bodyMedium
-                        )
-                    })
+                            Text(
+                                text = transactionHour,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    )
 
-                    Column(horizontalAlignment = Alignment.End, content = {
-                        Text(
-                            text = transactionAmount, style = MaterialTheme.typography.titleMedium
-                        )
+                    Column(
+                        horizontalAlignment = Alignment.End,
+                        content = {
+                            Text(
+                                text = transactionAmount,
+                                style = MaterialTheme.typography.titleMedium
+                            )
 
-                        Text(
-                            text = accountTypeName, style = MaterialTheme.typography.bodyMedium
-                        )
-                    })
-                })
-        })
+                            Text(
+                                text = accountTypeName,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    )
+                }
+            )
+        }
+    )
 }
