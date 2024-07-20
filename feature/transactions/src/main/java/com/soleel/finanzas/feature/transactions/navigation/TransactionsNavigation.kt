@@ -25,7 +25,6 @@ const val ALL_TRANSACTIONS_ROUTE = "$TRANSACTIONS_ROUTE/all"
 const val DAILY_TRANSACTIONS_ROUTE = "$TRANSACTIONS_ROUTE/daily"
 const val WEEKLY_TRANSACTIONS_ROUTE = "$TRANSACTIONS_ROUTE/weekly"
 const val MONTHLY_TRANSACTIONS_ROUTE = "$TRANSACTIONS_ROUTE/monthly"
-const val ANNUALLY_TRANSACTIONS_ROUTE = "$TRANSACTIONS_ROUTE/annually"
 
 const val SUMMARY_PERIOD_ARG = "summaryPeriod" // Los argumentos son con camellcase
 
@@ -70,7 +69,6 @@ fun NavGraphBuilder.transactionsGraph(
             dailyTransactionsScreen(finishApp = finishApp)
             weeklyTransactionsScreen(finishApp = finishApp)
             monthlyTransactionsScreen(finishApp = finishApp)
-            annuallyTransactionsScreen(finishApp = finishApp)
         }
     )
 }
@@ -152,28 +150,6 @@ private fun NavGraphBuilder.monthlyTransactionsScreen(
                 builder = {
                     type = NavType.StringType; defaultValue =
                     TransactionsLevelDestination.MONTHLY.lowercase()
-                }
-            )
-        ),
-        content = {
-            TransactionsSummaryListRoute(
-                finishApp = finishApp
-            )
-        }
-    )
-}
-
-private fun NavGraphBuilder.annuallyTransactionsScreen(
-    finishApp: (Context) -> Unit
-) {
-    composable(
-        route = ANNUALLY_TRANSACTIONS_ROUTE,
-        arguments = listOf(
-            navArgument(
-                name = SUMMARY_PERIOD_ARG,
-                builder = {
-                    type = NavType.StringType; defaultValue =
-                    TransactionsLevelDestination.ANNUALLY.lowercase()
                 }
             )
         ),

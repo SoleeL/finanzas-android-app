@@ -22,11 +22,6 @@ enum class TransactionsLevelDestination(
     MONTHLY(
         title = "Mes",
         summaryTitle = "M"
-    ),
-
-    ANNUALLY(
-        title = "Año",
-        summaryTitle = "A"
     );
 
     companion object {

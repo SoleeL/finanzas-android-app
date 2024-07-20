@@ -19,10 +19,10 @@ class GetMonthlyTransactionsUseCase @Inject constructor(
 ) {
     // Listado de los ingresos y gastos mensuales
     operator fun invoke(): Flow<List<TransactionsSummary>> = transactionRepository.getTransactionsByCreatedOrder()
-        .mapToSummaryByMonth()
+        .mapToSummaryByMonthsOfYear()
 }
 
-private fun Flow<List<Transaction>>.mapToSummaryByMonth(): Flow<List<TransactionsSummary>> {
+private fun Flow<List<Transaction>>.mapToSummaryByMonthsOfYear(): Flow<List<TransactionsSummary>> {
     return this.map(transform = {transactions ->
         transactions
             .groupBy(keySelector = { it.createAt.toMonthDate() })

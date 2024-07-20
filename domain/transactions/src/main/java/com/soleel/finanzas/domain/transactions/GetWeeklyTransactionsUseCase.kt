@@ -19,10 +19,10 @@ class GetWeeklyTransactionsUseCase @Inject constructor(
 ) {
     // Listado de los ingresos y gastos semanales
     operator fun invoke(): Flow<List<TransactionsSummary>> = transactionRepository.getTransactionsByCreatedOrder()
-        .mapToSummaryByWeek()
+        .mapToSummaryByWeeksOfMonth()
 }
 
-private fun Flow<List<Transaction>>.mapToSummaryByWeek(): Flow<List<TransactionsSummary>> {
+private fun Flow<List<Transaction>>.mapToSummaryByWeeksOfMonth(): Flow<List<TransactionsSummary>> {
     return this.map(transform = { transactions ->
         transactions
             .groupBy(keySelector = { it.createAt.toWeekDate() })

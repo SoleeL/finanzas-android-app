@@ -10,8 +10,7 @@ import com.soleel.finanzas.core.common.retryflow.retryableFlow
 import com.soleel.finanzas.core.model.TransactionsGroup
 import com.soleel.finanzas.core.model.TransactionsSummary
 import com.soleel.finanzas.domain.transactions.GetAllTransactionsUseCase
-import com.soleel.finanzas.domain.transactions.GetAnnuallyTransactionsUseCase
-import com.soleel.finanzas.domain.transactions.GetDailyTransactionsUseCase
+import com.soleel.finanzas.domain.transactions.GetDaysOfWeekTransactionsUseCase
 import com.soleel.finanzas.domain.transactions.GetMonthlyTransactionsUseCase
 import com.soleel.finanzas.domain.transactions.GetWeeklyTransactionsUseCase
 import com.soleel.finanzas.feature.transactions.navigation.TransactionsArgs
@@ -21,7 +20,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.delayFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
@@ -56,10 +54,9 @@ class TransactionsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 
     private val getAllTransactionsUseCase: GetAllTransactionsUseCase,
-    private val getDailyTransactionsUseCase: GetDailyTransactionsUseCase,
+    private val getDaysOfWeekTransactionsUseCase: GetDaysOfWeekTransactionsUseCase,
     private val getWeeklyTransactionsUseCase: GetWeeklyTransactionsUseCase,
     private val getMonthlyTransactionsUseCase: GetMonthlyTransactionsUseCase,
-    private val getAnnuallyTransactionsUseCase: GetAnnuallyTransactionsUseCase,
 
     private val retryableFlowTrigger: RetryableFlowTrigger,
 ) : ViewModel() {
@@ -97,10 +94,9 @@ class TransactionsViewModel @Inject constructor(
 
     private fun getFlowTransactionsSum(): Flow<TransactionsSummaryUiState> {
         return (when (summaryPeriod) {
-            TransactionsLevelDestination.DAILY -> getDailyTransactionsUseCase()
+            TransactionsLevelDestination.DAILY -> getDaysOfWeekTransactionsUseCase()
             TransactionsLevelDestination.WEEKLY -> getWeeklyTransactionsUseCase()
             TransactionsLevelDestination.MONTHLY -> getMonthlyTransactionsUseCase()
-            TransactionsLevelDestination.ANNUALLY -> getAnnuallyTransactionsUseCase()
             else -> flowOf(emptyList())
         })
             .asResult()
