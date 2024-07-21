@@ -8,19 +8,25 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import androidx.tracing.trace
+import com.soleel.finanzas.feature.accountcreate.navigation.accountCreateGraph
 import com.soleel.finanzas.feature.accountcreate.navigation.navigateToAccountCreateGraph
+import com.soleel.finanzas.feature.accounts.navigation.ACCOUNTS_ROUTE
 import com.soleel.finanzas.feature.accounts.navigation.navigateToAccounts
 import com.soleel.finanzas.feature.profile.navigation.navigateToProfile
 import com.soleel.finanzas.feature.stats.navigation.navigateToStats
 import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionCreateGraph
+import com.soleel.finanzas.feature.transactioncreate.navigation.transactionCreateRoute
+import com.soleel.finanzas.feature.transactions.navigation.ALL_TRANSACTIONS_ROUTE
 import com.soleel.finanzas.feature.transactions.navigation.TRANSACTIONS_ROUTE
 import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination
+import com.soleel.finanzas.feature.transactions.navigation.destination.isTransactionsLevelDestination
 import com.soleel.finanzas.feature.transactions.navigation.navigateToAllTransactions
 import com.soleel.finanzas.feature.transactions.navigation.navigateToSummaryPeriodTransactions
 import com.soleel.finanzas.navigation.destination.TopLevelDestination
@@ -92,7 +98,7 @@ class FinanzasAppState(
 
     @Composable
     fun getCurrentDestination(): NavDestination? {
-        return navController.currentBackStackEntryAsState().value?.destination
+        return this.navController.currentBackStackEntryAsState().value?.destination
     }
 
     @Composable
@@ -123,13 +129,13 @@ class FinanzasAppState(
                 )
 
                 when (topLevelDestination) {
-                    TRANSACTIONS -> navController.navigateToAllTransactions(navOptions = topLevelNavOptions)
+                    TRANSACTIONS -> this.navController.navigateToAllTransactions(navOptions = topLevelNavOptions)
 
-                    ACCOUNTS -> navController.navigateToAccounts(navOptions = topLevelNavOptions)
+                    ACCOUNTS -> this.navController.navigateToAccounts(navOptions = topLevelNavOptions)
 
-                    STATS -> navController.navigateToStats(navOptions = topLevelNavOptions)
+                    STATS -> this.navController.navigateToStats(navOptions = topLevelNavOptions)
 
-                    PROFILE -> navController.navigateToProfile(navOptions = topLevelNavOptions)
+                    PROFILE -> this.navController.navigateToProfile(navOptions = topLevelNavOptions)
                 }
             }
         )
@@ -184,20 +190,35 @@ class FinanzasAppState(
     }
 
     fun navigateToTransactions(transactionsLevelDestination: TransactionsLevelDestination) {
-        navController.navigateToSummaryPeriodTransactions(transactionsLevelDestination = transactionsLevelDestination)
+        this.navController.navigateToSummaryPeriodTransactions(transactionsLevelDestination = transactionsLevelDestination)
     }
 
     fun navigateToAccountCreate() {
-        navController.navigateToAccountCreateGraph()
+        this.navController.navigateToAccountCreateGraph()
     }
 
     fun navigateToTransactionCreate() {
-        navController.navigateToTransactionCreateGraph()
+        this.navController.navigateToTransactionCreateGraph()
     }
 
-    fun backToHome() {
-        navController.popBackStack(
-            route = TRANSACTIONS_ROUTE,
+    fun popBackStackTransactionCreate() {
+        this.navController.popBackStack(route = transactionCreateRoute, inclusive = true)
+    }
+
+    fun popBackStackAccountCreate() {
+        this.navController.popBackStack(route = accountCreateGraph, inclusive = true)
+    }
+
+    fun backToTransactions() {
+        this.navController.popBackStack(
+            route = ALL_TRANSACTIONS_ROUTE,
+            inclusive = false
+        )
+    }
+
+    fun backToAccounts() {
+        this.navController.popBackStack(
+            route = ACCOUNTS_ROUTE,
             inclusive = false
         )
     }
@@ -206,8 +227,13 @@ class FinanzasAppState(
         return this.showTransactionsTab.value
     }
 
-    fun showTransactionsTab() {
-        this.showTransactionsTab.value = true
+    fun updateTransactionsTab() {
+        if (this.navController.currentDestination.isTransactionsLevelDestination()) {
+            this.showTransactionsTab.value = true
+            return
+        }
+
+        this.showTransactionsTab.value = false
     }
 
     fun hideTransactionsTab() {

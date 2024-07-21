@@ -7,17 +7,17 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.soleel.finanzas.feature.accounts.AccountsRoute
 
-const val accountsRoute = "accounts_route"
+const val ACCOUNTS_ROUTE = "accounts"
 
 fun NavController.navigateToAccounts(navOptions: NavOptions? = null) {
-    this.navigate(accountsRoute, navOptions)
+    this.navigate(ACCOUNTS_ROUTE, navOptions)
 }
 
 fun NavGraphBuilder.accountsScreen(
     finishApp: (Context) -> Unit
 ) {
     composable(
-        route = accountsRoute,
+        route = ACCOUNTS_ROUTE,
         content = {
             AccountsRoute(
                 finishApp = finishApp

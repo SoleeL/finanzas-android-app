@@ -14,7 +14,6 @@ dependencies {
     implementation(projects.feature.accounts)
     implementation(projects.feature.profile)
     implementation(projects.feature.add)
-    implementation(projects.feature.cancelalert)
     implementation(projects.feature.accountcreate)
     implementation(projects.feature.transactioncreate)
 }

@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.soleel.finanzas.feature.add.AddMenuFAB
-import com.soleel.finanzas.feature.cancelalert.CancelAlertDialog
+import com.soleel.finanzas.core.ui.template.CancelAlertDialog
 import com.soleel.finanzas.feature.transactions.navigation.SUMMARY_PERIOD_ARG
 import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination
 import com.soleel.finanzas.navigation.FinanzasNavHost
@@ -41,7 +41,7 @@ fun FinanzasApp(
             //                toTimePeriodSelection = transactionsState.navigateToTimePeriodSelection(),
             //                toSearch = transactionsState.navigateToSearch()
             //            )
-            if (appState.shouldShowTransactionsTab()) {
+            if (appState.shouldShowTransactionsTab()) { // TODO: Buscar la forma de que desaparezca con suavidad
                 TransactionsTab(
                     destinations = appState.transactionsLevelDestinations(),
                     onNavigateToDestination = appState::navigateToTransactions,
@@ -55,9 +55,8 @@ fun FinanzasApp(
                     destinations = appState.topLevelDestinations(),
                     onNavigateToDestination = appState::navigateToTopLevelDestination,
                     currentDestination = appState.getCurrentDestination(),
-                    showTransactionsTab = appState::showTransactionsTab,
-                    hideTransactionsTab = appState::hideTransactionsTab,
-                    hideExtendAddMenu = appState::hideExtendAddMenu,
+                    updateTransactionsTab = appState::updateTransactionsTab,
+                    hideExtendAddMenu = appState::hideExtendAddMenu
                 )
             }
         },
@@ -89,19 +88,6 @@ fun FinanzasApp(
             }
         },
         content = {
-            if (appState.shouldShowCancelAlert()) {
-                CancelAlertDialog(
-                    showTransactionsTab = appState::showTransactionsTab,
-                    showBottomBar = appState::showBottomBar,
-                    showFloatingAddMenu = appState::showFloatingAddMenu,
-                    hideExtendAddMenu = appState::hideExtendAddMenu,
-                    onConfirmation = appState::backToHome,
-                    onDismissRequest = appState::hideCancelAlert,
-                    dialogTitle = "¿Quieres volver al inicio?",
-                    dialogText = "Cancelaras la creacion actual."
-                )
-            }
-
             FinanzasNavHost(
                 modifier = Modifier.padding(it),
                 appState = appState
@@ -158,8 +144,7 @@ private fun FinanzasBottomBar(
     onNavigateToDestination: (TopLevelDestination) -> Unit,
     currentDestination: NavDestination?,
     modifier: Modifier = Modifier,
-    showTransactionsTab: () -> Unit,
-    hideTransactionsTab: () -> Unit,
+    updateTransactionsTab: () -> Unit,
     hideExtendAddMenu: () -> Unit,
 ) {
     NavigationBar(
@@ -172,14 +157,9 @@ private fun FinanzasBottomBar(
                     NavigationBarItem(
                         selected = selected,
                         onClick = {
-                            if (TopLevelDestination.TRANSACTIONS == destination) {
-                                showTransactionsTab()
-                            } else {
-                                hideTransactionsTab()
-                            }
-
                             hideExtendAddMenu()
                             onNavigateToDestination(destination)
+                            updateTransactionsTab()
                         },
                         icon = {
                             Icon(

@@ -1,5 +1,9 @@
 package com.soleel.finanzas.feature.transactions.navigation.destination
 
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
+import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination.Companion.lowercase
+
 enum class TransactionsLevelDestination(
     val title: String,
     val summaryTitle: String
@@ -36,4 +40,9 @@ enum class TransactionsLevelDestination(
             return this.toString().lowercase()
         }
     }
+}
+
+fun NavDestination?.isTransactionsLevelDestination(): Boolean {
+    val destinationRute = this?.route ?: return false
+    return TransactionsLevelDestination.entries.any( predicate =  { destinationRute.contains(it.lowercase(), ignoreCase = true) })
 }

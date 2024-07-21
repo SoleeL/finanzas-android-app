@@ -15,6 +15,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +28,8 @@ import androidx.compose.ui.unit.dp
 import com.soleel.finanzas.core.common.enums.AccountTypeEnum
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.AccountCard
-import com.soleel.finanzas.core.ui.template.AccountCreateTopAppBar
+import com.soleel.finanzas.core.ui.template.CancelAlertDialog
+import com.soleel.finanzas.core.ui.template.CreateTopAppBar
 import com.soleel.finanzas.core.ui.uivalues.AccountUIValues
 import com.soleel.finanzas.core.ui.uivalues.getAccountUI
 import com.soleel.finanzas.domain.validation.validator.NameValidator
@@ -38,23 +41,20 @@ import com.soleel.finanzas.feature.accountcreate.AccountUiEvent
 @Composable
 internal fun AccountNameRoute(
     modifier: Modifier = Modifier,
-
-    onCancelClick: () -> Unit,
+    onAcceptCancel: () -> Unit,
     onBackClick: () -> Unit,
-
     fromNameToAmount: () -> Unit,
-
     viewModel: AccountCreateViewModel
 ) {
     val accountCreateUi = viewModel.accountUiCreate
 
     AccountNameScreen(
         modifier = modifier,
-        onCancelClick = onCancelClick,
+        onAcceptCancel = onAcceptCancel,
         onBackClick = onBackClick,
+        fromNameToAmount = fromNameToAmount,
         accountCreateUi = accountCreateUi,
         onAccountCreateEventUi = viewModel::onAccountCreateEventUi,
-        fromNameToAmount = fromNameToAmount
     )
 }
 
@@ -63,14 +63,14 @@ internal fun AccountNameRoute(
 internal fun AccountNameScreenPreview() {
     AccountNameScreen(
         modifier = Modifier,
+        onAcceptCancel = {},
         onBackClick = {},
-        onCancelClick = {},
+        fromNameToAmount = {},
         accountCreateUi = AccountUiCreate(
             type = AccountTypeEnum.CREDIT.id,
             name = "Inversion en bolsa",
         ),
-        onAccountCreateEventUi = {},
-        fromNameToAmount = {}
+        onAccountCreateEventUi = {}
     )
 }
 
@@ -78,22 +78,34 @@ internal fun AccountNameScreenPreview() {
 @Composable
 internal fun AccountNameScreen(
     modifier: Modifier,
-    onCancelClick: () -> Unit,
+    onAcceptCancel: () -> Unit,
     onBackClick: () -> Unit,
     accountCreateUi: AccountUiCreate,
     onAccountCreateEventUi: (AccountUiEvent) -> Unit,
     fromNameToAmount: () -> Unit
 ) {
-    BackHandler(
-        enabled = true,
-        onBack = { onBackClick() }
-    )
+    val showCancelAlert: MutableState<Boolean> = remember(calculation = { mutableStateOf(false) })
+
+    if (showCancelAlert.value) {
+        CancelAlertDialog(
+            onDismiss = { showCancelAlert.value = false },
+            onConfirmation = {
+                showCancelAlert.value = false
+                onAcceptCancel()
+            },
+            dialogTitle = "¿Quieres volver atras?",
+            dialogText = "Cancelaras la creacion de esta cuenta."
+        )
+    }
+
+    BackHandler(enabled = true, onBack = onBackClick)
 
     Scaffold(
         topBar = {
-            AccountCreateTopAppBar(
+            CreateTopAppBar(
+                title = R.string.account_create_title,
                 subTitle = R.string.account_name_top_app_bar_subtitle,
-                onCancelClick = onCancelClick
+                onBackButton = { showCancelAlert.value = true }
             )
         },
         bottomBar = {

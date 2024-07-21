@@ -24,15 +24,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.soleel.finanzas.core.ui.template.TransactionCreateTopAppBar
+import com.soleel.finanzas.core.ui.R
+import com.soleel.finanzas.core.ui.template.CreateTopAppBar
 
 
 @Composable
 internal fun TransactionCreateRoute(
     modifier: Modifier = Modifier,
-    showTransactionsTab: () -> Unit,
-    showBottomBar: () -> Unit,
-    showFloatingAddMenu: () -> Unit,
     onBackClick: () -> Unit,
     fromInitToAccount: () -> Unit,
     viewModel: TransactionCreateViewModel = hiltViewModel()
@@ -41,9 +39,6 @@ internal fun TransactionCreateRoute(
 
     TransactionCreateScreen(
         modifier = modifier,
-        showTransactionsTab = showTransactionsTab,
-        showBottomBar = showBottomBar,
-        showFloatingAddMenu = showFloatingAddMenu,
         onBackClick = onBackClick,
         fromInitToAccount = fromInitToAccount,
         accountsUiState = accountsUiState,
@@ -55,9 +50,6 @@ internal fun TransactionCreateRoute(
 @Composable
 private fun TransactionCreateScreen(
     modifier: Modifier,
-    showTransactionsTab: () -> Unit,
-    showBottomBar: () -> Unit,
-    showFloatingAddMenu: () -> Unit,
     onBackClick: () -> Unit,
     fromInitToAccount: () -> Unit,
     accountsUiState: AccountsUiState,
@@ -66,22 +58,14 @@ private fun TransactionCreateScreen(
 
     BackHandler(
         enabled = true,
-        onBack = {
-            showTransactionsTab()
-            showBottomBar()
-            showFloatingAddMenu()
-            onBackClick()
-        }
+        onBack = onBackClick
     )
 
     Scaffold(
         topBar = {
-            TransactionCreateTopAppBar(
-                onClick = {
-                    showBottomBar()
-                    showFloatingAddMenu()
-                    onBackClick()
-                }
+            CreateTopAppBar(
+                title = R.string.trasaction_create_title,
+                onBackButton = onBackClick
             )
         },
         content = {

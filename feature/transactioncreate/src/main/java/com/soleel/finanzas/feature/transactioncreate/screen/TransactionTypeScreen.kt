@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,8 +20,9 @@ import com.soleel.finanzas.core.common.enums.AccountTypeEnum
 import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.model.Account
 import com.soleel.finanzas.core.ui.R
+import com.soleel.finanzas.core.ui.template.CancelAlertDialog
+import com.soleel.finanzas.core.ui.template.CreateTopAppBar
 import com.soleel.finanzas.core.ui.template.TransactionCard
-import com.soleel.finanzas.core.ui.template.TransactionCreateTopAppBar
 import com.soleel.finanzas.core.ui.uivalues.getTransactionUI
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.feature.transactioncreate.TransactionCreateViewModel
@@ -31,7 +33,7 @@ import java.util.Date
 
 @Composable
 internal fun TransactionTypeRoute(
-    onCancelClick: () -> Unit,
+    onAcceptCancel: () -> Unit,
     onBackClick: () -> Unit,
     fromTypeToCategory: () -> Unit,
     viewModel: TransactionCreateViewModel
@@ -40,7 +42,7 @@ internal fun TransactionTypeRoute(
 
     TransactionTypeScreen(
         modifier = Modifier,
-        onCancelClick = onCancelClick,
+        onAcceptCancel = onAcceptCancel,
         onBackClick = onBackClick,
         transactionUiCreate = transactionUiCreate,
         onTransactionCreateUiEvent = viewModel::onTransactionCreateUiEvent,
@@ -52,7 +54,7 @@ internal fun TransactionTypeRoute(
 @Composable
 fun TransactionTypeScreenPreview() {
     TransactionTypeScreen(modifier = Modifier,
-        onCancelClick = {},
+        onAcceptCancel = {},
         onBackClick = {},
         transactionUiCreate = TransactionUiCreate(
             Account(
@@ -72,20 +74,33 @@ fun TransactionTypeScreenPreview() {
 @Composable
 fun TransactionTypeScreen(
     modifier: Modifier,
-    onCancelClick: () -> Unit,
+    onAcceptCancel: () -> Unit,
     onBackClick: () -> Unit,
     transactionUiCreate: TransactionUiCreate,
     onTransactionCreateUiEvent: (TransactionUiEvent) -> Unit,
     fromTypeToCategory: () -> Unit
 ) {
-    BackHandler(
-        enabled = true,
-        onBack = { onBackClick() }
-    )
+    val showCancelAlert: MutableState<Boolean> = remember(calculation =  { mutableStateOf(false) })
+
+    if (showCancelAlert.value) {
+        CancelAlertDialog(
+            onDismiss = { showCancelAlert.value = false },
+            onConfirmation = {
+                showCancelAlert.value = false
+                onAcceptCancel()
+            },
+            dialogTitle = "¿Quieres volver atras?",
+            dialogText = "Cancelaras la creacion de esta transaccion."
+        )
+    }
+
+    BackHandler(enabled = true, onBack = onBackClick)
 
     Scaffold(topBar = {
-        TransactionCreateTopAppBar(
-            subTitle = R.string.trasaction_type_top_app_bar_subtitle, onClick = onCancelClick
+        CreateTopAppBar(
+            title= R.string.trasaction_create_title,
+            subTitle = R.string.trasaction_type_top_app_bar_subtitle,
+            onBackButton = { showCancelAlert.value = true }
         )
     },
 //        bottomBar = {

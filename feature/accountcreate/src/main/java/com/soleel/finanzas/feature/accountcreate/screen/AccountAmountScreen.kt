@@ -16,6 +16,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,7 +32,8 @@ import androidx.compose.ui.unit.dp
 import com.soleel.finanzas.core.common.enums.AccountTypeEnum
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.AccountCard
-import com.soleel.finanzas.core.ui.template.AccountCreateTopAppBar
+import com.soleel.finanzas.core.ui.template.CancelAlertDialog
+import com.soleel.finanzas.core.ui.template.CreateTopAppBar
 import com.soleel.finanzas.core.ui.uivalues.AccountUIValues
 import com.soleel.finanzas.core.ui.uivalues.getAccountUI
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
@@ -44,29 +46,18 @@ import com.soleel.finanzas.feature.accountcreate.AccountUiEvent
 @Composable
 internal fun AccountAmountRoute(
     modifier: Modifier = Modifier,
-    showTransactionsTab: () -> Unit,
-    showBottomBar: () -> Unit,
-    showFloatingAddMenu: () -> Unit,
-    hideExtendAddMenu: () -> Unit,
-    onCancelClick: () -> Unit,
+    onAcceptCancel: () -> Unit,
     onBackClick: () -> Unit,
-    onSaveClick: () -> Unit,
+    onAccountSaved: () -> Unit,
     viewModel: AccountCreateViewModel
 ) {
     val accountCreateUi = viewModel.accountUiCreate
 
     AccountAmountScreen(
         modifier = modifier,
-
-        showTransactionsTab = showTransactionsTab,
-        showBottomBar = showBottomBar,
-        showFloatingAddMenu = showFloatingAddMenu,
-        hideExtendAddMenu = hideExtendAddMenu,
-
+        onAcceptCancel = onAcceptCancel,
         onBackClick = onBackClick,
-        onCancelClick = onCancelClick,
-        onSaveClick = onSaveClick,
-
+        onAccountSaved = onAccountSaved,
         accountCreateUi = accountCreateUi,
         onAccountCreateEventUi = viewModel::onAccountCreateEventUi
     )
@@ -77,13 +68,9 @@ internal fun AccountAmountRoute(
 fun AccountAmountScreenPreview() {
     AccountAmountScreen(
         modifier = Modifier,
+        onAcceptCancel = {},
         onBackClick = {},
-        showTransactionsTab = {},
-        showBottomBar = {},
-        showFloatingAddMenu = {},
-        hideExtendAddMenu = {},
-        onCancelClick = {},
-        onSaveClick = {},
+        onAccountSaved = {},
         accountCreateUi = AccountUiCreate(
             type = AccountTypeEnum.INVESTMENT.id,
             amount = "$340,000"
@@ -96,34 +83,38 @@ fun AccountAmountScreenPreview() {
 @Composable
 internal fun AccountAmountScreen(
     modifier: Modifier,
+    onAcceptCancel: () -> Unit,
     onBackClick: () -> Unit,
-    showTransactionsTab: () -> Unit,
-    showBottomBar: () -> Unit,
-    showFloatingAddMenu: () -> Unit,
-    hideExtendAddMenu: () -> Unit,
-    onCancelClick: () -> Unit,
-    onSaveClick: () -> Unit,
+    onAccountSaved: () -> Unit,
     accountCreateUi: AccountUiCreate,
     onAccountCreateEventUi: (AccountUiEvent) -> Unit
 ) {
-    BackHandler(
-        enabled = true,
-        onBack = { onBackClick() }
-    )
+    val showCancelAlert: MutableState<Boolean> = remember(calculation =  { mutableStateOf(false) })
+
+    if (showCancelAlert.value) {
+        CancelAlertDialog(
+            onDismiss = { showCancelAlert.value = false },
+            onConfirmation = {
+                showCancelAlert.value = false
+                onAcceptCancel()
+            },
+            dialogTitle = "¿Quieres volver atras?",
+            dialogText = "Cancelaras la creacion de esta cuenta."
+        )
+    }
+
+    BackHandler(enabled = true, onBack = onBackClick)
 
     if (accountCreateUi.isAccountSaved) {
-        showTransactionsTab()
-        showBottomBar()
-        showFloatingAddMenu()
-        hideExtendAddMenu()
-        onSaveClick()
+        onAccountSaved()
     }
 
     Scaffold(
         topBar = {
-            AccountCreateTopAppBar(
+            CreateTopAppBar(
+                title = R.string.account_create_title,
                 subTitle = R.string.account_amount_top_app_bar_subtitle,
-                onCancelClick = onCancelClick
+                onBackButton = { showCancelAlert.value = true }
             )
         },
         bottomBar = {

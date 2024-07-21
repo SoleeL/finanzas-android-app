@@ -14,64 +14,56 @@ import com.soleel.finanzas.feature.accountcreate.screen.AccountNameRoute
 import com.soleel.finanzas.feature.accountcreate.screen.CreateSelectAccountTypeRoute
 
 
-const val accountCreateGraph = "_account_create_graph"
+const val accountCreateGraph = "account_create"
 
-const val accountTypeRoute = "_account_type_route"
-const val accountNameRoute = "_account_name_route"
-const val accountAmountRoute = "enter__account_amount_route"
+const val accountTypeSelectionRoute = "type"
+const val accountNameInputRoute = "name"
+const val accountAmountInputRoute = "amount"
 
 fun NavController.navigateToAccountCreateGraph(navOptions: NavOptions? = null) {
     this.navigate(accountCreateGraph, navOptions)
 }
 
 fun NavController.navigateToAccountTypeRoute(navOptions: NavOptions? = null) {
-    this.navigate(accountTypeRoute, navOptions)
+    this.navigate(accountTypeSelectionRoute, navOptions)
 }
 
 fun NavController.navigateToAccountNameRoute(navOptions: NavOptions? = null) {
-    this.navigate(accountNameRoute, navOptions)
+    this.navigate(accountNameInputRoute, navOptions)
 }
 
 fun NavController.navigateToAccountAmountRoute(navOptions: NavOptions? = null) {
-    this.navigate(accountAmountRoute, navOptions)
+    this.navigate(accountAmountInputRoute, navOptions)
 }
 
 fun NavGraphBuilder.accountCreateGraph(
     navController: NavHostController,
-    showTransactionsTab: () -> Unit,
-    showBottomBar: () -> Unit,
-    showFloatingAddMenu: () -> Unit,
-    hideExtendAddMenu: () -> Unit,
-    onCancelClick: () -> Unit,
+    onAcceptCancel: () -> Unit,
     onBackClick: () -> Unit,
-    onSaveClick: () -> Unit,
     fromTypeToName: () -> Unit,
     fromNameToAmount: () -> Unit,
+    onAccountSaved: () -> Unit,
 ) {
     navigation(
-        startDestination = accountTypeRoute,
+        startDestination = accountTypeSelectionRoute,
         route = accountCreateGraph,
         builder = {
             accountTypeRoute(
                 navController = navController,
-                onCancelClick = onCancelClick,
+                onAcceptCancel = onAcceptCancel,
                 fromTypeToName = fromTypeToName
             )
             accountNameRoute(
                 navController = navController,
-                onCancelClick = onCancelClick,
+                onAcceptCancel = onAcceptCancel,
                 onBackClick = onBackClick,
                 fromNameToAmount = fromNameToAmount
             )
             accountAmountRoute(
                 navController = navController,
-                showTransactionsTab = showTransactionsTab,
-                showBottomBar = showBottomBar,
-                showFloatingAddMenu = showFloatingAddMenu,
-                hideExtendAddMenu = hideExtendAddMenu,
-                onCancelClick = onCancelClick,
+                onAcceptCancel = onAcceptCancel,
                 onBackClick = onBackClick,
-                onSaveClick = onSaveClick
+                onAccountSaved = onAccountSaved
             )
         }
     )
@@ -79,11 +71,11 @@ fun NavGraphBuilder.accountCreateGraph(
 
 fun NavGraphBuilder.accountTypeRoute(
     navController: NavHostController,
-    onCancelClick: () -> Unit,
+    onAcceptCancel: () -> Unit,
     fromTypeToName: () -> Unit
 ) {
     composable(
-        route = accountTypeRoute,
+        route = accountTypeSelectionRoute,
         content = {
 
             val parentEntry = remember(
@@ -98,7 +90,7 @@ fun NavGraphBuilder.accountTypeRoute(
             )
 
             CreateSelectAccountTypeRoute(
-                onCancelClick = onCancelClick,
+                onAcceptCancel = onAcceptCancel,
                 fromTypeToName = fromTypeToName,
                 viewModel = viewModel
             )
@@ -108,12 +100,12 @@ fun NavGraphBuilder.accountTypeRoute(
 
 fun NavGraphBuilder.accountNameRoute(
     navController: NavHostController,
-    onCancelClick: () -> Unit,
+    onAcceptCancel: () -> Unit,
     onBackClick: () -> Unit,
     fromNameToAmount: () -> Unit
 ) {
     composable(
-        route = accountNameRoute,
+        route = accountNameInputRoute,
         content = {
 
             val parentEntry = remember(
@@ -128,7 +120,7 @@ fun NavGraphBuilder.accountNameRoute(
             )
 
             AccountNameRoute(
-                onCancelClick = onCancelClick,
+                onAcceptCancel = onAcceptCancel,
                 onBackClick = onBackClick,
                 fromNameToAmount = fromNameToAmount,
                 viewModel = viewModel
@@ -139,16 +131,12 @@ fun NavGraphBuilder.accountNameRoute(
 
 fun NavGraphBuilder.accountAmountRoute(
     navController: NavHostController,
-    showTransactionsTab: () -> Unit,
-    showBottomBar: () -> Unit,
-    showFloatingAddMenu: () -> Unit,
-    hideExtendAddMenu: () -> Unit,
-    onCancelClick: () -> Unit,
+    onAcceptCancel: () -> Unit,
     onBackClick: () -> Unit,
-    onSaveClick: () -> Unit
+    onAccountSaved: () -> Unit
 ) {
     composable(
-        route = accountAmountRoute,
+        route = accountAmountInputRoute,
         content = {
 
             val parentEntry = remember(
@@ -163,13 +151,9 @@ fun NavGraphBuilder.accountAmountRoute(
             )
 
             AccountAmountRoute(
-                showTransactionsTab = showTransactionsTab,
-                showBottomBar = showBottomBar,
-                showFloatingAddMenu = showFloatingAddMenu,
-                hideExtendAddMenu = hideExtendAddMenu,
-                onCancelClick = onCancelClick,
+                onAcceptCancel = onAcceptCancel,
                 onBackClick = onBackClick,
-                onSaveClick = onSaveClick,
+                onAccountSaved = onAccountSaved,
                 viewModel = viewModel
             )
         }

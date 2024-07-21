@@ -20,17 +20,30 @@ import com.soleel.finanzas.core.ui.R
 
 @Preview
 @Composable
+fun AccountCreateTopAppBarPreview() {
+    CreateTopAppBar(
+        title = R.string.account_create_title,
+        subTitle = R.string.account_type_top_app_bar_subtitle,
+        onBackButton = {}
+    )
+}
+
+@Preview
+@Composable
 fun TransactionCreateTopAppBarPreview() {
-    TransactionCreateTopAppBar(
-        subTitle = R.string.account_type_top_app_bar_subtitle
-    ) {}
+    CreateTopAppBar(
+        title = R.string.trasaction_create_title,
+        subTitle = R.string.account_type_top_app_bar_subtitle,
+        onBackButton = {}
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TransactionCreateTopAppBar(
+fun CreateTopAppBar(
+    title: Int,
     subTitle: Int? = null,
-    onClick: () -> Unit
+    onBackButton: () -> Unit
 ) {
     CenterAlignedTopAppBar(
         title = {
@@ -39,11 +52,10 @@ fun TransactionCreateTopAppBar(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 content = {
                     Text(
-                        text = stringResource(id = R.string.trasaction_create_title),
+                        text = stringResource(id = title),
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.titleMedium
                     )
-
                     if (null != subTitle) {
                         Text(
                             text = stringResource(id = subTitle),
@@ -56,7 +68,7 @@ fun TransactionCreateTopAppBar(
         },
         navigationIcon = {
             IconButton(
-                onClick = { onClick() },
+                onClick = { onBackButton() },
                 content = {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,

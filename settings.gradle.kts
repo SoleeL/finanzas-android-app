@@ -34,7 +34,6 @@ include(":domain:validation")
 include(":domain:visualtransformation")
 
 include(":feature:add")
-include(":feature:cancelalert")
 include(":feature:accounts")
 include(":feature:accountcreate")
 include(":feature:profile")

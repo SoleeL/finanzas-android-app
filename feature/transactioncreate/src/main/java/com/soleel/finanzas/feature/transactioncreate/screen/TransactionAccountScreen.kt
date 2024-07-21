@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,7 +21,8 @@ import com.soleel.finanzas.core.common.enums.AccountTypeEnum
 import com.soleel.finanzas.core.model.Account
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.AccountCard
-import com.soleel.finanzas.core.ui.template.TransactionCreateTopAppBar
+import com.soleel.finanzas.core.ui.template.CancelAlertDialog
+import com.soleel.finanzas.core.ui.template.CreateTopAppBar
 import com.soleel.finanzas.core.ui.uivalues.getAccountUI
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.feature.transactioncreate.AccountsUiState
@@ -30,7 +32,7 @@ import java.util.Date
 
 @Composable
 internal fun TransactionAccountRoute(
-    onCancelClick: () -> Unit,
+    onAcceptCancel: () -> Unit,
     fromAccountToType: () -> Unit,
     viewModel: TransactionCreateViewModel
 ) {
@@ -39,9 +41,8 @@ internal fun TransactionAccountRoute(
 
     TransactionAccountScreen(
         modifier = Modifier,
-        onCancelClick = onCancelClick,
-        AccountsUiState = AccountsUiState,
-//        transactionUiCreate = transactionUiCreate,
+        onAcceptCancel = onAcceptCancel,
+        accountsUiState = AccountsUiState,
         onTransactionCreateUiEvent = viewModel::onTransactionCreateUiEvent,
         fromAccountToType = fromAccountToType
     )
@@ -52,8 +53,8 @@ internal fun TransactionAccountRoute(
 fun TransactionAccountScreenPreview() {
     TransactionAccountScreen(
         modifier = Modifier,
-        onCancelClick = {},
-        AccountsUiState = AccountsUiState.Success(
+        onAcceptCancel = {},
+        accountsUiState = AccountsUiState.Success(
             listOf(
                 Account(
                     id = "1",
@@ -93,42 +94,38 @@ fun TransactionAccountScreenPreview() {
 @Composable
 fun TransactionAccountScreen(
     modifier: Modifier,
-    onCancelClick: () -> Unit,
-    AccountsUiState: AccountsUiState,
-//    transactionUiCreate: TransactionUiCreate,
+    onAcceptCancel: () -> Unit,
+    accountsUiState: AccountsUiState,
     onTransactionCreateUiEvent: (TransactionUiEvent) -> Unit,
     fromAccountToType: () -> Unit
 ) {
+    val showCancelAlert: MutableState<Boolean> = remember(calculation =  { mutableStateOf(false) })
+
+    if (showCancelAlert.value) {
+        CancelAlertDialog(
+            onDismiss = { showCancelAlert.value = false },
+            onConfirmation = {
+                showCancelAlert.value = false
+                onAcceptCancel()
+            },
+            dialogTitle = "¿Quieres volver atras?",
+            dialogText = "Cancelaras la creacion de esta transaccion."
+        )
+    }
+
     BackHandler(
         enabled = true,
-        onBack = { onCancelClick() }
+        onBack = { showCancelAlert.value = false == showCancelAlert.value }
     )
 
     Scaffold(
         topBar = {
-            TransactionCreateTopAppBar(
+            CreateTopAppBar(
+                title= R.string.trasaction_create_title,
                 subTitle = R.string.trasaction_account_top_app_bar_subtitle,
-                onClick = onCancelClick
+                onBackButton = { showCancelAlert.value = true }
             )
         },
-//        bottomBar = {
-//            Column(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(bottom = 20.dp),
-//                horizontalAlignment = Alignment.CenterHorizontally,
-//                content = {
-//                    Button(
-//                        onClick = { fromAccountToType() },
-//                        modifier = Modifier
-//                            .fillMaxWidth(0.9f)
-//                            .height(64.dp),
-////                        enabled = 0 != AccountUiCreate.type,
-//                        content = { Text(text = "Avanzar a seleccion de tipo") }
-//                    )
-//                }
-//            )
-//        },
         content = {
 
             Column(
@@ -137,9 +134,9 @@ fun TransactionAccountScreen(
 //                    .wrapContentSize(Alignment.Center)
                     .padding(top = it.calculateTopPadding()),
                 content = {
-                    when (AccountsUiState) {
+                    when (accountsUiState) {
                         is AccountsUiState.Success -> SelectAccount(
-                            Accounts = AccountsUiState.accounts,
+                            accounts = accountsUiState.accounts,
 //                            transactionUiCreate = transactionUiCreate,
                             onTransactionCreateUiEvent = onTransactionCreateUiEvent,
                             fromAccountToType = fromAccountToType
@@ -156,7 +153,7 @@ fun TransactionAccountScreen(
 
 @Composable
 fun SelectAccount(
-    Accounts: List<Account>,
+    accounts: List<Account>,
 //    transactionUiCreate: TransactionUiCreate,
     onTransactionCreateUiEvent: (TransactionUiEvent) -> Unit,
     fromAccountToType: () -> Unit
@@ -165,7 +162,7 @@ fun SelectAccount(
         modifier = Modifier.fillMaxSize(),
         content = {
             items(
-                items = Accounts,
+                items = accounts,
                 itemContent = { account ->
 
                     val currencyVisualTransformation by remember(calculation = {

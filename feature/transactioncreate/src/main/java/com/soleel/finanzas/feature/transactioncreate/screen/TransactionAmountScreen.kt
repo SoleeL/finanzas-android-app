@@ -17,6 +17,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,8 +35,9 @@ import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
 import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.model.Account
 import com.soleel.finanzas.core.ui.R
+import com.soleel.finanzas.core.ui.template.CancelAlertDialog
+import com.soleel.finanzas.core.ui.template.CreateTopAppBar
 import com.soleel.finanzas.core.ui.template.TransactionCard
-import com.soleel.finanzas.core.ui.template.TransactionCreateTopAppBar
 import com.soleel.finanzas.core.ui.uivalues.getTransactionUI
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.domain.validation.validator.TransactionAmountValidator
@@ -47,26 +49,18 @@ import java.util.Date
 
 @Composable
 internal fun TransactionAmountRoute(
-    showTransactionsTab: () -> Unit,
-    showBottomBar: () -> Unit,
-    showFloatingAddMenu: () -> Unit,
-    hideExtendAddMenu: () -> Unit,
-    onCancelClick: () -> Unit,
+    onAcceptCancel: () -> Unit,
     onBackClick: () -> Unit,
-    onSaveClick: () -> Unit,
+    onTransactionSaved: () -> Unit,
     viewModel: TransactionCreateViewModel
 ) {
     val transactionUiCreate: TransactionUiCreate = viewModel.transactionUiCreate
 
     TransactionAmountScreen(
         modifier = Modifier,
-        showTransactionsTab = showTransactionsTab,
-        showBottomBar = showBottomBar,
-        showFloatingAddMenu = showFloatingAddMenu,
-        hideExtendAddMenu = hideExtendAddMenu,
-        onCancelClick = onCancelClick,
+        onAcceptCancel = onAcceptCancel,
         onBackClick = onBackClick,
-        onSaveClick = onSaveClick,
+        onTransactionSaved = onTransactionSaved,
         transactionUiCreate = transactionUiCreate,
         onTransactionCreateUiEvent = viewModel::onTransactionCreateUiEvent
     )
@@ -77,13 +71,9 @@ internal fun TransactionAmountRoute(
 fun TransactionAmountScreenPreview() {
     TransactionAmountScreen(
         modifier = Modifier,
-        showTransactionsTab = {},
-        showBottomBar = {},
-        showFloatingAddMenu = {},
-        hideExtendAddMenu = {},
-        onCancelClick = {},
+        onAcceptCancel = {},
         onBackClick = {},
-        onSaveClick = {},
+        onTransactionSaved = {},
         transactionUiCreate = TransactionUiCreate(
             account = Account(
                 id = "2",
@@ -105,34 +95,38 @@ fun TransactionAmountScreenPreview() {
 @Composable
 fun TransactionAmountScreen(
     modifier: Modifier,
-    showTransactionsTab: () -> Unit,
-    showBottomBar: () -> Unit,
-    showFloatingAddMenu: () -> Unit,
-    hideExtendAddMenu: () -> Unit,
-    onCancelClick: () -> Unit,
+    onAcceptCancel: () -> Unit,
     onBackClick: () -> Unit,
-    onSaveClick: () -> Unit,
+    onTransactionSaved: () -> Unit,
     transactionUiCreate: TransactionUiCreate,
     onTransactionCreateUiEvent: (TransactionUiEvent) -> Unit
 ) {
-    BackHandler(
-        enabled = true,
-        onBack = { onBackClick() }
-    )
+    val showCancelAlert: MutableState<Boolean> = remember(calculation =  { mutableStateOf(false) })
+
+    if (showCancelAlert.value) {
+        CancelAlertDialog(
+            onDismiss = { showCancelAlert.value = false },
+            onConfirmation = {
+                showCancelAlert.value = false
+                onAcceptCancel()
+            },
+            dialogTitle = "¿Quieres volver atras?",
+            dialogText = "Cancelaras la creacion de esta transaccion."
+        )
+    }
+
+    BackHandler(enabled = true, onBack = onBackClick)
 
     if (transactionUiCreate.isTransactionSaved) {
-        showTransactionsTab()
-        showBottomBar()
-        showFloatingAddMenu()
-        hideExtendAddMenu()
-        onSaveClick()
+        onTransactionSaved()
     }
 
     Scaffold(
         topBar = {
-            TransactionCreateTopAppBar(
+            CreateTopAppBar(
+                title= R.string.trasaction_create_title,
                 subTitle = R.string.trasaction_amount_top_app_bar_subtitle,
-                onClick = onCancelClick
+                onBackButton = { showCancelAlert.value = true }
             )
         },
         bottomBar = {

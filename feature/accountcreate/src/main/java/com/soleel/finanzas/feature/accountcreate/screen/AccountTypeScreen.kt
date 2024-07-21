@@ -10,12 +10,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.soleel.finanzas.core.common.enums.AccountTypeEnum
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.AccountCard
-import com.soleel.finanzas.core.ui.template.AccountCreateTopAppBar
+import com.soleel.finanzas.core.ui.template.CancelAlertDialog
+import com.soleel.finanzas.core.ui.template.CreateTopAppBar
 import com.soleel.finanzas.core.ui.uivalues.AccountUIValues
 import com.soleel.finanzas.feature.accountcreate.AccountCreateViewModel
 import com.soleel.finanzas.feature.accountcreate.AccountUiCreate
@@ -26,7 +30,7 @@ import com.soleel.finanzas.feature.accountcreate.util.AccountCards
 @Composable
 internal fun CreateSelectAccountTypeRoute(
     modifier: Modifier = Modifier,
-    onCancelClick: () -> Unit,
+    onAcceptCancel: () -> Unit,
     fromTypeToName: () -> Unit,
     viewModel: AccountCreateViewModel
 ) {
@@ -34,10 +38,10 @@ internal fun CreateSelectAccountTypeRoute(
 
     CreateSelectAccountTypeScreen(
         modifier = modifier,
-        onCancelClick = onCancelClick,
+        onAcceptCancel = onAcceptCancel,
+        fromTypeToName = fromTypeToName,
         accountCreateUi = accountCreateUi,
-        onAccountCreateEventUi = viewModel::onAccountCreateEventUi,
-        fromTypeToName = fromTypeToName
+        onAccountCreateEventUi = viewModel::onAccountCreateEventUi
     )
 }
 
@@ -46,10 +50,10 @@ internal fun CreateSelectAccountTypeRoute(
 fun CreateSelectAccountTypeScreenPreview() {
     CreateSelectAccountTypeScreen(
         modifier = Modifier,
-        onCancelClick = {},
+        onAcceptCancel = {},
+        fromTypeToName = {},
         accountCreateUi = AccountUiCreate(),
-        onAccountCreateEventUi = {},
-        fromTypeToName = {}
+        onAccountCreateEventUi = {}
     )
 }
 
@@ -57,21 +61,36 @@ fun CreateSelectAccountTypeScreenPreview() {
 @Composable
 internal fun CreateSelectAccountTypeScreen(
     modifier: Modifier,
-    onCancelClick: () -> Unit,
+    onAcceptCancel: () -> Unit,
+    fromTypeToName: () -> Unit,
     accountCreateUi: AccountUiCreate,
-    onAccountCreateEventUi: (AccountUiEvent) -> Unit,
-    fromTypeToName: () -> Unit
+    onAccountCreateEventUi: (AccountUiEvent) -> Unit
 ) {
+    val showCancelAlert: MutableState<Boolean> = remember(calculation =  { mutableStateOf(false) })
+
+    if (showCancelAlert.value) {
+        CancelAlertDialog(
+            onDismiss = { showCancelAlert.value = false },
+            onConfirmation = {
+                showCancelAlert.value = false
+                onAcceptCancel()
+            },
+            dialogTitle = "¿Quieres volver atras?",
+            dialogText = "Cancelaras la creacion de esta cuenta."
+        )
+    }
+
     BackHandler(
         enabled = true,
-        onBack = { onCancelClick() }
+        onBack = { showCancelAlert.value = false == showCancelAlert.value }
     )
 
     Scaffold(
         topBar = {
-            AccountCreateTopAppBar(
+            CreateTopAppBar(
+                title = R.string.account_create_title,
                 subTitle = R.string.account_type_top_app_bar_subtitle,
-                onCancelClick = onCancelClick
+                onBackButton = { showCancelAlert.value = true }
             )
         },
 //        bottomBar = {

@@ -16,6 +16,7 @@ import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransa
 import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionTypeRoute
 import com.soleel.finanzas.feature.transactioncreate.navigation.transactionCreateGraph
 import com.soleel.finanzas.feature.transactions.navigation.TRANSACTIONS_ROUTE
+import com.soleel.finanzas.feature.transactions.navigation.destination.isTransactionsLevelDestination
 import com.soleel.finanzas.feature.transactions.navigation.transactionsGraph
 import com.soleel.finanzas.ui.FinanzasAppState
 
@@ -51,31 +52,47 @@ fun FinanzasNavHost(
 
             accountCreateGraph(
                 navController = navController,
-                showTransactionsTab = appState::showTransactionsTab,
-                showBottomBar = appState::showBottomBar,
-                showFloatingAddMenu = appState::showFloatingAddMenu,
-                hideExtendAddMenu = appState::hideExtendAddMenu,
-                onBackClick = appState::backToHome,
-                onCancelClick = appState::showCancelAlert,
-                onSaveClick = appState::backToHome,
+                onAcceptCancel = {
+                    appState.popBackStackAccountCreate()
+                    appState.hideExtendAddMenu()
+                    appState.showFloatingAddMenu()
+                    appState.showBottomBar()
+                    appState.updateTransactionsTab()
+                },
+                onBackClick = navController::popBackStack,
                 fromTypeToName = navController::navigateToAccountNameRoute,
-                fromNameToAmount = navController::navigateToAccountAmountRoute
+                fromNameToAmount = navController::navigateToAccountAmountRoute,
+                onAccountSaved = {
+                    appState.backToAccounts()
+                    appState.hideExtendAddMenu()
+                    appState.showFloatingAddMenu()
+                    appState.showBottomBar()
+                    appState.updateTransactionsTab()
+                }
             )
 
             transactionCreateGraph(
                 navController = navController,
-                showTransactionsTab = appState::showTransactionsTab,
-                showBottomBar = appState::showBottomBar,
-                showFloatingAddMenu = appState::showFloatingAddMenu,
-                hideExtendAddMenu = appState::hideExtendAddMenu,
-                onBackClick = appState::backToHome,
-                onCancelClick = appState::showCancelAlert,
-                onSaveClick = appState::backToHome,
+                onAcceptCancel = {
+                    appState.popBackStackTransactionCreate()
+                    appState.hideExtendAddMenu()
+                    appState.showFloatingAddMenu()
+                    appState.showBottomBar()
+                    appState.updateTransactionsTab()
+                },
+                onBackClick = navController::popBackStack,
                 fromInitToAccount = navController::navigateToTransactionAccountRoute,
                 fromAccountToType = navController::navigateToTransactionTypeRoute,
                 fromTypeToCategory = navController::navigateToTransactionCategoryRoute,
                 fromCategoryToName = navController::navigateToTransactionNameRoute,
                 fromNameToAmount = navController::navigateToTransactionAmountRoute,
+                onTransactionSaved = {
+                    appState.backToTransactions()
+                    appState.hideExtendAddMenu()
+                    appState.showFloatingAddMenu()
+                    appState.showBottomBar()
+                    appState.updateTransactionsTab()
+                }
             )
         }
     )
