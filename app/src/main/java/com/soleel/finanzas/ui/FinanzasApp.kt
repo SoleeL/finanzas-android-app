@@ -85,7 +85,7 @@ fun FinanzasApp(
                             showExtendAddMenu = appState::showExtendAddMenu,
                             hideExtendAddMenu = appState::hideExtendAddMenu,
                             onNavigateToCreateAccount = {
-                                appState.navigateToAccountCreate()
+                                appState.navigateToCreateAccount()
                                 appState.hideFloatingAddMenu()
                                 appState.updateTransactionsTab()
                                 appState.hideBottomBar()

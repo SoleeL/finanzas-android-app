@@ -2,6 +2,8 @@ package com.soleel.finanzas.feature.transactions.navigation
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -79,6 +81,10 @@ private fun NavGraphBuilder.allTransactionsScreen(
 ) {
     composable(
         route = ALL_TRANSACTIONS_ROUTE,
+        enterTransition = { fadeIn(initialAlpha = 1f) },
+        exitTransition = { fadeOut(targetAlpha = 1f) },
+        popEnterTransition = { fadeIn(initialAlpha = 1f) },
+        popExitTransition = { fadeOut(targetAlpha = 1f) },
         arguments = listOf(
             navArgument(
                 name = SUMMARY_PERIOD_ARG,
@@ -101,6 +107,10 @@ private fun NavGraphBuilder.dailyTransactionsScreen(
 ) {
     composable(
         route = DAILY_TRANSACTIONS_ROUTE,
+        enterTransition = { fadeIn(initialAlpha = 1f) },
+        exitTransition = { fadeOut(targetAlpha = 1f) },
+        popEnterTransition = { fadeIn(initialAlpha = 1f) },
+        popExitTransition = { fadeOut(targetAlpha = 1f) },
         arguments = listOf(
             navArgument(
                 name = SUMMARY_PERIOD_ARG,
@@ -123,6 +133,10 @@ private fun NavGraphBuilder.weeklyTransactionsScreen(
 ) {
     composable(
         route = WEEKLY_TRANSACTIONS_ROUTE,
+        enterTransition = { fadeIn(initialAlpha = 1f) },
+        exitTransition = { fadeOut(targetAlpha = 1f) },
+        popEnterTransition = { fadeIn(initialAlpha = 1f) },
+        popExitTransition = { fadeOut(targetAlpha = 1f) },
         arguments = listOf(
             navArgument(
                 name = SUMMARY_PERIOD_ARG,
@@ -145,6 +159,10 @@ private fun NavGraphBuilder.monthlyTransactionsScreen(
 ) {
     composable(
         route = MONTHLY_TRANSACTIONS_ROUTE,
+        enterTransition = { fadeIn(initialAlpha = 1f) },
+        exitTransition = { fadeOut(targetAlpha = 1f) },
+        popEnterTransition = { fadeIn(initialAlpha = 1f) },
+        popExitTransition = { fadeOut(targetAlpha = 1f) },
         arguments = listOf(
             navArgument(
                 name = SUMMARY_PERIOD_ARG,

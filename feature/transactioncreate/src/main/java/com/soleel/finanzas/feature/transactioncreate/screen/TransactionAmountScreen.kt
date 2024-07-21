@@ -40,7 +40,7 @@ import com.soleel.finanzas.core.ui.template.CreateTopAppBar
 import com.soleel.finanzas.core.ui.template.TransactionCard
 import com.soleel.finanzas.core.ui.uivalues.getTransactionUI
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
-import com.soleel.finanzas.domain.validation.validator.TransactionAmountValidator
+import com.soleel.finanzas.domain.validation.validator.ValidatorTransactionAmount
 import com.soleel.finanzas.feature.transactioncreate.TransactionCreateViewModel
 import com.soleel.finanzas.feature.transactioncreate.TransactionUiCreate
 import com.soleel.finanzas.feature.transactioncreate.TransactionUiEvent
@@ -206,7 +206,7 @@ fun EnterTransactionAmountTextFlied(
                 .trimStart('0')
                 .trim(predicate = { inputTrimStart -> inputTrimStart.isDigit().not() })
 
-            if (trimmed.length <= TransactionAmountValidator.maxCharLimit) {
+            if (trimmed.length <= ValidatorTransactionAmount.MAX_CHAR_LIMIT) {
                 onTransactionCreateUiEvent(
                     TransactionUiEvent.TransactionAmountChanged(
                         if (trimmed.isBlank()) 0 else trimmed.toInt()

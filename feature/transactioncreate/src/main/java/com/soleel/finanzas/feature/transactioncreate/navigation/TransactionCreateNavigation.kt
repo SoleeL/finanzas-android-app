@@ -1,5 +1,7 @@
 package com.soleel.finanzas.feature.transactioncreate.navigation
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -113,6 +115,10 @@ fun NavGraphBuilder.transactionCreateRoute(
 ) {
     composable(
         route = transactionCreateRoute,
+        enterTransition = { fadeIn(initialAlpha = 1f) },
+        exitTransition = { fadeOut(targetAlpha = 1f) },
+        popEnterTransition = { fadeIn(initialAlpha = 1f) },
+        popExitTransition = { fadeOut(targetAlpha = 1f) },
         content = {
 
             val parentEntry = remember(
@@ -142,8 +148,11 @@ fun NavGraphBuilder.transactionAccountRoute(
 ) {
     composable(
         route = transactionSelectAccountRoute,
+        enterTransition = { fadeIn(initialAlpha = 1f) },
+        exitTransition = { fadeOut(targetAlpha = 1f) },
+        popEnterTransition = { fadeIn(initialAlpha = 1f) },
+        popExitTransition = { fadeOut(targetAlpha = 1f) },
         content = {
-
             val parentEntry = remember(
                 key1 = it,
                 calculation = {
@@ -172,6 +181,10 @@ fun NavGraphBuilder.transactionTypeRoute(
 ) {
     composable(
         route = transactionSelectTypeRoute,
+        enterTransition = { fadeIn(initialAlpha = 1f) },
+        exitTransition = { fadeOut(targetAlpha = 1f) },
+        popEnterTransition = { fadeIn(initialAlpha = 1f) },
+        popExitTransition = { fadeOut(targetAlpha = 1f) },
         content = {
 
             val parentEntry = remember(
@@ -203,6 +216,10 @@ fun NavGraphBuilder.transactionCategoryRoute(
 ) {
     composable(
         route = transactionSelectCategoryRoute,
+        enterTransition = { fadeIn(initialAlpha = 1f) },
+        exitTransition = { fadeOut(targetAlpha = 1f) },
+        popEnterTransition = { fadeIn(initialAlpha = 1f) },
+        popExitTransition = { fadeOut(targetAlpha = 1f) },
         content = {
 
             val parentEntry = remember(
@@ -234,6 +251,10 @@ fun NavGraphBuilder.transactionNameRoute(
 ) {
     composable(
         route = transactionInputNameRoute,
+        enterTransition = { fadeIn(initialAlpha = 1f) },
+        exitTransition = { fadeOut(targetAlpha = 1f) },
+        popEnterTransition = { fadeIn(initialAlpha = 1f) },
+        popExitTransition = { fadeOut(targetAlpha = 1f) },
         content = {
 
             val parentEntry = remember(
@@ -265,8 +286,11 @@ fun NavGraphBuilder.transactionAmountRoute(
 ) {
     composable(
         route = transactionInputAmountRoute,
+        enterTransition = { fadeIn(initialAlpha = 1f) },
+        exitTransition = { fadeOut(targetAlpha = 1f) },
+        popEnterTransition = { fadeIn(initialAlpha = 1f) },
+        popExitTransition = { fadeOut(targetAlpha = 1f) },
         content = {
-
             val parentEntry = remember(
                 key1 = it,
                 calculation = {

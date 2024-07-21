@@ -7,14 +7,14 @@
     <string name="next_step">"Siguiente"</string>
 
     <!-- CREATE TRANSACTION STRINGS -->
-    <string name="account_create_title">"Crear Cuenta de Pago"</string>
+    <string name="account_create_title">"Crear cuenta de pagos"</string>
     <string name="account_type_top_app_bar_subtitle" tools:ignore="TypographyFractions">"Seleccionar tipo de cuenta (1/3)"</string>
     <string name="attribute_account_type_field">"Tipo de cuenta de pago"</string>
     <string name="account_name_top_app_bar_subtitle" tools:ignore="TypographyFractions">"Ingresar nombre de la cuenta (2/3)"</string>
     <string name="attribute_account_name_field">"Nombre de la cuenta de pago"</string>
     <string name="account_amount_top_app_bar_subtitle" tools:ignore="TypographyFractions">"Ingresar monto de la cuenta (3/3)"</string>
     <string name="attribute_account_amount_field">"Monto de la cuenta de pago"</string>
-    <string name="add_account_button">"Agregar cuenta de pago"</string>
+    <string name="save_account_button">"Guardar cuenta de pagos"</string>
 
     <!-- CREATE TRANSACTION STRINGS -->
     <string name="trasaction_create_title">"Crear Transaccion"</string>

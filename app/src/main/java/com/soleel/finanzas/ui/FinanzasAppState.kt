@@ -8,17 +8,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import androidx.tracing.trace
-import com.soleel.finanzas.feature.accountcreate.navigation.accountCreateGraph
-import com.soleel.finanzas.feature.accountcreate.navigation.navigateToAccountCreateGraph
 import com.soleel.finanzas.feature.accounts.navigation.ACCOUNTS_ROUTE
 import com.soleel.finanzas.feature.accounts.navigation.navigateToAccounts
+import com.soleel.finanzas.feature.createaccount.navigation.CREATE_ACCOUNT_ROUTE
+import com.soleel.finanzas.feature.createaccount.navigation.navigateToCreateAccountRoute
 import com.soleel.finanzas.feature.profile.navigation.navigateToProfile
 import com.soleel.finanzas.feature.stats.navigation.navigateToStats
 import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionCreateGraph
@@ -45,7 +44,6 @@ fun rememberFinanzasAppState(
     showBottomBar: MutableState<Boolean> = remember { mutableStateOf(true) },
     showFloatingAddMenu: MutableState<Boolean> = remember { mutableStateOf(true) },
     showExtendAddMenu: MutableState<Boolean> = remember { mutableStateOf(false) },
-    showCancelAlert: MutableState<Boolean> = remember { mutableStateOf(false) }
 ): FinanzasAppState {
 
     return remember(
@@ -60,7 +58,6 @@ fun rememberFinanzasAppState(
                 showBottomBar = showBottomBar,
                 showFloatingAddMenu = showFloatingAddMenu,
                 showExtendAddMenu = showExtendAddMenu,
-                showCancelAlert = showCancelAlert
             )
         }
     )
@@ -73,7 +70,6 @@ private fun createAppState(
     showBottomBar: MutableState<Boolean>,
     showFloatingAddMenu: MutableState<Boolean>,
     showExtendAddMenu: MutableState<Boolean>,
-    showCancelAlert: MutableState<Boolean>
 ): FinanzasAppState {
     return FinanzasAppState(
         navController = navController,
@@ -82,7 +78,6 @@ private fun createAppState(
         showBottomBar = showBottomBar,
         showFloatingAddMenu = showFloatingAddMenu,
         showExtendAddMenu = showExtendAddMenu,
-        showCancelAlert = showCancelAlert
     )
 }
 
@@ -93,20 +88,11 @@ class FinanzasAppState(
     val showBottomBar: MutableState<Boolean>,
     val showFloatingAddMenu: MutableState<Boolean>,
     val showExtendAddMenu: MutableState<Boolean>,
-    val showCancelAlert: MutableState<Boolean>,
 ) {
 
     @Composable
     fun getCurrentDestination(): NavDestination? {
         return this.navController.currentBackStackEntryAsState().value?.destination
-    }
-
-    @Composable
-    fun getCurrentTopLevelDestination(): TopLevelDestination? {
-        return when (getCurrentDestination()?.route) {
-            TRANSACTIONS_ROUTE -> TRANSACTIONS
-            else -> null
-        }
     }
 
     fun topLevelDestinations(): List<TopLevelDestination> {
@@ -153,8 +139,8 @@ class FinanzasAppState(
         this.navController.navigateToSummaryPeriodTransactions(transactionsLevelDestination = transactionsLevelDestination)
     }
 
-    fun navigateToAccountCreate() {
-        this.navController.navigateToAccountCreateGraph()
+    fun navigateToCreateAccount() {
+        this.navController.navigateToCreateAccountRoute()
     }
 
     fun navigateToTransactionCreate() {
@@ -165,20 +151,9 @@ class FinanzasAppState(
         this.navController.popBackStack(route = transactionCreateRoute, inclusive = true)
     }
 
-    fun popBackStackAccountCreate() {
-        this.navController.popBackStack(route = accountCreateGraph, inclusive = true)
-    }
-
     fun backToTransactions() {
         this.navController.popBackStack(
             route = ALL_TRANSACTIONS_ROUTE,
-            inclusive = false
-        )
-    }
-
-    fun backToAccounts() {
-        this.navController.popBackStack(
-            route = ACCOUNTS_ROUTE,
             inclusive = false
         )
     }
@@ -234,18 +209,6 @@ class FinanzasAppState(
 
     fun hideExtendAddMenu() {
         this.showExtendAddMenu.value = false
-    }
-
-    fun shouldShowCancelAlert(): Boolean {
-        return this.showCancelAlert.value
-    }
-
-    fun showCancelAlert() {
-        this.showCancelAlert.value = true
-    }
-
-    fun hideCancelAlert() {
-        this.showCancelAlert.value = false
     }
 }
 
