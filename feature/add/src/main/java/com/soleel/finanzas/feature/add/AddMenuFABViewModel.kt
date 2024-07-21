@@ -12,11 +12,10 @@ import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 data class AddUiState(
-    val itemsAccount: List<Account> = emptyList(),
     val userMessage: String? = null,
     val isAccountLoading: Boolean = false,
     val isAccountSuccess: Boolean = false,
-    val isAccountEmpty: Boolean = false,
+    val isAccountsEmpty: Boolean = false,
 )
 
 @HiltViewModel
@@ -42,10 +41,9 @@ open class AddMenuFABViewModel @Inject constructor(
         itemsAccount: List<Account>
     ): AddUiState {
         return AddUiState(
-            itemsAccount = itemsAccount,
             isAccountLoading = false,
             isAccountSuccess = true,
-            isAccountEmpty = itemsAccount.isEmpty()
+            isAccountsEmpty = itemsAccount.isEmpty()
         )
     }
 }

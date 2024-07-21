@@ -15,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.soleel.finanzas.feature.add.AddMenuFAB
-import com.soleel.finanzas.core.ui.template.CancelAlertDialog
 import com.soleel.finanzas.feature.transactions.navigation.SUMMARY_PERIOD_ARG
 import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination
 import com.soleel.finanzas.navigation.FinanzasNavHost
@@ -46,7 +44,8 @@ fun FinanzasApp(
             //                toSearch = transactionsState.navigateToSearch()
             //            )
 
-            val selectedTabIndex: MutableState<Int> = remember(calculation =  { mutableIntStateOf(0) })
+            val selectedTabIndex: MutableState<Int> =
+                remember(calculation = { mutableIntStateOf(0) })
 
             if (appState.shouldShowTransactionsTab()) {
                 TransactionsTab(
@@ -82,14 +81,21 @@ fun FinanzasApp(
                     contentAlignment = Alignment.BottomEnd,
                     content = {
                         AddMenuFAB(
-                            hideFloatingAddMenu = appState::hideFloatingAddMenu,
                             shouldShowExtendAddMenu = appState.shouldShowExtendAddMenu(),
                             showExtendAddMenu = appState::showExtendAddMenu,
                             hideExtendAddMenu = appState::hideExtendAddMenu,
-                            hideTransactionsTab = appState::hideTransactionsTab,
-                            hideBottomBar = appState::hideBottomBar,
-                            toAccountCreate = appState::navigateToAccountCreate,
-                            toTransactionCreate = appState::navigateToTransactionCreate
+                            onNavigateToCreateAccount = {
+                                appState.navigateToAccountCreate()
+                                appState.hideFloatingAddMenu()
+                                appState.updateTransactionsTab()
+                                appState.hideBottomBar()
+                            },
+                            onNavigateToCreateTransaction = {
+                                appState.navigateToTransactionCreate()
+                                appState.hideFloatingAddMenu()
+                                appState.updateTransactionsTab()
+                                appState.hideBottomBar()
+                            }
                         )
                     }
                 )
@@ -113,7 +119,7 @@ private fun TransactionsTabPreview(
         destinations = TransactionsLevelDestination.entries,
         onNavigateToDestination = {},
         currentDestination = appState.getCurrentDestination(),
-        selectedTabIndex = remember(calculation =  { mutableIntStateOf(0) })
+        selectedTabIndex = remember(calculation = { mutableIntStateOf(0) })
     )
 }
 
@@ -124,7 +130,8 @@ private fun TransactionsTab(
     currentDestination: NavDestination?,
     selectedTabIndex: MutableState<Int>
 ) {
-    val currentTransactionsLevel: TransactionsLevelDestination = currentDestination?.getTransactionsLevel() ?: TransactionsLevelDestination.ALL
+    val currentTransactionsLevel: TransactionsLevelDestination =
+        currentDestination?.getTransactionsLevel() ?: TransactionsLevelDestination.ALL
 
     TabRow(
         selectedTabIndex = selectedTabIndex.value,
