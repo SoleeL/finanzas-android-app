@@ -13,6 +13,10 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -41,11 +45,15 @@ fun FinanzasApp(
             //                toTimePeriodSelection = transactionsState.navigateToTimePeriodSelection(),
             //                toSearch = transactionsState.navigateToSearch()
             //            )
-            if (appState.shouldShowTransactionsTab()) { // TODO: Buscar la forma de que desaparezca con suavidad
+
+            val selectedTabIndex: MutableState<Int> = remember(calculation =  { mutableIntStateOf(0) })
+
+            if (appState.shouldShowTransactionsTab()) {
                 TransactionsTab(
                     destinations = appState.transactionsLevelDestinations(),
                     onNavigateToDestination = appState::navigateToTransactions,
-                    currentDestination = appState.getCurrentDestination()
+                    currentDestination = appState.getCurrentDestination(),
+                    selectedTabIndex = selectedTabIndex
                 )
             }
         },
@@ -104,7 +112,8 @@ private fun TransactionsTabPreview(
     TransactionsTab(
         destinations = TransactionsLevelDestination.entries,
         onNavigateToDestination = {},
-        currentDestination = appState.getCurrentDestination()
+        currentDestination = appState.getCurrentDestination(),
+        selectedTabIndex = remember(calculation =  { mutableIntStateOf(0) })
     )
 }
 
@@ -113,11 +122,12 @@ private fun TransactionsTab(
     destinations: List<TransactionsLevelDestination>,
     onNavigateToDestination: (TransactionsLevelDestination) -> Unit,
     currentDestination: NavDestination?,
+    selectedTabIndex: MutableState<Int>
 ) {
     val currentTransactionsLevel: TransactionsLevelDestination = currentDestination?.getTransactionsLevel() ?: TransactionsLevelDestination.ALL
 
     TabRow(
-        selectedTabIndex = currentTransactionsLevel.ordinal,
+        selectedTabIndex = selectedTabIndex.value,
         tabs = {
             destinations.forEachIndexed { index, transactionsLevel ->
                 Tab(
@@ -125,8 +135,9 @@ private fun TransactionsTab(
                     selected = currentTransactionsLevel.ordinal == index,
                     enabled = true,
                     onClick = {
+                        selectedTabIndex.value = index
                         onNavigateToDestination(TransactionsLevelDestination.entries[index])
-                    },
+                    }
                 )
             }
         }

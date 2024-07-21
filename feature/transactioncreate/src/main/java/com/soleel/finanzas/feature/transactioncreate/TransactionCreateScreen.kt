@@ -2,6 +2,7 @@ package com.soleel.finanzas.feature.transactioncreate
 
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -123,17 +125,33 @@ fun TransactionCreateErrorScreen(
     }
 }
 
+@Preview
+@Composable
+fun TransactionCreateLoadingScreenPreview() {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .background(color = MaterialTheme.colorScheme.background),
+        content = { TransactionCreateLoadingScreen() }
+    )
+}
+
 @Composable
 fun TransactionCreateLoadingScreen() {
-    Box(
+    Column(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
         content = {
             CircularProgressIndicator(
                 color = ProgressIndicatorDefaults.circularColor,
                 strokeWidth = 5.dp,
                 trackColor = ProgressIndicatorDefaults.circularTrackColor,
                 strokeCap = ProgressIndicatorDefaults.CircularIndeterminateStrokeCap
+            )
+
+            Text(
+                modifier = Modifier.padding(top = 4.dp),
+                text = "Obteniendo cuentas"
             )
         }
     )

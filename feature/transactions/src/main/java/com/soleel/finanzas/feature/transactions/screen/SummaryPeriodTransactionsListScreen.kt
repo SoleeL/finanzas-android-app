@@ -37,29 +37,30 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.model.TransactionsSummary
 import com.soleel.finanzas.core.ui.theme.TransactionTypeExpenditureBackgroundColor
 import com.soleel.finanzas.core.ui.theme.TransactionTypeIncomeBackgroundColor
 import com.soleel.finanzas.core.ui.theme.TransactionTypeLetterColor
-import com.soleel.finanzas.domain.formatdate.AllTransactionsGroupDateUseCase
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.feature.transactions.TransactionsErrorScreen
 import com.soleel.finanzas.feature.transactions.TransactionsLoadingScreen
 import com.soleel.finanzas.feature.transactions.TransactionsSummaryUiState
 import com.soleel.finanzas.feature.transactions.TransactionsUiEvent
 import com.soleel.finanzas.feature.transactions.TransactionsViewModel
-import java.util.Date
 
+// README: El uso repetitivo de este composable en
+//  la navegacion, puede estar provocando una ejecucion de los casos de uso innecesaria.
 @Composable
-internal fun TransactionsSummaryListRoute(
+internal fun SummaryPeriodTransactionsListRoute(
     modifier: Modifier = Modifier,
     finishApp: (Context) -> Unit,
     viewModel: TransactionsViewModel = hiltViewModel()
 ) {
-    val transactionsSummaryUiState: TransactionsSummaryUiState by viewModel.transactionsSummaryUiState.collectAsState()
+    val transactionsSummaryUiState: TransactionsSummaryUiState by viewModel.transactionsSummaryUiState.collectAsStateWithLifecycle()
 
-    TransactionsSummaryListScreen(
+    SummaryPeriodTransactionsListScreen(
         modifier = modifier,
         finishApp = finishApp,
         transactionsSummaryUiState = transactionsSummaryUiState,
@@ -68,7 +69,7 @@ internal fun TransactionsSummaryListRoute(
 }
 
 @Composable
-private fun TransactionsSummaryListScreen(
+private fun SummaryPeriodTransactionsListScreen(
     modifier: Modifier,
     finishApp: (Context) -> Unit,
     transactionsSummaryUiState: TransactionsSummaryUiState,
@@ -85,7 +86,7 @@ private fun TransactionsSummaryListScreen(
     )
 
     when (transactionsSummaryUiState) {
-        is TransactionsSummaryUiState.Success -> TransactionsSummarySuccessScreen(
+        is TransactionsSummaryUiState.Success -> SummaryPeriodTransactionsSuccessScreen(
             transactionsSummaryList = transactionsSummaryUiState.transactionsSummaryList
         )
 
@@ -99,7 +100,7 @@ private fun TransactionsSummaryListScreen(
 }
 
 @Composable
-private fun TransactionsSummarySuccessScreen(
+private fun SummaryPeriodTransactionsSuccessScreen(
     transactionsSummaryList: List<TransactionsSummary>
 ) {
     if (transactionsSummaryList.isEmpty()) {
@@ -118,13 +119,13 @@ private fun TransactionsSummarySuccessScreen(
             }
         )
     } else {
-        TransactionsSummaryList(transactionsSummaryList = transactionsSummaryList)
+        SummaryPeriodTransactionsList(transactionsSummaryList = transactionsSummaryList)
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun TransactionsSummaryList(
+private fun SummaryPeriodTransactionsList(
     transactionsSummaryList: List<TransactionsSummary>
 ) {
     val currencyVisualTransformation by remember(calculation = {

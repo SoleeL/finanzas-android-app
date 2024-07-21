@@ -1,6 +1,7 @@
 package com.soleel.finanzas.feature.transactions.navigation
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -12,7 +13,7 @@ import androidx.navigation.navigation
 import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination
 import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination.Companion.lowercase
 import com.soleel.finanzas.feature.transactions.screen.AllTransactionsListRoute
-import com.soleel.finanzas.feature.transactions.screen.TransactionsSummaryListRoute
+import com.soleel.finanzas.feature.transactions.screen.SummaryPeriodTransactionsListRoute
 import java.net.URLDecoder
 import java.net.URLEncoder
 import kotlin.text.Charsets.UTF_8
@@ -110,7 +111,7 @@ private fun NavGraphBuilder.dailyTransactionsScreen(
             )
         ),
         content = {
-            TransactionsSummaryListRoute(
+            SummaryPeriodTransactionsListRoute(
                 finishApp = finishApp
             )
         }
@@ -132,7 +133,7 @@ private fun NavGraphBuilder.weeklyTransactionsScreen(
             )
         ),
         content = {
-            TransactionsSummaryListRoute(
+            SummaryPeriodTransactionsListRoute(
                 finishApp = finishApp
             )
         }
@@ -154,7 +155,7 @@ private fun NavGraphBuilder.monthlyTransactionsScreen(
             )
         ),
         content = {
-            TransactionsSummaryListRoute(
+            SummaryPeriodTransactionsListRoute(
                 finishApp = finishApp
             )
         }

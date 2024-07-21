@@ -21,10 +21,12 @@ import com.soleel.finanzas.domain.validation.validator.TransactionCategoryValida
 import com.soleel.finanzas.domain.validation.validator.TransactionTypeValidator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Date
@@ -99,7 +101,9 @@ class TransactionCreateViewModel @Inject constructor(
             accountUiState(accountRepository = accountRepository)
         })
 
-    val accountsUiState: StateFlow<AccountsUiState> = _accountsUiState.stateIn(
+    val accountsUiState: StateFlow<AccountsUiState> = _accountsUiState
+        .onStart(action = { delay(500) })
+        .stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
         initialValue = AccountsUiState.Loading

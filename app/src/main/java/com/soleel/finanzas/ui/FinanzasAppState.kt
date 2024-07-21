@@ -145,46 +145,6 @@ class FinanzasAppState(
         return TransactionsLevelDestination.entries
     }
 
-//    fun navigateToTransactionsLevelDestination(transactionsLevelDestination: TransactionsLevelDestination) {
-//        trace(
-//            label = "Navigation: ${transactionsLevelDestination.name}",
-//            block = {
-//                val transactionsLevelNavOptions = navOptions(
-//                    optionsBuilder = {
-//                        popUpTo(
-//                            id = navController.graph.findStartDestination().id,
-//                            popUpToBuilder = { saveState = true }
-//                        )
-//                        launchSingleTop = true
-//                        restoreState = true
-//                    }
-//                )
-//
-//                when (transactionsLevelDestination) {
-//                    TransactionsLevelDestination.ALL -> navController.navigateToAllTransactions(
-//                        navOptions = transactionsLevelNavOptions
-//                    )
-//
-//                    TransactionsLevelDestination.DAILY -> navController.navigateToDailyTransactions(
-//                        navOptions = transactionsLevelNavOptions
-//                    )
-//
-//                    TransactionsLevelDestination.WEEKLY -> navController.navigateToWeeklyTransactions(
-//                        navOptions = transactionsLevelNavOptions
-//                    )
-//
-//                    TransactionsLevelDestination.MONTHLY -> navController.navigateToMonthlyTransactions(
-//                        navOptions = transactionsLevelNavOptions
-//                    )
-//
-//                    TransactionsLevelDestination.ANNUALLY -> navController.navigateToAnnuallyTransactions(
-//                        navOptions = transactionsLevelNavOptions
-//                    )
-//                }
-//            }
-//        )
-//    }
-
     fun finishApp(context: Context) {
         (context as Activity).finish()
     }
