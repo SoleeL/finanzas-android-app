@@ -2,6 +2,7 @@ package com.soleel.finanzas.feature.transactioncreate
 
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,31 +22,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.soleel.finanzas.core.ui.template.TransactionCreateTopAppBar
+import com.soleel.finanzas.core.ui.R
+import com.soleel.finanzas.core.ui.template.CreateTopAppBar
 
 
 @Composable
 internal fun TransactionCreateRoute(
     modifier: Modifier = Modifier,
-    showBottomBar: () -> Unit,
-    showFloatingAddMenu: () -> Unit,
     onBackClick: () -> Unit,
-    fromInitToPaymentAccount: () -> Unit,
+    fromInitToAccount: () -> Unit,
     viewModel: TransactionCreateViewModel = hiltViewModel()
 ) {
-    val paymentAccountsUiState by viewModel.paymentAccountsUiState.collectAsStateWithLifecycle()
+    val accountsUiState by viewModel.accountsUiState.collectAsStateWithLifecycle()
 
     TransactionCreateScreen(
         modifier = modifier,
-        showBottomBar = showBottomBar,
-        showFloatingAddMenu = showFloatingAddMenu,
         onBackClick = onBackClick,
-        fromInitToPaymentAccount = fromInitToPaymentAccount,
-        paymentAccountsUiState = paymentAccountsUiState,
-        onPaymentAccountsUiEvent = viewModel::onPaymentAccountsUiEvent
+        fromInitToAccount = fromInitToAccount,
+        accountsUiState = accountsUiState,
+        onAccountsUiEvent = viewModel::onAccountsUiEvent
     )
 }
 
@@ -53,52 +52,41 @@ internal fun TransactionCreateRoute(
 @Composable
 private fun TransactionCreateScreen(
     modifier: Modifier,
-    showBottomBar: () -> Unit,
-    showFloatingAddMenu: () -> Unit,
     onBackClick: () -> Unit,
-    fromInitToPaymentAccount: () -> Unit,
-    paymentAccountsUiState: PaymentAccountsUiState,
-    onPaymentAccountsUiEvent: (PaymentAccountsUiEvent) -> Unit
+    fromInitToAccount: () -> Unit,
+    accountsUiState: AccountsUiState,
+    onAccountsUiEvent: (AccountsUiEvent) -> Unit
 ) {
 
     BackHandler(
         enabled = true,
-        onBack = {
-            showBottomBar()
-            showFloatingAddMenu()
-            onBackClick()
-        }
+        onBack = onBackClick
     )
 
     Scaffold(
         topBar = {
-            TransactionCreateTopAppBar(
-                onClick = {
-                    showBottomBar()
-                    showFloatingAddMenu()
-                    onBackClick()
-                }
+            CreateTopAppBar(
+                title = R.string.trasaction_create_title,
+                onBackButton = onBackClick
             )
         },
         content = {
-            when (paymentAccountsUiState) {
-                is PaymentAccountsUiState.Success -> fromInitToPaymentAccount()
+            when (accountsUiState) {
+                is AccountsUiState.Success -> fromInitToAccount()
 
-                is PaymentAccountsUiState.Error -> CreateTransactionErrorScreen(
+                is AccountsUiState.Error -> TransactionCreateErrorScreen(
                     modifier = modifier,
-                    onRetry = { onPaymentAccountsUiEvent(PaymentAccountsUiEvent.Retry) }
+                    onRetry = { onAccountsUiEvent(AccountsUiEvent.Retry) }
                 )
 
-                is PaymentAccountsUiState.Loading -> TransactionCreateLoadingScreen()
+                is AccountsUiState.Loading -> TransactionCreateLoadingScreen()
             }
         }
     )
 }
 
-
-
 @Composable
-fun CreateTransactionErrorScreen(
+fun TransactionCreateErrorScreen(
     modifier: Modifier = Modifier,
     onRetry: () -> Unit
 ) {
@@ -137,17 +125,33 @@ fun CreateTransactionErrorScreen(
     }
 }
 
+@Preview
+@Composable
+fun TransactionCreateLoadingScreenPreview() {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .background(color = MaterialTheme.colorScheme.background),
+        content = { TransactionCreateLoadingScreen() }
+    )
+}
+
 @Composable
 fun TransactionCreateLoadingScreen() {
-    Box(
+    Column(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
         content = {
             CircularProgressIndicator(
                 color = ProgressIndicatorDefaults.circularColor,
                 strokeWidth = 5.dp,
                 trackColor = ProgressIndicatorDefaults.circularTrackColor,
                 strokeCap = ProgressIndicatorDefaults.CircularIndeterminateStrokeCap
+            )
+
+            Text(
+                modifier = Modifier.padding(top = 4.dp),
+                text = "Obteniendo cuentas"
             )
         }
     )

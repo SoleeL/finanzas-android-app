@@ -9,29 +9,31 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
-import com.soleel.finanzas.core.common.constants.PaymentAccountTypeConstant
-import com.soleel.finanzas.core.common.constants.TransactionTypeConstant
-import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
+import com.soleel.finanzas.core.common.enums.AccountTypeEnum
+import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
+import com.soleel.finanzas.core.model.Account
+import com.soleel.finanzas.core.ui.R
+import com.soleel.finanzas.core.ui.template.CancelAlertDialog
+import com.soleel.finanzas.core.ui.template.CreateTopAppBar
+import com.soleel.finanzas.core.ui.template.TransactionCard
+import com.soleel.finanzas.core.ui.uivalues.getTransactionUI
+import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.feature.transactioncreate.TransactionCreateViewModel
 import com.soleel.finanzas.feature.transactioncreate.TransactionUiCreate
 import com.soleel.finanzas.feature.transactioncreate.TransactionUiEvent
-import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
-import com.soleel.finanzas.core.ui.R
-import com.soleel.finanzas.core.ui.template.TransactionCard
-import com.soleel.finanzas.core.ui.template.TransactionCreateTopAppBar
-import com.soleel.finanzas.core.ui.util.getPaymentAccountCard
-import com.soleel.finanzas.core.ui.util.getTransactionTypeCard
+import java.util.Date
 
 
 @Composable
 internal fun TransactionTypeRoute(
-    onCancelClick: () -> Unit,
+    onAcceptCancel: () -> Unit,
     onBackClick: () -> Unit,
     fromTypeToCategory: () -> Unit,
     viewModel: TransactionCreateViewModel
@@ -40,7 +42,7 @@ internal fun TransactionTypeRoute(
 
     TransactionTypeScreen(
         modifier = Modifier,
-        onCancelClick = onCancelClick,
+        onAcceptCancel = onAcceptCancel,
         onBackClick = onBackClick,
         transactionUiCreate = transactionUiCreate,
         onTransactionCreateUiEvent = viewModel::onTransactionCreateUiEvent,
@@ -52,16 +54,16 @@ internal fun TransactionTypeRoute(
 @Composable
 fun TransactionTypeScreenPreview() {
     TransactionTypeScreen(modifier = Modifier,
-        onCancelClick = {},
+        onAcceptCancel = {},
         onBackClick = {},
         transactionUiCreate = TransactionUiCreate(
-            PaymentAccount(
+            Account(
                 id = "2",
                 name = "Cuenta corriente falabella",
                 amount = 400000,
-                createAt = 1708709787983L,
-                updatedAt = 1708709787983L,
-                accountType = PaymentAccountTypeConstant.CREDIT
+                createAt = Date(),
+                updatedAt = Date(),
+                type = AccountTypeEnum.CREDIT
             )
         ),
         onTransactionCreateUiEvent = {},
@@ -72,20 +74,33 @@ fun TransactionTypeScreenPreview() {
 @Composable
 fun TransactionTypeScreen(
     modifier: Modifier,
-    onCancelClick: () -> Unit,
+    onAcceptCancel: () -> Unit,
     onBackClick: () -> Unit,
     transactionUiCreate: TransactionUiCreate,
     onTransactionCreateUiEvent: (TransactionUiEvent) -> Unit,
     fromTypeToCategory: () -> Unit
 ) {
-    BackHandler(
-        enabled = true,
-        onBack = { onBackClick() }
-    )
+    val showCancelAlert: MutableState<Boolean> = remember(calculation =  { mutableStateOf(false) })
+
+    if (showCancelAlert.value) {
+        CancelAlertDialog(
+            onDismiss = { showCancelAlert.value = false },
+            onConfirmation = {
+                showCancelAlert.value = false
+                onAcceptCancel()
+            },
+            dialogTitle = "¿Quieres volver atras?",
+            dialogText = "Cancelaras la creacion de esta transaccion."
+        )
+    }
+
+    BackHandler(enabled = true, onBack = onBackClick)
 
     Scaffold(topBar = {
-        TransactionCreateTopAppBar(
-            subTitle = R.string.trasaction_type_top_app_bar_subtitle, onClick = onCancelClick
+        CreateTopAppBar(
+            title= R.string.trasaction_create_title,
+            subTitle = R.string.trasaction_type_top_app_bar_subtitle,
+            onBackButton = { showCancelAlert.value = true }
         )
     },
 //        bottomBar = {
@@ -100,7 +115,7 @@ fun TransactionTypeScreen(
 //                        modifier = Modifier
 //                            .fillMaxWidth(0.9f)
 //                            .height(64.dp),
-////                        enabled = 0 != paymentAccountUiCreate.type,
+////                        enabled = 0 != AccountUiCreate.type,
 //                        content = { Text(text = "Avanzar a seleccion de categoria") }
 //                    )
 //                }
@@ -115,7 +130,6 @@ fun TransactionTypeScreen(
                 .fillMaxSize()
                 .padding(top = it.calculateTopPadding()),
                 content = {
-
                     SelectTransactionType(
                         transactionUiCreate = transactionUiCreate,
                         onTransactionCreateUiEvent = onTransactionCreateUiEvent,
@@ -136,12 +150,12 @@ fun SelectTransactionType(
     fromTypeToCategory: () -> Unit
 ) {
 
-    val transactionTypes: List<Pair<Int, String>> = remember(calculation = {
-        TransactionTypeConstant.idToValueList
+    val transactionTypes: List<TransactionTypeEnum> = remember(calculation = {
+        TransactionTypeEnum.entries
     })
 
-    val paymentAccountAmount: String = currencyVisualTransformation
-        .filter(AnnotatedString(text = transactionUiCreate.paymentAccount.amount.toString()))
+    val accountAmount: String = currencyVisualTransformation
+        .filter(AnnotatedString(text = transactionUiCreate.account.amount.toString()))
         .text
         .toString()
 
@@ -152,18 +166,16 @@ fun SelectTransactionType(
                 items = transactionTypes,
                 itemContent = { transactionType ->
                     TransactionCard(
-                        paymentAccountCardItem = getPaymentAccountCard(
-                            paymentAccountType = transactionUiCreate.paymentAccount.accountType,
-                            paymentAccountTypeName = transactionUiCreate.paymentAccount.name,
-                            amount = paymentAccountAmount
-                        ),
-                        transactionTypeCardItem = getTransactionTypeCard(
-                            transactionType = transactionType.first
+                        transactionUIValues = getTransactionUI(
+                            accountTypeEnum = transactionUiCreate.account.type,
+                            accountName = transactionUiCreate.account.name,
+                            accountAmount = accountAmount,
+                            transactionType = TransactionTypeEnum.fromId(transactionType.id)
                         ),
                         onClick = {
                             onTransactionCreateUiEvent(
                                 TransactionUiEvent.TransactionTypeChanged(
-                                    transactionType = transactionType.first
+                                    transactionType = transactionType.id
                                 )
                             )
                             fromTypeToCategory()

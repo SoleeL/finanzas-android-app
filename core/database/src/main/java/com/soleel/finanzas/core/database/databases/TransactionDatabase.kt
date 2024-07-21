@@ -2,16 +2,16 @@ package com.soleel.finanzas.core.database.databases
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.soleel.finanzas.core.database.daos.AccountDAO
 
-import com.soleel.finanzas.core.database.daos.PaymentAccountDAO
 import com.soleel.finanzas.core.database.daos.TransactionDAO
-import com.soleel.finanzas.core.database.entities.PaymentAccountEntity
+import com.soleel.finanzas.core.database.entities.AccountEntity
 import com.soleel.finanzas.core.database.entities.TransactionEntity
 
 
 @Database(
     entities = [
-        PaymentAccountEntity::class,
+        AccountEntity::class,
         TransactionEntity::class
     ],
     version = 1,
@@ -19,7 +19,7 @@ import com.soleel.finanzas.core.database.entities.TransactionEntity
 )
 abstract class TransactionDatabase : RoomDatabase() {
 
-    abstract fun paymentAccountDAO(): PaymentAccountDAO
+    abstract fun accountDAO(): AccountDAO
     abstract fun transactionDAO(): TransactionDAO
 
 }

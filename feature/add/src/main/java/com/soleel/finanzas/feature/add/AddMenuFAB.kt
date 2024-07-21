@@ -31,9 +31,10 @@ fun FabMenuHidePreview() {
         shouldShowExtendAddMenu = false,
         showExtendAddMenu = {},
         hideExtendAddMenu = {},
+        hideTransactionsTab = {},
         hideBottomBar = {},
-        toCreatePaymentAccount = {},
-        toCreateTransaction = {},
+        toAccountCreate = {},
+        toTransactionCreate = {},
         viewModel = AddMenuFABViewModelMock()
     )
 }
@@ -46,9 +47,10 @@ fun FabMenuShowPreview() {
         shouldShowExtendAddMenu = true,
         showExtendAddMenu = {},
         hideExtendAddMenu = {},
+        hideTransactionsTab = {},
         hideBottomBar = {},
-        toCreatePaymentAccount = {},
-        toCreateTransaction = {},
+        toAccountCreate = {},
+        toTransactionCreate = {},
         viewModel = AddMenuFABViewModelMock()
     )
 }
@@ -59,12 +61,13 @@ fun AddMenuFAB(
     shouldShowExtendAddMenu: Boolean,
     showExtendAddMenu: () -> Unit,
     hideExtendAddMenu: () -> Unit,
+    hideTransactionsTab: () -> Unit,
     hideBottomBar: () -> Unit,
-    toCreatePaymentAccount: () -> Unit,
-    toCreateTransaction: () -> Unit,
+    toAccountCreate: () -> Unit,
+    toTransactionCreate: () -> Unit,
     viewModel: AddMenuFABViewModel = hiltViewModel()
 ) {
-    val paymentAccountsUiState: AddUiState by viewModel.addUiState.collectAsState()
+    val accountsUiState: AddUiState by viewModel.addUiState.collectAsState()
 
 //    val statusMenu: MutableState<Boolean> = remember { mutableStateOf(false) }
 
@@ -74,11 +77,12 @@ fun AddMenuFAB(
                 Column(
                     horizontalAlignment = Alignment.End,
                     content = {
-                        if (false == paymentAccountsUiState.isPaymentAccountEmpty) {
+                        if (false == accountsUiState.isAccountEmpty) {
                             ItemMenuFAB(
                                 onClick = {
-                                    toCreateTransaction()
+                                    toTransactionCreate()
                                     hideFloatingAddMenu()
+                                    hideTransactionsTab()
                                     hideBottomBar()
                                 },
                                 icon = R.drawable.ic_add_transaction,
@@ -87,8 +91,9 @@ fun AddMenuFAB(
                         }
                         ItemMenuFAB(
                             onClick = {
-                                toCreatePaymentAccount()
+                                toAccountCreate()
                                 hideFloatingAddMenu()
+                                hideTransactionsTab()
                                 hideBottomBar()
                             },
                             icon = R.drawable.ic_add_account,

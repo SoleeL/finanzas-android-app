@@ -29,16 +29,6 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
 
                 configureAndroidKotlin(this)
                 configureBuildTypes(this)
-
-//                dependencies {
-//                    add("implementation", project(":feature:home"))
-//                    add("implementation", project(":feature:stats"))
-//                    add("implementation", project(":feature:accounts"))
-//                    add("implementation", project(":feature:profile"))
-//                    add("implementation", project(":feature:createpaymentaccount"))
-//                    add("implementation", project(":feature:createtransaction"))
-//                }
-                
             }
         }
     }

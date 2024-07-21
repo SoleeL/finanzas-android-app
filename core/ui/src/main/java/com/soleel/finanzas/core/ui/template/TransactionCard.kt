@@ -20,28 +20,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.soleel.finanzas.core.common.constants.PaymentAccountTypeConstant
-import com.soleel.finanzas.core.common.constants.TransactionCategoryConstant
-import com.soleel.finanzas.core.common.constants.TransactionTypeConstant
-import com.soleel.finanzas.core.ui.util.PaymentAccountCardItem
-import com.soleel.finanzas.core.ui.util.TransactionCategoryCardItem
-import com.soleel.finanzas.core.ui.util.TransactionTypeCardItem
-import com.soleel.finanzas.core.ui.util.getPaymentAccountCard
-import com.soleel.finanzas.core.ui.util.getTransactionCategoryCard
-import com.soleel.finanzas.core.ui.util.getTransactionTypeCard
+import com.soleel.finanzas.core.common.enums.AccountTypeEnum
+import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
+import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
+import com.soleel.finanzas.core.ui.uivalues.AccountUIValues
+import com.soleel.finanzas.core.ui.uivalues.TransactionTypeUIValues
+import com.soleel.finanzas.core.ui.uivalues.TransactionUIValues
+import com.soleel.finanzas.core.ui.uivalues.getTransactionUI
 import java.util.Locale
 
 @Preview
 @Composable
-fun TransactionTypeCategoryCardPreview() {
+fun TransactionTypeIncomeCardPreview() {
     TransactionCard(
-        transactionTypeCardItem = getTransactionTypeCard(
-            transactionType = TransactionTypeConstant.INCOME
-        ),
-        paymentAccountCardItem = getPaymentAccountCard(
-            paymentAccountType = PaymentAccountTypeConstant.CREDIT,
-            paymentAccountTypeName = "Cuenta de credito banco estado",
-            amount = "$300,000"
+        transactionUIValues = getTransactionUI(
+            accountTypeEnum = AccountTypeEnum.CREDIT,
+            accountName = "CMR Falabella",
+            accountAmount = "$300.000",
+            transactionType = TransactionTypeEnum.INCOME,
         )
     )
 }
@@ -50,13 +46,11 @@ fun TransactionTypeCategoryCardPreview() {
 @Composable
 fun TransactionTypeExpenditureCardPreview() {
     TransactionCard(
-        transactionTypeCardItem = getTransactionTypeCard(
-            transactionType = TransactionTypeConstant.EXPENDITURE
-        ),
-        paymentAccountCardItem = getPaymentAccountCard(
-            paymentAccountType = PaymentAccountTypeConstant.CREDIT,
-            paymentAccountTypeName = "Cuenta de credito banco estado",
-            amount = "$300,000"
+        transactionUIValues = getTransactionUI(
+            accountTypeEnum = AccountTypeEnum.CREDIT,
+            accountName = "CMR Falabella",
+            accountAmount = "$300.000",
+            transactionType = TransactionTypeEnum.EXPENDITURE,
         )
     )
 }
@@ -65,18 +59,15 @@ fun TransactionTypeExpenditureCardPreview() {
 @Composable
 fun TransactionTypeIncomeCategoryTransferCardPreview() {
     TransactionCard(
-        transactionTypeCardItem = getTransactionTypeCard(
-            transactionType = TransactionTypeConstant.INCOME
-        ),
-        paymentAccountCardItem = getPaymentAccountCard(
-            paymentAccountType = PaymentAccountTypeConstant.DEBIT,
-            paymentAccountTypeName = "Cuenta de credito banco estado",
-            amount = "$300,000"
-        ),
-        transactionCategoryCardItem = getTransactionCategoryCard(
-            transactionType = TransactionTypeConstant.INCOME,
-            transactionCategory = TransactionCategoryConstant.INCOME_TRANSFER,
-        )
+        transactionUIValues = getTransactionUI(
+            accountTypeEnum = AccountTypeEnum.DEBIT,
+            accountName = "CMR Falabella",
+            accountAmount = "$300.000",
+            transactionType = TransactionTypeEnum.INCOME,
+            transactionCategory = TransactionCategoryEnum.INCOME_TRANSFER,
+            transactionName = "Transferencia a juan",
+            transactionDate = "30/05/1994 01:12",
+            transactionAmount = "$20.000")
     )
 }
 
@@ -84,18 +75,15 @@ fun TransactionTypeIncomeCategoryTransferCardPreview() {
 @Composable
 fun TransactionTypeIncomeCategorySalaryCardPreview() {
     TransactionCard(
-        transactionTypeCardItem = getTransactionTypeCard(
-            transactionType = TransactionTypeConstant.INCOME
-        ),
-        paymentAccountCardItem = getPaymentAccountCard(
-            paymentAccountType = PaymentAccountTypeConstant.DEBIT,
-            paymentAccountTypeName = "Cuenta de credito banco estado",
-            amount = "$300,000"
-        ),
-        transactionCategoryCardItem = getTransactionCategoryCard(
-            transactionType = TransactionTypeConstant.INCOME,
-            transactionCategory = TransactionCategoryConstant.INCOME_SALARY
-        )
+        transactionUIValues = getTransactionUI(
+            accountTypeEnum = AccountTypeEnum.DEBIT,
+            accountName = "CMR Falabella",
+            accountAmount = "$300.000",
+            transactionType = TransactionTypeEnum.INCOME,
+            transactionCategory = TransactionCategoryEnum.INCOME_SALARY,
+            transactionName = "Transferencia a juan",
+            transactionDate = "30/05/1994 01:12",
+            transactionAmount = "$20.000")
     )
 }
 
@@ -103,18 +91,15 @@ fun TransactionTypeIncomeCategorySalaryCardPreview() {
 @Composable
 fun TransactionTypeIncomeCategoryServiceCardPreview() {
     TransactionCard(
-        transactionTypeCardItem = getTransactionTypeCard(
-            transactionType = TransactionTypeConstant.INCOME
-        ),
-        paymentAccountCardItem = getPaymentAccountCard(
-            paymentAccountType = PaymentAccountTypeConstant.DEBIT,
-            paymentAccountTypeName = "Cuenta de credito banco estado",
-            amount = "$300,000"
-        ),
-        transactionCategoryCardItem = getTransactionCategoryCard(
-            transactionType = TransactionTypeConstant.INCOME,
-            transactionCategory = TransactionCategoryConstant.INCOME_SERVICE
-        )
+        transactionUIValues = getTransactionUI(
+            accountTypeEnum = AccountTypeEnum.DEBIT,
+            accountName = "CMR Falabella",
+            accountAmount = "$300.000",
+            transactionType = TransactionTypeEnum.INCOME,
+            transactionCategory = TransactionCategoryEnum.INCOME_SERVICE,
+            transactionName = "Transferencia a juan",
+            transactionDate = "30/05/1994 01:12",
+            transactionAmount = "$20.000")
     )
 }
 
@@ -122,18 +107,15 @@ fun TransactionTypeIncomeCategoryServiceCardPreview() {
 @Composable
 fun TransactionTypeIncomeCategorySalesCardPreview() {
     TransactionCard(
-        transactionTypeCardItem = getTransactionTypeCard(
-            transactionType = TransactionTypeConstant.INCOME
-        ),
-        paymentAccountCardItem = getPaymentAccountCard(
-            paymentAccountType = PaymentAccountTypeConstant.DEBIT,
-            paymentAccountTypeName = "Cuenta de credito banco estado",
-            amount = "$300,000"
-        ),
-        transactionCategoryCardItem = getTransactionCategoryCard(
-            transactionType = TransactionTypeConstant.INCOME,
-            transactionCategory = TransactionCategoryConstant.INCOME_SALES
-        )
+        transactionUIValues = getTransactionUI(
+            accountTypeEnum = AccountTypeEnum.DEBIT,
+            accountName = "CMR Falabella",
+            accountAmount = "$300.000",
+            transactionType = TransactionTypeEnum.INCOME,
+            transactionCategory = TransactionCategoryEnum.INCOME_SALES,
+            transactionName = "Transferencia a juan",
+            transactionDate = "30/05/1994 01:12",
+            transactionAmount = "$20.000")
     )
 }
 
@@ -141,18 +123,15 @@ fun TransactionTypeIncomeCategorySalesCardPreview() {
 @Composable
 fun TransactionTypeIncomeCategoryBonusCardPreview() {
     TransactionCard(
-        transactionTypeCardItem = getTransactionTypeCard(
-            transactionType = TransactionTypeConstant.INCOME
-        ),
-        paymentAccountCardItem = getPaymentAccountCard(
-            paymentAccountType = PaymentAccountTypeConstant.DEBIT,
-            paymentAccountTypeName = "Cuenta de credito banco estado",
-            amount = "$300,000"
-        ),
-        transactionCategoryCardItem = getTransactionCategoryCard(
-            transactionType = TransactionTypeConstant.INCOME,
-            transactionCategory = TransactionCategoryConstant.INCOME_BONUS
-        )
+        transactionUIValues = getTransactionUI(
+            accountTypeEnum = AccountTypeEnum.DEBIT,
+            accountName = "CMR Falabella",
+            accountAmount = "$300.000",
+            transactionType = TransactionTypeEnum.INCOME,
+            transactionCategory = TransactionCategoryEnum.INCOME_BONUS,
+            transactionName = "Transferencia a juan",
+            transactionDate = "30/05/1994 01:12",
+            transactionAmount = "$20.000")
     )
 }
 
@@ -160,18 +139,15 @@ fun TransactionTypeIncomeCategoryBonusCardPreview() {
 @Composable
 fun TransactionTypeIncomeCategoryRefundCardPreview() {
     TransactionCard(
-        transactionTypeCardItem = getTransactionTypeCard(
-            transactionType = TransactionTypeConstant.INCOME
-        ),
-        paymentAccountCardItem = getPaymentAccountCard(
-            paymentAccountType = PaymentAccountTypeConstant.DEBIT,
-            paymentAccountTypeName = "Cuenta de credito banco estado",
-            amount = "$300,000"
-        ),
-        transactionCategoryCardItem = getTransactionCategoryCard(
-            transactionType = TransactionTypeConstant.INCOME,
-            transactionCategory = TransactionCategoryConstant.INCOME_REFUND
-        )
+        transactionUIValues = getTransactionUI(
+            accountTypeEnum = AccountTypeEnum.DEBIT,
+            accountName = "CMR Falabella",
+            accountAmount = "$300.000",
+            transactionType = TransactionTypeEnum.INCOME,
+            transactionCategory = TransactionCategoryEnum.INCOME_REFUND,
+            transactionName = "Transferencia a juan",
+            transactionDate = "30/05/1994 01:12",
+            transactionAmount = "$20.000")
     )
 }
 
@@ -179,18 +155,15 @@ fun TransactionTypeIncomeCategoryRefundCardPreview() {
 @Composable
 fun TransactionTypeIncomeCategoryOtherCardPreview() {
     TransactionCard(
-        transactionTypeCardItem = getTransactionTypeCard(
-            transactionType = TransactionTypeConstant.INCOME
-        ),
-        paymentAccountCardItem = getPaymentAccountCard(
-            paymentAccountType = PaymentAccountTypeConstant.DEBIT,
-            paymentAccountTypeName = "Cuenta de credito banco estado",
-            amount = "$300,000"
-        ),
-        transactionCategoryCardItem = getTransactionCategoryCard(
-            transactionType = TransactionTypeConstant.INCOME,
-            transactionCategory = TransactionCategoryConstant.INCOME_OTHER
-        )
+        transactionUIValues = getTransactionUI(
+            accountTypeEnum = AccountTypeEnum.CREDIT,
+            accountName = "CMR Falabella",
+            accountAmount = "$300.000",
+            transactionType = TransactionTypeEnum.INCOME,
+            transactionCategory = TransactionCategoryEnum.INCOME_OTHER,
+            transactionName = "Transferencia a juan",
+            transactionDate = "30/05/1994 01:12",
+            transactionAmount = "$20.000")
     )
 }
 
@@ -198,18 +171,15 @@ fun TransactionTypeIncomeCategoryOtherCardPreview() {
 @Composable
 fun TransactionTypeExpenditureCategoryTransferCardPreview() {
     TransactionCard(
-        transactionTypeCardItem = getTransactionTypeCard(
-            transactionType = TransactionTypeConstant.EXPENDITURE
-        ),
-        paymentAccountCardItem = getPaymentAccountCard(
-            paymentAccountType = PaymentAccountTypeConstant.DEBIT,
-            paymentAccountTypeName = "Cuenta de credito banco estado",
-            amount = "$300,000"
-        ),
-        transactionCategoryCardItem = getTransactionCategoryCard(
-            transactionType = TransactionTypeConstant.EXPENDITURE,
-            transactionCategory = TransactionCategoryConstant.EXPENDITURE_TRANSFER
-        )
+        transactionUIValues = getTransactionUI(
+            accountTypeEnum = AccountTypeEnum.DEBIT,
+            accountName = "CMR Falabella",
+            accountAmount = "$300.000",
+            transactionType = TransactionTypeEnum.EXPENDITURE,
+            transactionCategory = TransactionCategoryEnum.EXPENDITURE_TRANSFER,
+            transactionName = "Transferencia a juan",
+            transactionDate = "30/05/1994 01:12",
+            transactionAmount = "$20.000")
     )
 }
 
@@ -217,18 +187,15 @@ fun TransactionTypeExpenditureCategoryTransferCardPreview() {
 @Composable
 fun TransactionTypeExpenditureCategoryMarketCardPreview() {
     TransactionCard(
-        transactionTypeCardItem = getTransactionTypeCard(
-            transactionType = TransactionTypeConstant.EXPENDITURE
-        ),
-        paymentAccountCardItem = getPaymentAccountCard(
-            paymentAccountType = PaymentAccountTypeConstant.DEBIT,
-            paymentAccountTypeName = "Cuenta de credito banco estado",
-            amount = "$300,000"
-        ),
-        transactionCategoryCardItem = getTransactionCategoryCard(
-            transactionType = TransactionTypeConstant.EXPENDITURE,
-            transactionCategory = TransactionCategoryConstant.EXPENDITURE_MARKET
-        )
+        transactionUIValues = getTransactionUI(
+            accountTypeEnum = AccountTypeEnum.DEBIT,
+            accountName = "CMR Falabella",
+            accountAmount = "$300.000",
+            transactionType = TransactionTypeEnum.EXPENDITURE,
+            transactionCategory = TransactionCategoryEnum.EXPENDITURE_MARKET,
+            transactionName = "Transferencia a juan",
+            transactionDate = "30/05/1994 01:12",
+            transactionAmount = "$20.000")
     )
 }
 
@@ -236,18 +203,15 @@ fun TransactionTypeExpenditureCategoryMarketCardPreview() {
 @Composable
 fun TransactionTypeExpenditureCategoryServiceCardPreview() {
     TransactionCard(
-        transactionTypeCardItem = getTransactionTypeCard(
-            transactionType = TransactionTypeConstant.EXPENDITURE
-        ),
-        paymentAccountCardItem = getPaymentAccountCard(
-            paymentAccountType = PaymentAccountTypeConstant.DEBIT,
-            paymentAccountTypeName = "Cuenta de credito banco estado",
-            amount = "$300,000"
-        ),
-        transactionCategoryCardItem = getTransactionCategoryCard(
-            transactionType = TransactionTypeConstant.EXPENDITURE,
-            transactionCategory = TransactionCategoryConstant.EXPENDITURE_SERVICE
-        )
+        transactionUIValues = getTransactionUI(
+            accountTypeEnum = AccountTypeEnum.DEBIT,
+            accountName = "CMR Falabella",
+            accountAmount = "$300.000",
+            transactionType = TransactionTypeEnum.EXPENDITURE,
+            transactionCategory = TransactionCategoryEnum.EXPENDITURE_SERVICE,
+            transactionName = "Transferencia a juan",
+            transactionDate = "30/05/1994 01:12",
+            transactionAmount = "$20.000")
     )
 }
 
@@ -255,18 +219,15 @@ fun TransactionTypeExpenditureCategoryServiceCardPreview() {
 @Composable
 fun TransactionTypeExpenditureCategoryAcquisitionCardPreview() {
     TransactionCard(
-        transactionTypeCardItem = getTransactionTypeCard(
-            transactionType = TransactionTypeConstant.EXPENDITURE
-        ),
-        paymentAccountCardItem = getPaymentAccountCard(
-            paymentAccountType = PaymentAccountTypeConstant.DEBIT,
-            paymentAccountTypeName = "Cuenta de credito banco estado",
-            amount = "$300,000"
-        ),
-        transactionCategoryCardItem = getTransactionCategoryCard(
-            transactionType = TransactionTypeConstant.EXPENDITURE,
-            transactionCategory = TransactionCategoryConstant.EXPENDITURE_ACQUISITION
-        )
+        transactionUIValues = getTransactionUI(
+            accountTypeEnum = AccountTypeEnum.DEBIT,
+            accountName = "CMR Falabella",
+            accountAmount = "$300.000",
+            transactionType = TransactionTypeEnum.EXPENDITURE,
+            transactionCategory = TransactionCategoryEnum.EXPENDITURE_ACQUISITION,
+            transactionName = "Transferencia a juan",
+            transactionDate = "30/05/1994 01:12",
+            transactionAmount = "$20.000")
     )
 }
 
@@ -274,18 +235,15 @@ fun TransactionTypeExpenditureCategoryAcquisitionCardPreview() {
 @Composable
 fun TransactionTypeExpenditureCategoryLeasureCardPreview() {
     TransactionCard(
-        transactionTypeCardItem = getTransactionTypeCard(
-            transactionType = TransactionTypeConstant.EXPENDITURE
-        ),
-        paymentAccountCardItem = getPaymentAccountCard(
-            paymentAccountType = PaymentAccountTypeConstant.DEBIT,
-            paymentAccountTypeName = "Cuenta de credito banco estado",
-            amount = "$300,000"
-        ),
-        transactionCategoryCardItem = getTransactionCategoryCard(
-            transactionType = TransactionTypeConstant.EXPENDITURE,
-            transactionCategory = TransactionCategoryConstant.EXPENDITURE_LEASURE
-        )
+        transactionUIValues = getTransactionUI(
+            accountTypeEnum = AccountTypeEnum.DEBIT,
+            accountName = "CMR Falabella",
+            accountAmount = "$300.000",
+            transactionType = TransactionTypeEnum.EXPENDITURE,
+            transactionCategory = TransactionCategoryEnum.EXPENDITURE_LEASURE,
+            transactionName = "Transferencia a juan",
+            transactionDate = "30/05/1994 01:12",
+            transactionAmount = "$20.000")
     )
 }
 
@@ -293,18 +251,15 @@ fun TransactionTypeExpenditureCategoryLeasureCardPreview() {
 @Composable
 fun TransactionTypeExpenditureCategoryGiftCardPreview() {
     TransactionCard(
-        transactionTypeCardItem = getTransactionTypeCard(
-            transactionType = TransactionTypeConstant.EXPENDITURE
-        ),
-        paymentAccountCardItem = getPaymentAccountCard(
-            paymentAccountType = PaymentAccountTypeConstant.DEBIT,
-            paymentAccountTypeName = "Cuenta de credito banco estado",
-            amount = "$300,000"
-        ),
-        transactionCategoryCardItem = getTransactionCategoryCard(
-            transactionType = TransactionTypeConstant.EXPENDITURE,
-            transactionCategory = TransactionCategoryConstant.EXPENDITURE_GIFT
-        )
+        transactionUIValues = getTransactionUI(
+            accountTypeEnum = AccountTypeEnum.DEBIT,
+            accountName = "CMR Falabella",
+            accountAmount = "$300.000",
+            transactionType = TransactionTypeEnum.EXPENDITURE,
+            transactionCategory = TransactionCategoryEnum.EXPENDITURE_GIFT,
+            transactionName = "Transferencia a juan",
+            transactionDate = "30/05/1994 01:12",
+            transactionAmount = "$20.000")
     )
 }
 
@@ -312,26 +267,21 @@ fun TransactionTypeExpenditureCategoryGiftCardPreview() {
 @Composable
 fun TransactionTypeExpenditureCategoryOtherCardPreview() {
     TransactionCard(
-        transactionTypeCardItem = getTransactionTypeCard(
-            transactionType = TransactionTypeConstant.EXPENDITURE
-        ),
-        paymentAccountCardItem = getPaymentAccountCard(
-            paymentAccountType = PaymentAccountTypeConstant.DEBIT,
-            paymentAccountTypeName = "Cuenta de credito banco estado",
-            amount = "$300,000"
-        ),
-        transactionCategoryCardItem = getTransactionCategoryCard(
-            transactionType = TransactionTypeConstant.EXPENDITURE,
-            transactionCategory = TransactionCategoryConstant.EXPENDITURE_OTHER
-        )
+        transactionUIValues = getTransactionUI(
+            accountTypeEnum = AccountTypeEnum.DEBIT,
+            accountName = "CMR Falabella",
+            accountAmount = "$300.000",
+            transactionType = TransactionTypeEnum.EXPENDITURE,
+            transactionCategory = TransactionCategoryEnum.EXPENDITURE_OTHER,
+            transactionName = "Transferencia a juan",
+            transactionDate = "30/05/1994 01:12",
+            transactionAmount = "$20.000")
     )
 }
 
 @Composable
 fun TransactionCard(
-    transactionTypeCardItem: TransactionTypeCardItem,
-    paymentAccountCardItem: PaymentAccountCardItem,
-    transactionCategoryCardItem: TransactionCategoryCardItem? = null,
+    transactionUIValues: TransactionUIValues,
     onClick: () -> Unit = {},
     onClickEnable: Boolean = true
 ) {
@@ -347,23 +297,21 @@ fun TransactionCard(
             defaultElevation = 6.dp
         ),
         content = {
-            TransactionTypeRow(transactionTypeCardItem)
-            TransactionPaymentAccountRow(paymentAccountCardItem)
-            if (null != transactionCategoryCardItem) {
-                TransactionCategoryRow(transactionCategoryCardItem)
-            }
+            TransactionTypeRow(transactionUIValues.type)
+            TransactionAccountRow(transactionUIValues.account)
+            TransactionCategoryRow(transactionUIValues)
         }
     )
 }
 
 @Composable
 fun TransactionTypeRow(
-    transactionTypeCardItem: TransactionTypeCardItem
+    transactionTypeUIValues: TransactionTypeUIValues
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = transactionTypeCardItem.typeBackgroundColor)
+            .background(color = transactionTypeUIValues.backgroundColor)
             .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {
@@ -371,15 +319,15 @@ fun TransactionTypeRow(
                 verticalAlignment = Alignment.CenterVertically,
                 content = {
                     Icon(
-                        painter = painterResource(id = transactionTypeCardItem.typeIcon),
+                        painter = painterResource(id = transactionTypeUIValues.icon),
                         contentDescription = "Transaction type",
                         modifier = Modifier.size(16.dp),
-                        tint = transactionTypeCardItem.letterColor
+                        tint = transactionTypeUIValues.letterColor
                     )
                     Text(
-                        text = transactionTypeCardItem.typeName.uppercase(Locale.getDefault()),
+                        text = transactionTypeUIValues.name.uppercase(Locale.getDefault()),
                         modifier = Modifier.padding(start = 8.dp),
-                        color = transactionTypeCardItem.letterColor,
+                        color = transactionTypeUIValues.letterColor,
                         style = MaterialTheme.typography.labelSmall
                     )
                 }
@@ -389,9 +337,11 @@ fun TransactionTypeRow(
 }
 
 @Composable
-fun TransactionPaymentAccountRow(paymentAccountCardItem: PaymentAccountCardItem) {
+fun TransactionAccountRow(
+    accountUIValues: AccountUIValues
+) {
     Column(
-        modifier = Modifier.background(brush = paymentAccountCardItem.gradientBrush),
+        modifier = Modifier.background(brush = accountUIValues.type.gradientBrush),
         content = {
             Row(
                 modifier = Modifier
@@ -405,23 +355,23 @@ fun TransactionPaymentAccountRow(paymentAccountCardItem: PaymentAccountCardItem)
                         verticalAlignment = Alignment.CenterVertically,
                         content = {
                             Icon(
-                                painter = painterResource(id = paymentAccountCardItem.typeIcon),
+                                painter = painterResource(id = accountUIValues.type.icon),
                                 contentDescription = "Add button.",
                                 modifier = Modifier.size(48.dp),
-                                tint = paymentAccountCardItem.letterColor
+                                tint = accountUIValues.type.letterColor
                             )
                             Text(
-                                text = paymentAccountCardItem.typeName,
+                                text = accountUIValues.type.name,
                                 modifier = Modifier.padding(start = 8.dp),
-                                color = paymentAccountCardItem.letterColor,
+                                color = accountUIValues.type.letterColor,
                                 style = MaterialTheme.typography.titleMedium
                             )
                         }
                     )
                     Text(
-                        text = paymentAccountCardItem.amount,
+                        text = accountUIValues.amount,
                         modifier = Modifier,
-                        color = paymentAccountCardItem.letterColor,
+                        color = accountUIValues.type.letterColor,
                         style = MaterialTheme.typography.titleLarge
                     )
                 }
@@ -434,8 +384,8 @@ fun TransactionPaymentAccountRow(paymentAccountCardItem: PaymentAccountCardItem)
                 content = {
                     Text(
                         modifier = Modifier,
-                        text = paymentAccountCardItem.typeNameAccount,
-                        color = paymentAccountCardItem.letterColor,
+                        text = accountUIValues.name,
+                        color = accountUIValues.type.letterColor,
                         style = MaterialTheme.typography.titleLarge,
                         textAlign = TextAlign.Center
                     )
@@ -446,9 +396,15 @@ fun TransactionPaymentAccountRow(paymentAccountCardItem: PaymentAccountCardItem)
 }
 
 @Composable
-fun TransactionCategoryRow(transactionCategoryCardItem: TransactionCategoryCardItem) {
+fun TransactionCategoryRow(
+    transactionUIValues: TransactionUIValues
+) {
+    if (null == transactionUIValues.category) {
+        return
+    }
+
     Column(
-        modifier = Modifier.background(brush = transactionCategoryCardItem.gradientBrush),
+        modifier = Modifier.background(brush = transactionUIValues.category.gradientBrush),
         content = {
             Row(
                 modifier = Modifier
@@ -463,24 +419,24 @@ fun TransactionCategoryRow(transactionCategoryCardItem: TransactionCategoryCardI
                         content = {
                             Icon(
                                 painter = painterResource(
-                                    id = transactionCategoryCardItem.categoryIcon
+                                    id = transactionUIValues.category.icon
                                 ),
                                 contentDescription = "Add button.",
                                 modifier = Modifier.size(48.dp),
-                                tint = transactionCategoryCardItem.letterColor
+                                tint = transactionUIValues.category.letterColor
                             )
                             Text(
-                                text = transactionCategoryCardItem.categoryName,
+                                text = transactionUIValues.category.name,
                                 modifier = Modifier.padding(start = 8.dp),
-                                color = transactionCategoryCardItem.letterColor,
+                                color = transactionUIValues.category.letterColor,
                                 style = MaterialTheme.typography.titleMedium
                             )
                         }
                     )
                     Text(
-                        text = transactionCategoryCardItem.amount,
+                        text = transactionUIValues.amount,
                         modifier = Modifier,
-                        color = transactionCategoryCardItem.letterColor,
+                        color = transactionUIValues.category.letterColor,
                         style = MaterialTheme.typography.titleLarge
                     )
                 }
@@ -493,8 +449,8 @@ fun TransactionCategoryRow(transactionCategoryCardItem: TransactionCategoryCardI
                 content = {
                     Text(
                         modifier = Modifier,
-                        text = transactionCategoryCardItem.categoryNameTransaction,
-                        color = transactionCategoryCardItem.letterColor,
+                        text = transactionUIValues.name,
+                        color = transactionUIValues.category.letterColor,
                         style = MaterialTheme.typography.titleLarge,
                         textAlign = TextAlign.Center
                     )

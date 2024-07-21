@@ -1,6 +1,6 @@
 package com.soleel.finanzas.data.transaction.interfaces
 
-import com.soleel.finanzas.data.transaction.model.Transaction
+import com.soleel.finanzas.core.model.Transaction
 import kotlinx.coroutines.flow.Flow
 
 interface ITransactionLocalDataSource {
@@ -10,6 +10,8 @@ interface ITransactionLocalDataSource {
     fun getTransactionWithForceUpdate(transactionId: String, forceUpdate: Boolean = false): Transaction?
 
     fun getTransactions(): Flow<List<Transaction>>
+
+    fun getTransactionsByCreatedOrder(): Flow<List<Transaction>>
 
     fun getTransactionsWithForceUpdate(forceUpdate: Boolean = false): List<Transaction>
 
@@ -22,7 +24,7 @@ interface ITransactionLocalDataSource {
         amount: Int,
         transactionType: Int,
         transactionCategory: Int,
-        paymentAccountId: String
+        accountId: String
     ): String
 
     suspend fun updateTransaction(
@@ -30,12 +32,12 @@ interface ITransactionLocalDataSource {
         transactionAmount: Int,
         transactionDescription: String,
         transactionCreateAt: Long,
-        paymentAccountId: Int,
+        accountId: Int,
         typeTransactionId: Int,
         categoryId: Int
     )
 
-    suspend fun deleteAllTransactions(paymentAccountId: String)
+    suspend fun deleteAllTransactions(accountId: String)
 
     suspend fun deleteTransaction(transactionId: String)
 }

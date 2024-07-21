@@ -1,6 +1,6 @@
 package com.soleel.finanzas.domain.validation.validator
 
-import com.soleel.finanzas.core.common.constants.TransactionTypeConstant
+import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.domain.validation.generic.InValidation
 import com.soleel.finanzas.domain.validation.model.ResultValidation
@@ -18,7 +18,7 @@ class TransactionAmountValidator : InValidation<Triple<Int, Int, Int>, ResultVal
         if (0 == input.second) {
             return ResultValidation(
                 successful = false,
-                errorMessage = R.string.payment_account_not_selected_error_message
+                errorMessage = R.string.account_not_selected_error_message
             )
         }
 
@@ -50,21 +50,21 @@ class TransactionAmountValidator : InValidation<Triple<Int, Int, Int>, ResultVal
             )
         }
 
-        if (TransactionTypeConstant.INCOME == input.third
+        if (TransactionTypeEnum.INCOME.id == input.third
             && maxAmountLimit < input.first + input.second
         ) {
             return ResultValidation(
                 successful = false,
-                errorMessage = R.string.amount_more_payment_account_can_not_be_gt_error_message
+                errorMessage = R.string.amount_more_account_can_not_be_gt_error_message
             )
         }
 
-        if (TransactionTypeConstant.EXPENDITURE == input.third
+        if (TransactionTypeEnum.EXPENDITURE.id == input.third
             && 0 > input.second - input.first
         ) {
             return ResultValidation(
                 successful = false,
-                errorMessage = R.string.amount_can_not_be_gt_payment_account_error_message
+                errorMessage = R.string.amount_can_not_be_gt_account_error_message
             )
         }
 

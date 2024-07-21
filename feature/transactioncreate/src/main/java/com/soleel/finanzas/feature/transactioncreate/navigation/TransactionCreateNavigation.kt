@@ -10,104 +10,97 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.soleel.finanzas.feature.transactioncreate.TransactionCreateRoute
 import com.soleel.finanzas.feature.transactioncreate.TransactionCreateViewModel
+import com.soleel.finanzas.feature.transactioncreate.screen.TransactionAccountRoute
 import com.soleel.finanzas.feature.transactioncreate.screen.TransactionAmountRoute
 import com.soleel.finanzas.feature.transactioncreate.screen.TransactionCategoryRoute
 import com.soleel.finanzas.feature.transactioncreate.screen.TransactionNameRoute
-import com.soleel.finanzas.feature.transactioncreate.screen.TransactionPaymentAccountRoute
 import com.soleel.finanzas.feature.transactioncreate.screen.TransactionTypeRoute
 
 
-const val transactionCreateGraph = "transaction_create_graph"
+const val transactionCreateGraph = "transaction_create"
 
-const val transactionCreateRoute = "transaction_create_route"
-const val transactionPaymentAccountRoute = "transaction_payment_account_route"
-const val transactionCategoryRoute = "transaction_category_route"
-const val transactionTypeRoute = "transaction_type_route"
-const val transactionNameRoute = "transaction_name_route"
-const val transactionAmountRoute = "transaction_amount_route"
+const val transactionCreateRoute = "init"
+const val transactionSelectAccountRoute = "select_account"
+const val transactionSelectTypeRoute = "select_type"
+const val transactionSelectCategoryRoute = "select_category"
+const val transactionInputNameRoute = "input_name"
+const val transactionInputAmountRoute = "input_amount"
 
 fun NavController.navigateToTransactionCreateGraph(navOptions: NavOptions? = null) {
     this.navigate(transactionCreateGraph, navOptions)
 }
 
-fun NavController.navigateToTransactionPaymentAccountRoute(navOptions: NavOptions? = null) {
-    this.navigate(transactionPaymentAccountRoute, navOptions)
+fun NavController.navigateToTransactionAccountRoute(navOptions: NavOptions? = null) {
+    this.navigate(transactionSelectAccountRoute, navOptions)
 }
 
 fun NavController.navigateToTransactionTypeRoute(navOptions: NavOptions? = null) {
-    this.navigate(transactionTypeRoute, navOptions)
+    this.navigate(transactionSelectTypeRoute, navOptions)
 }
 
 fun NavController.navigateToTransactionCategoryRoute(navOptions: NavOptions? = null) {
-    this.navigate(transactionCategoryRoute, navOptions)
+    this.navigate(transactionSelectCategoryRoute, navOptions)
 }
 
 fun NavController.navigateToTransactionNameRoute(navOptions: NavOptions? = null) {
-    this.navigate(transactionNameRoute, navOptions)
+    this.navigate(transactionInputNameRoute, navOptions)
 }
 
 fun NavController.navigateToTransactionAmountRoute(navOptions: NavOptions? = null) {
-    this.navigate(transactionAmountRoute, navOptions)
+    this.navigate(transactionInputAmountRoute, navOptions)
 }
 
 fun NavGraphBuilder.transactionCreateGraph(
     navController: NavHostController,
-    showBottomBar: () -> Unit,
-    showFloatingAddMenu: () -> Unit,
-    hideExtendAddMenu: () -> Unit,
+    onAcceptCancel: () -> Unit,
     onBackClick: () -> Unit,
-    onCancelClick: () -> Unit,
-    onSaveClick: () -> Unit,
-    fromInitToPaymentAccount: () -> Unit,
-    fromPaymentAccountToType: () -> Unit,
+    fromInitToAccount: () -> Unit,
+    fromAccountToType: () -> Unit,
     fromTypeToCategory: () -> Unit,
     fromCategoryToName: () -> Unit,
-    fromNameToAmount: () -> Unit
+    fromNameToAmount: () -> Unit,
+    onTransactionSaved: () -> Unit
 ) {
     navigation(
         startDestination = transactionCreateRoute,
         route = transactionCreateGraph,
         builder = {
             // README: Es la ruta de carga de los datos, si esto falla, entonces no es necesario
-            //  mostrar le modal de cancelar la creacion de la transaccion.
+            //  mostrar el modal de cancelar la creacion de la transaccion, solo volver a la vista
+            //  anterior en el backstack.
             transactionCreateRoute(
                 navController = navController,
-                showBottomBar = showBottomBar,
-                showFloatingAddMenu = showFloatingAddMenu,
-                onBackClick = onBackClick,
-                fromInitToPaymentAccount = fromInitToPaymentAccount
+                onBackClick = onAcceptCancel,
+                fromInitToAccount = fromInitToAccount
             )
-            transactionPaymentAccountRoute(
+            transactionAccountRoute(
                 navController = navController,
-                onCancelClick = onCancelClick,
-                fromPaymentAccountToType = fromPaymentAccountToType
+                onAcceptCancel = onAcceptCancel,
+                fromAccountToType = fromAccountToType
             )
             transactionTypeRoute(
                 navController = navController,
-                onCancelClick = onCancelClick,
+                onAcceptCancel = onAcceptCancel,
                 onBackClick = onBackClick,
                 fromTypeToCategory = fromTypeToCategory
             )
             transactionCategoryRoute(
                 navController = navController,
-                onCancelClick = onCancelClick,
+                onAcceptCancel = onAcceptCancel,
                 onBackClick = onBackClick,
                 fromCategoryToName = fromCategoryToName
             )
             transactionNameRoute(
                 navController = navController,
-                onCancelClick = onCancelClick,
+                onAcceptCancel = onAcceptCancel,
                 onBackClick = onBackClick,
                 fromNameToAmount = fromNameToAmount
             )
             transactionAmountRoute(
                 navController = navController,
-                showBottomBar = showBottomBar,
-                showFloatingAddMenu = showFloatingAddMenu,
-                hideExtendAddMenu = hideExtendAddMenu,
-                onCancelClick = onCancelClick,
+                onAcceptCancel = onAcceptCancel,
                 onBackClick = onBackClick,
-                onSaveClick = onSaveClick
+                onTransactionSaved = onTransactionSaved
             )
         }
     )
@@ -115,10 +108,8 @@ fun NavGraphBuilder.transactionCreateGraph(
 
 fun NavGraphBuilder.transactionCreateRoute(
     navController: NavHostController,
-    showBottomBar: () -> Unit,
-    showFloatingAddMenu: () -> Unit,
     onBackClick: () -> Unit,
-    fromInitToPaymentAccount: () -> Unit
+    fromInitToAccount: () -> Unit
 ) {
     composable(
         route = transactionCreateRoute,
@@ -136,23 +127,21 @@ fun NavGraphBuilder.transactionCreateRoute(
             )
 
             TransactionCreateRoute(
-                showBottomBar = showBottomBar,
-                showFloatingAddMenu = showFloatingAddMenu,
                 onBackClick = onBackClick,
-                fromInitToPaymentAccount = fromInitToPaymentAccount,
+                fromInitToAccount = fromInitToAccount,
                 viewModel = viewModel
             )
         }
     )
 }
 
-fun NavGraphBuilder.transactionPaymentAccountRoute(
+fun NavGraphBuilder.transactionAccountRoute(
     navController: NavHostController,
-    onCancelClick: () -> Unit,
-    fromPaymentAccountToType: () -> Unit
+    onAcceptCancel: () -> Unit,
+    fromAccountToType: () -> Unit
 ) {
     composable(
-        route = transactionPaymentAccountRoute,
+        route = transactionSelectAccountRoute,
         content = {
 
             val parentEntry = remember(
@@ -166,9 +155,9 @@ fun NavGraphBuilder.transactionPaymentAccountRoute(
                 viewModelStoreOwner = parentEntry
             )
 
-            TransactionPaymentAccountRoute(
-                onCancelClick = onCancelClick,
-                fromPaymentAccountToType = fromPaymentAccountToType,
+            TransactionAccountRoute(
+                onAcceptCancel = onAcceptCancel,
+                fromAccountToType = fromAccountToType,
                 viewModel = viewModel
             )
         }
@@ -177,12 +166,12 @@ fun NavGraphBuilder.transactionPaymentAccountRoute(
 
 fun NavGraphBuilder.transactionTypeRoute(
     navController: NavHostController,
-    onCancelClick: () -> Unit,
+    onAcceptCancel: () -> Unit,
     onBackClick: () -> Unit,
     fromTypeToCategory: () -> Unit,
 ) {
     composable(
-        route = transactionTypeRoute,
+        route = transactionSelectTypeRoute,
         content = {
 
             val parentEntry = remember(
@@ -197,7 +186,7 @@ fun NavGraphBuilder.transactionTypeRoute(
             )
 
             TransactionTypeRoute(
-                onCancelClick = onCancelClick,
+                onAcceptCancel = onAcceptCancel,
                 onBackClick = onBackClick,
                 fromTypeToCategory = fromTypeToCategory,
                 viewModel = viewModel
@@ -208,13 +197,12 @@ fun NavGraphBuilder.transactionTypeRoute(
 
 fun NavGraphBuilder.transactionCategoryRoute(
     navController: NavHostController,
-    onCancelClick: () -> Unit,
+    onAcceptCancel: () -> Unit,
     onBackClick: () -> Unit,
-    fromCategoryToName: () -> Unit,
-
-    ) {
+    fromCategoryToName: () -> Unit
+) {
     composable(
-        route = transactionCategoryRoute,
+        route = transactionSelectCategoryRoute,
         content = {
 
             val parentEntry = remember(
@@ -229,7 +217,7 @@ fun NavGraphBuilder.transactionCategoryRoute(
             )
 
             TransactionCategoryRoute(
-                onCancelClick = onCancelClick,
+                onAcceptCancel = onAcceptCancel,
                 onBackClick = onBackClick,
                 fromCategoryToName = fromCategoryToName,
                 viewModel = viewModel
@@ -240,12 +228,12 @@ fun NavGraphBuilder.transactionCategoryRoute(
 
 fun NavGraphBuilder.transactionNameRoute(
     navController: NavHostController,
-    onCancelClick: () -> Unit,
+    onAcceptCancel: () -> Unit,
     onBackClick: () -> Unit,
     fromNameToAmount: () -> Unit,
 ) {
     composable(
-        route = transactionNameRoute,
+        route = transactionInputNameRoute,
         content = {
 
             val parentEntry = remember(
@@ -260,7 +248,7 @@ fun NavGraphBuilder.transactionNameRoute(
             )
 
             TransactionNameRoute(
-                onCancelClick = onCancelClick,
+                onAcceptCancel = onAcceptCancel,
                 onBackClick = onBackClick,
                 fromNameToAmount = fromNameToAmount,
                 viewModel = viewModel
@@ -271,15 +259,12 @@ fun NavGraphBuilder.transactionNameRoute(
 
 fun NavGraphBuilder.transactionAmountRoute(
     navController: NavHostController,
-    showBottomBar: () -> Unit,
-    showFloatingAddMenu: () -> Unit,
-    hideExtendAddMenu: () -> Unit,
-    onCancelClick: () -> Unit,
+    onAcceptCancel: () -> Unit,
     onBackClick: () -> Unit,
-    onSaveClick: () -> Unit,
+    onTransactionSaved: () -> Unit,
 ) {
     composable(
-        route = transactionAmountRoute,
+        route = transactionInputAmountRoute,
         content = {
 
             val parentEntry = remember(
@@ -294,12 +279,9 @@ fun NavGraphBuilder.transactionAmountRoute(
             )
 
             TransactionAmountRoute(
-                showBottomBar = showBottomBar,
-                showFloatingAddMenu = showFloatingAddMenu,
-                hideExtendAddMenu = hideExtendAddMenu,
-                onCancelClick = onCancelClick,
+                onAcceptCancel = onAcceptCancel,
                 onBackClick = onBackClick,
-                onSaveClick = onSaveClick,
+                onTransactionSaved = onTransactionSaved,
                 viewModel = viewModel
             )
         }

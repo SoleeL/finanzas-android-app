@@ -10,13 +10,13 @@ import androidx.room.PrimaryKey
 @Entity(
     tableName = "transaction_table",
     indices = [
-        Index(name = "index_payment_account_id", value = ["payment_account_id"])
+        Index(name = "index_account_id", value = ["account_id"])
     ],
     foreignKeys = [
         ForeignKey(
-            entity = PaymentAccountEntity::class,
+            entity = AccountEntity::class,
             parentColumns = ["id"],
-            childColumns = ["payment_account_id"],
+            childColumns = ["account_id"],
             onDelete = ForeignKey.CASCADE
         )
     ]
@@ -29,5 +29,5 @@ data class TransactionEntity(
     @ColumnInfo(name = "updated_at") var updatedAt: Long,
     @ColumnInfo(name = "transaction_type") var transactionType: Int,
     @ColumnInfo(name = "category_type") var categoryType: Int,
-    @ColumnInfo(name = "payment_account_id") var paymentAccountId: String
+    @ColumnInfo(name = "account_id") var accountId: String
 )

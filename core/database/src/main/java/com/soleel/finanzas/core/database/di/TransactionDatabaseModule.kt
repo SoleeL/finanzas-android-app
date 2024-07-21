@@ -3,7 +3,7 @@ package com.soleel.finanzas.core.database.di
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.soleel.finanzas.core.database.daos.PaymentAccountDAO
+import com.soleel.finanzas.core.database.daos.AccountDAO
 import com.soleel.finanzas.core.database.daos.TransactionDAO
 import com.soleel.finanzas.core.database.databases.TransactionDatabase
 import dagger.Module
@@ -30,7 +30,7 @@ object TransactionDatabaseModule {
     }
 
     @Provides
-    fun providePaymentAccountDAO(database: TransactionDatabase): PaymentAccountDAO = database.paymentAccountDAO()
+    fun provideAccountDAO(database: TransactionDatabase): AccountDAO = database.accountDAO()
 
     @Provides
     fun provideTransactionDAO(database: TransactionDatabase): TransactionDAO = database.transactionDAO()

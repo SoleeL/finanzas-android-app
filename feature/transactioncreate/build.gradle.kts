@@ -12,5 +12,5 @@ dependencies {
     api(projects.core.common)
     api(projects.data.transaction)
     api(projects.domain.validation)
-    api(projects.domain.transformation)
+    api(projects.domain.visualtransformation)
 }

@@ -2,8 +2,8 @@ package com.soleel.finanzas.feature.add
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.soleel.finanzas.data.paymentaccount.interfaces.IPaymentAccountLocalDataSource
-import com.soleel.finanzas.data.paymentaccount.model.PaymentAccount
+import com.soleel.finanzas.core.model.Account
+import com.soleel.finanzas.data.account.interfaces.IAccountLocalDataSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -12,40 +12,40 @@ import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 data class AddUiState(
-    val itemsPaymentAccount: List<PaymentAccount> = emptyList(),
+    val itemsAccount: List<Account> = emptyList(),
     val userMessage: String? = null,
-    val isPaymentAccountLoading: Boolean = false,
-    val isPaymentAccountSuccess: Boolean = false,
-    val isPaymentAccountEmpty: Boolean = false,
+    val isAccountLoading: Boolean = false,
+    val isAccountSuccess: Boolean = false,
+    val isAccountEmpty: Boolean = false,
 )
 
 @HiltViewModel
 open class AddMenuFABViewModel @Inject constructor(
-    val repositoryLocalPaymentAccount: IPaymentAccountLocalDataSource
+    val repositoryLocalAccount: IAccountLocalDataSource
 ) : ViewModel() {
 
 //    private val homeFlow: Flow<AddUiState> =
-//        repositoryLocalPaymentAccount.getPaymentAccounts().map(transform = this::getData)
+//        repositoryLocalAccount.getAccounts().map(transform = this::getData)
 
-    open val addUiState: StateFlow<AddUiState> = repositoryLocalPaymentAccount
-        .getPaymentAccounts()
+    open val addUiState: StateFlow<AddUiState> = repositoryLocalAccount
+        .getAccounts()
         .map(transform = this::getData)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
             initialValue = AddUiState(
-                isPaymentAccountLoading = true
+                isAccountLoading = true
             )
         )
 
     fun getData(
-        itemsPaymentAccount: List<PaymentAccount>
+        itemsAccount: List<Account>
     ): AddUiState {
         return AddUiState(
-            itemsPaymentAccount = itemsPaymentAccount,
-            isPaymentAccountLoading = false,
-            isPaymentAccountSuccess = true,
-            isPaymentAccountEmpty = itemsPaymentAccount.isEmpty()
+            itemsAccount = itemsAccount,
+            isAccountLoading = false,
+            isAccountSuccess = true,
+            isAccountEmpty = itemsAccount.isEmpty()
         )
     }
 }
