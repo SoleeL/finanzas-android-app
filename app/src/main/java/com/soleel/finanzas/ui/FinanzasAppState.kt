@@ -14,16 +14,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import androidx.tracing.trace
-import com.soleel.finanzas.feature.accounts.navigation.ACCOUNTS_ROUTE
 import com.soleel.finanzas.feature.accounts.navigation.navigateToAccounts
-import com.soleel.finanzas.feature.createaccount.navigation.CREATE_ACCOUNT_ROUTE
 import com.soleel.finanzas.feature.createaccount.navigation.navigateToCreateAccountRoute
+import com.soleel.finanzas.feature.createtransaction.navigation.navigateToCreateTransactionRoute
 import com.soleel.finanzas.feature.profile.navigation.navigateToProfile
 import com.soleel.finanzas.feature.stats.navigation.navigateToStats
-import com.soleel.finanzas.feature.transactioncreate.navigation.navigateToTransactionCreateGraph
-import com.soleel.finanzas.feature.transactioncreate.navigation.transactionCreateRoute
-import com.soleel.finanzas.feature.transactions.navigation.ALL_TRANSACTIONS_ROUTE
-import com.soleel.finanzas.feature.transactions.navigation.TRANSACTIONS_ROUTE
 import com.soleel.finanzas.feature.transactions.navigation.destination.TransactionsLevelDestination
 import com.soleel.finanzas.feature.transactions.navigation.destination.isTransactionsLevelDestination
 import com.soleel.finanzas.feature.transactions.navigation.navigateToAllTransactions
@@ -144,18 +139,7 @@ class FinanzasAppState(
     }
 
     fun navigateToTransactionCreate() {
-        this.navController.navigateToTransactionCreateGraph()
-    }
-
-    fun popBackStackTransactionCreate() {
-        this.navController.popBackStack(route = transactionCreateRoute, inclusive = true)
-    }
-
-    fun backToTransactions() {
-        this.navController.popBackStack(
-            route = ALL_TRANSACTIONS_ROUTE,
-            inclusive = false
-        )
+        this.navController.navigateToCreateTransactionRoute()
     }
 
     fun shouldShowTransactionsTab(): Boolean {

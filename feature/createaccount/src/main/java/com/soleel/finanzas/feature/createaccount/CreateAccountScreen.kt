@@ -136,32 +136,6 @@ internal fun CreateAccountScreen(
             )
         },
         content = {
-
-            val currencyVisualTransformation by remember(calculation = {
-                mutableStateOf(CurrencyVisualTransformation(currencyCode = "USD"))
-            })
-
-            val accountUIValues: AccountUIValues = remember(calculation = {
-                getAccountUI(
-                    accountTypeEnum = AccountTypeEnum.fromId(accountCreateUi.type),
-                    accountName = accountCreateUi.name,
-                    accountAmount = ""
-                )
-            })
-
-            val originAmount: String = remember(calculation = {
-                accountUIValues.amount
-            })
-
-            if (accountCreateUi.amount.isNotBlank()) {
-                accountUIValues.amount = currencyVisualTransformation
-                    .filter(AnnotatedString(text = accountCreateUi.amount))
-                    .text
-                    .toString()
-            } else {
-                accountUIValues.amount = originAmount
-            }
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -183,8 +157,7 @@ internal fun CreateAccountScreen(
 
                     EnterAccountAmountTextField(
                         accountCreateUi = accountCreateUi,
-                        onAccountCreateEventUi = onAccountCreateEventUi,
-                        currencyVisualTransformation = currencyVisualTransformation
+                        onAccountCreateEventUi = onAccountCreateEventUi
                     )
                 }
             )
@@ -294,9 +267,34 @@ fun EnterAccountNameTextField(
 @Composable
 fun EnterAccountAmountTextField(
     accountCreateUi: CreateAccountUi,
-    onAccountCreateEventUi: (CreateAccountEventUi) -> Unit,
-    currencyVisualTransformation: CurrencyVisualTransformation
+    onAccountCreateEventUi: (CreateAccountEventUi) -> Unit
 ) {
+
+    val currencyVisualTransformation by remember(calculation = {
+        mutableStateOf(CurrencyVisualTransformation(currencyCode = "USD"))
+    })
+
+    val accountUIValues: AccountUIValues = remember(calculation = {
+        getAccountUI(
+            accountTypeEnum = AccountTypeEnum.fromId(accountCreateUi.type),
+            accountName = accountCreateUi.name,
+            accountAmount = ""
+        )
+    })
+
+    val originAmount: String = remember(calculation = {
+        accountUIValues.amount
+    })
+
+    if (accountCreateUi.amount.isNotBlank()) {
+        accountUIValues.amount = currencyVisualTransformation
+            .filter(AnnotatedString(text = accountCreateUi.amount))
+            .text
+            .toString()
+    } else {
+        accountUIValues.amount = originAmount
+    }
+
     OutlinedTextField(
         value = accountCreateUi.amount,
         onValueChange = { input ->

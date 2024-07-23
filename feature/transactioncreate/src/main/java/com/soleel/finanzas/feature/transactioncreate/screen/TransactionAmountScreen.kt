@@ -149,20 +149,6 @@ fun TransactionAmountScreen(
             )
         },
         content = {
-            val currencyVisualTransformation by remember(calculation = {
-                mutableStateOf(CurrencyVisualTransformation(currencyCode = "USD"))
-            })
-
-            val accountAmount: String = currencyVisualTransformation
-                .filter(AnnotatedString(text = transactionUiCreate.account.amount.toString()))
-                .text
-                .toString()
-
-            val transactionAmount: String = currencyVisualTransformation
-                .filter(AnnotatedString(text = transactionUiCreate.transactionAmount.toString()))
-                .text
-                .toString()
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()

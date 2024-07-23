@@ -23,7 +23,6 @@ import com.soleel.finanzas.core.ui.R
 fun AccountCreateTopAppBarPreview() {
     CreateTopAppBar(
         title = R.string.account_create_title,
-        subTitle = R.string.account_type_top_app_bar_subtitle,
         onBackButton = {}
     )
 }
@@ -33,7 +32,6 @@ fun AccountCreateTopAppBarPreview() {
 fun TransactionCreateTopAppBarPreview() {
     CreateTopAppBar(
         title = R.string.trasaction_create_title,
-        subTitle = R.string.account_type_top_app_bar_subtitle,
         onBackButton = {}
     )
 }
