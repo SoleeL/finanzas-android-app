@@ -12,10 +12,8 @@ import com.soleel.finanzas.core.common.result.asResult
 import com.soleel.finanzas.core.common.retryflow.RetryableFlowTrigger
 import com.soleel.finanzas.core.common.retryflow.retryableFlow
 import com.soleel.finanzas.core.model.Account
-import com.soleel.finanzas.core.model.AccountSummary
 import com.soleel.finanzas.data.account.interfaces.IAccountLocalDataSource
 import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
-import com.soleel.finanzas.domain.account.AccountsSummaryUseCase
 import com.soleel.finanzas.domain.validation.validator.ValidatorAccountType
 import com.soleel.finanzas.domain.validation.validator.ValidatorName
 import com.soleel.finanzas.domain.validation.validator.ValidatorTransactionAmount
@@ -72,7 +70,7 @@ sealed class CreateTransactionUiEvent {
 }
 
 sealed interface AccountsUiState {
-    data class Success(val accounts: List<AccountSummary>) : AccountsUiState
+    data class Success(val accounts: List<Account>) : AccountsUiState
     data object Error : AccountsUiState
     data object Loading : AccountsUiState
 }
@@ -83,7 +81,7 @@ sealed class AccountsUiEvent {
 
 @HiltViewModel
 class CreateTransactionViewModel @Inject constructor(
-    private val accountsSummaryUseCase: AccountsSummaryUseCase,
+    private val accountRepository: IAccountLocalDataSource,
     private val transactionRepository: ITransactionLocalDataSource,
     private val retryableFlowTrigger: RetryableFlowTrigger
 ) : ViewModel() {
@@ -98,24 +96,18 @@ class CreateTransactionViewModel @Inject constructor(
     private val transactionAmountValidator = ValidatorTransactionAmount()
 
     private val _accountsUiState: Flow<AccountsUiState> = retryableFlowTrigger
-        .retryableFlow(flowProvider = { getFlowAllTransactions() })
+        .retryableFlow(flowProvider = { accountUiState(accountRepository = accountRepository) })
 
-    private fun getFlowAllTransactions(): Flow<AccountsUiState>{
-        return accountsSummaryUseCase()
+    private fun accountUiState(
+        accountRepository: IAccountLocalDataSource,
+    ): Flow<AccountsUiState> {
+        return accountRepository.getAccountsWithTotalAmount()
             .asResult()
-            .map(transform = { this.getData(it) })
+            .map(transform = this::getData)
     }
 
-//    private fun accountUiState(
-//        accountRepository: IAccountLocalDataSource,
-//    ): Flow<AccountsUiState> {
-//        return accountRepository.getAccountsWithTotalAmount()
-//            .asResult()
-//            .map(transform = this::getData)
-//    }
-
     private fun getData(
-        itemsAccount: Result<List<AccountSummary>>
+        itemsAccount: Result<List<Account>>
     ): AccountsUiState {
         return when (itemsAccount) {
             is Result.Success -> AccountsUiState.Success(itemsAccount.data)
@@ -206,7 +198,7 @@ class CreateTransactionViewModel @Inject constructor(
             is CreateTransactionUiEvent.TransactionAmountChanged -> {
                 createTransactionUiState = createTransactionUiState.copy(transactionAmount = event.transactionAmount)
                 validateTransactionAmount()
-                accountAmountRecalculate()
+//                accountAmountRecalculate()
             }
 
             is CreateTransactionUiEvent.Submit -> {
@@ -274,17 +266,17 @@ class CreateTransactionViewModel @Inject constructor(
         return amountResult.successful
     }
 
-    private fun accountAmountRecalculate() {
-        if (0 == initialAccountAmount) {
-            initialAccountAmount = createTransactionUiState.account.amount
-        }
-
-        createTransactionUiState.account.amount = when (createTransactionUiState.transactionType) {
-            TransactionTypeEnum.INCOME.id -> initialAccountAmount + createTransactionUiState.transactionAmount
-            TransactionTypeEnum.EXPENDITURE.id -> initialAccountAmount - createTransactionUiState.transactionAmount
-            else -> initialAccountAmount
-        }
-    }
+//    private fun accountAmountRecalculate() {
+//        if (0 == initialAccountAmount) {
+//            initialAccountAmount = createTransactionUiState.account.amount
+//        }
+//
+//        createTransactionUiState.account.amount = when (createTransactionUiState.transactionType) {
+//            TransactionTypeEnum.INCOME.id -> initialAccountAmount + createTransactionUiState.transactionAmount
+//            TransactionTypeEnum.EXPENDITURE.id -> initialAccountAmount - createTransactionUiState.transactionAmount
+//            else -> initialAccountAmount
+//        }
+//    }
 
     private fun saveTransaction() {
         viewModelScope.launch(

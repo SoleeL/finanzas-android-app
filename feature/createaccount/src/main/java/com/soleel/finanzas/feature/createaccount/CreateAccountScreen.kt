@@ -3,6 +3,7 @@ package com.soleel.finanzas.feature.createaccount
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,6 +25,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -39,9 +41,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.soleel.finanzas.core.common.enums.AccountTypeEnum
+import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.CancelAlertDialog
 import com.soleel.finanzas.core.ui.template.CreateTopAppBar
+import com.soleel.finanzas.core.ui.template.LargeDropdownMenu
 import com.soleel.finanzas.core.ui.uivalues.AccountUIValues
 import com.soleel.finanzas.core.ui.uivalues.getAccountUI
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
@@ -146,14 +150,12 @@ internal fun CreateAccountScreen(
                         onAccountCreateEventUi = onAccountCreateEventUi,
                     )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
                     EnterAccountNameTextField(
                         accountCreateUi = accountCreateUi,
                         onAccountCreateEventUi = onAccountCreateEventUi,
                     )
-
-                    Spacer(modifier = Modifier.height(8.dp))
 
                     EnterAccountAmountTextField(
                         accountCreateUi = accountCreateUi,
@@ -165,57 +167,32 @@ internal fun CreateAccountScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectTypeAccountDropdownMenu(
     accountCreateUi: CreateAccountUi,
     onAccountCreateEventUi: (CreateAccountEventUi) -> Unit
 ) {
-    var selectedOption by remember { mutableStateOf("") }
-    var expanded by remember { mutableStateOf(false) }
+    var selectedIndex by remember { mutableIntStateOf(-1) }
 
-    ExposedDropdownMenuBox(
-        modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
-        expanded = expanded,
-        onExpandedChange = { expanded = !expanded },
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp),
         content = {
-            TextField(
-                modifier = Modifier
-                    .menuAnchor()
-                    .fillMaxWidth(),
-                readOnly = true,
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_type),
-                        contentDescription = "Localized description"
+            LargeDropdownMenu(
+                label = "Tipo de cuenta",
+                items = AccountTypeEnum.entries,
+                selectedIndex = selectedIndex,
+                onItemSelected = { index, accountType ->
+                    selectedIndex = index
+                    onAccountCreateEventUi(
+                        CreateAccountEventUi.TypeChanged(
+                            accountType.id
+                        )
                     )
                 },
-                value = selectedOption,
-                onValueChange = {},
-                label = { Text("Tipo de cuenta") },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            )
-            ExposedDropdownMenu(
-                modifier = Modifier
-                    .menuAnchor()
-                    .fillMaxWidth(),
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-                content = {
-                    AccountTypeEnum.entries.forEach(
-                        action = { option ->
-                            DropdownMenuItem(
-                                text = { Text(text = option.value) },
-                                onClick = {
-                                    selectedOption = option.value
-                                    expanded = false
-                                    onAccountCreateEventUi(CreateAccountEventUi.TypeChanged(option.id))
-                                },
-                                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                            )
-                        }
-                    )
+                selectedItemToStartString = { accountType: AccountTypeEnum ->
+                    accountType.value
                 }
             )
         }

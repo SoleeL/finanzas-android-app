@@ -2,10 +2,10 @@ package com.soleel.finanzas.feature.createtransaction
 
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,28 +16,24 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -46,14 +42,16 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.soleel.finanzas.core.common.enums.AccountTypeEnum
+import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
+import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.model.Account
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.CancelAlertDialog
 import com.soleel.finanzas.core.ui.template.CreateTopAppBar
+import com.soleel.finanzas.core.ui.template.LargeDropdownMenu
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.domain.validation.validator.ValidatorTransactionAmount
 import java.util.Date
-
 
 @Composable
 internal fun CreateTransactionRoute(
@@ -133,7 +131,6 @@ private fun TransactionCreateScreen(
     createTransactionUiState: CreateTransactionUiState,
     onCreateTransactionUiEvent: (CreateTransactionUiEvent) -> Unit
 ) {
-
     val externalBackHandler: MutableState<Boolean> =
         remember(calculation = { mutableStateOf(true) })
 
@@ -221,105 +218,148 @@ fun TransactionCreateSuccess(
         onBackToPreviousView()
     }
 
+    val currencyVisualTransformation by remember(calculation = {
+        mutableStateOf(CurrencyVisualTransformation(currencyCode = "USD"))
+    })
+
     Column(
         modifier = modifier,
         content = {
 
             SelectAccountDropdownMenu(
                 accounts = accounts,
+                onCreateTransactionUiEvent = onCreateTransactionUiEvent,
+                currencyVisualTransformation = currencyVisualTransformation
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            SelectTransactionTypeDropdownMenu(
+                createTransactionUiState = createTransactionUiState,
                 onCreateTransactionUiEvent = onCreateTransactionUiEvent
             )
 
-            // TODO: Agregar la seleccion de tipo de transaccion
-            // TODO: Agregar la seleccion de categoria de transaccion
+            Spacer(modifier = Modifier.height(16.dp))
 
-            Spacer(modifier = Modifier.height(8.dp))
+            SelectTransactionCategoryDropdownMenu(
+                createTransactionUiState = createTransactionUiState,
+                onCreateTransactionUiEvent = onCreateTransactionUiEvent
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             InputTransactionNameTextField(
                 createTransactionUiState = createTransactionUiState,
                 onCreateTransactionUiEvent = onCreateTransactionUiEvent
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
-
             InputTransactionAmountTextField(
                 createTransactionUiState = createTransactionUiState,
-                onCreateTransactionUiEvent = onCreateTransactionUiEvent
+                onCreateTransactionUiEvent = onCreateTransactionUiEvent,
+                currencyVisualTransformation = currencyVisualTransformation
             )
         }
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectAccountDropdownMenu(
     accounts: List<Account>,
-    onCreateTransactionUiEvent: (CreateTransactionUiEvent) -> Unit
+    onCreateTransactionUiEvent: (CreateTransactionUiEvent) -> Unit,
+    currencyVisualTransformation: CurrencyVisualTransformation
 ) {
-    var selectedOption by remember { mutableStateOf("") }
-    var expanded by remember { mutableStateOf(false) }
-
-    val accountsSummary: List<AccountsSummary> by remember(calculation = {
-        mutableStateOf(
-            value = accounts.map(transform = { account ->
-                AccountsSummary(
-                    name = account.name,
-                    amount = "$0",
-                    account = account
-                )
-            })
-        )
-    })
-
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = false == expanded },
+    var selectedIndex by remember { mutableIntStateOf(-1) }
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp),
         content = {
-            TextField(
-                modifier = Modifier
-                    .menuAnchor()
-                    .fillMaxWidth(),
-                readOnly = true,
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_type),
-                        contentDescription = "Localized description"
+            LargeDropdownMenu(
+                label = "Cuenta de pago",
+                items = accounts,
+                selectedIndex = selectedIndex,
+                onItemSelected = { index, account ->
+                    selectedIndex = index
+                    onCreateTransactionUiEvent(CreateTransactionUiEvent.AccountChanged(account))
+                },
+                selectedItemToStartString = { account: Account ->
+                    "${account.name} - ${account.type.value} "
+                },
+                withEndText = true,
+                selectedItemToEndString = { account: Account ->
+                    currencyVisualTransformation
+                        .filter(AnnotatedString(text = account.amount.toString()))
+                        .text
+                        .toString()
+                }
+            )
+        }
+    )
+}
+
+@Composable
+fun SelectTransactionTypeDropdownMenu(
+    createTransactionUiState: CreateTransactionUiState,
+    onCreateTransactionUiEvent: (CreateTransactionUiEvent) -> Unit,
+) {
+    var selectedIndex by remember { mutableIntStateOf(-1) }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp),
+        content = {
+            LargeDropdownMenu(
+                enabled = createTransactionUiState.account.id.isNotEmpty(),
+                label = "Tipo de transaccion",
+                items = TransactionTypeEnum.entries,
+                selectedIndex = selectedIndex,
+                onItemSelected = { index, transactionType ->
+                    selectedIndex = index
+                    onCreateTransactionUiEvent(
+                        CreateTransactionUiEvent.TransactionTypeChanged(
+                            transactionType.id
+                        )
                     )
                 },
-                value = selectedOption,
-                onValueChange = {},
-                label = { Text("Cuenta de pago") },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                selectedItemToStartString = { transactionType: TransactionTypeEnum ->
+                    transactionType.value
+                }
             )
-            ExposedDropdownMenu(
-                modifier = Modifier
-                    .menuAnchor()
-                    .fillMaxWidth(),
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-                content = {
-                    accountsSummary.forEach(
-                        action = { account ->
-                            val accountNameAmount: String = "${account.name} - ${account.amount}"
-                            DropdownMenuItem(
-                                text = { Text(text = accountNameAmount) },
-                                onClick = {
-                                    selectedOption = accountNameAmount
-                                    expanded = false
-                                    onCreateTransactionUiEvent(
-                                        CreateTransactionUiEvent.AccountChanged(
-                                            account.account
-                                        )
-                                    )
-                                },
-                                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                            )
-                        }
+        }
+    )
+}
+
+@Composable
+fun SelectTransactionCategoryDropdownMenu(
+    createTransactionUiState: CreateTransactionUiState,
+    onCreateTransactionUiEvent: (CreateTransactionUiEvent) -> Unit,
+) {
+    var selectedIndex by remember { mutableIntStateOf(-1) }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp),
+        content = {
+            LargeDropdownMenu(
+                enabled = 0 != createTransactionUiState.transactionType,
+                label = "Categoria de transaccion",
+                items = TransactionCategoryEnum.getTransactionCategories(
+                    transactionType = TransactionTypeEnum.fromId(createTransactionUiState.transactionType),
+                    accountType = AccountTypeEnum.fromId(createTransactionUiState.account.type.id)
+                ),
+                selectedIndex = selectedIndex,
+                onItemSelected = { index, transactionCategory ->
+                    selectedIndex = index
+                    onCreateTransactionUiEvent(
+                        CreateTransactionUiEvent.TransactionCategoryChanged(
+                            transactionCategory.id
+                        )
                     )
+                },
+                selectedItemToStartString = { transactionCategory: TransactionCategoryEnum ->
+                    transactionCategory.value
                 }
             )
         }
@@ -375,11 +415,8 @@ fun InputTransactionNameTextField(
 fun InputTransactionAmountTextField(
     createTransactionUiState: CreateTransactionUiState,
     onCreateTransactionUiEvent: (CreateTransactionUiEvent) -> Unit,
+    currencyVisualTransformation: CurrencyVisualTransformation
 ) {
-    val currencyVisualTransformation by remember(calculation = {
-        mutableStateOf(CurrencyVisualTransformation(currencyCode = "USD"))
-    })
-
     OutlinedTextField(
         value = if (0 != createTransactionUiState.transactionAmount) createTransactionUiState.transactionAmount.toString() else "",
         onValueChange = { input: String ->
@@ -467,16 +504,6 @@ fun TransactionCreateErrorScreen(
         }
     }
 }
-
-//@Preview
-//@Composable
-//fun TransactionCreateLoadingScreenPreview() {
-//    Column(modifier = Modifier
-//        .fillMaxSize()
-//        .background(color = MaterialTheme.colorScheme.background),
-//        content = { TransactionCreateLoadingScreen() }
-//    )
-//}
 
 @Composable
 fun TransactionCreateLoadingScreen() {
