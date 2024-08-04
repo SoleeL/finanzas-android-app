@@ -113,10 +113,11 @@ class CreateAccountViewModel @Inject constructor(
                 )
 
                 transactionRepository.createTransaction(
+                    type = TransactionTypeEnum.INCOME.id,
+                    category = TransactionCategoryEnum.INCOME_TRANSFER.id,
                     name = "Monto inicial",
+                    date = System.currentTimeMillis(),
                     amount = createAccountUi.amount.toInt(),
-                    transactionType = TransactionTypeEnum.INCOME.id,
-                    transactionCategory = TransactionCategoryEnum.INCOME_TRANSFER.id,
                     accountId = accountId
                 )
 

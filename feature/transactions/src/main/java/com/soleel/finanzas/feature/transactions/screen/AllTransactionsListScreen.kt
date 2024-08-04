@@ -22,7 +22,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -120,7 +119,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "1",
                                 name = "Compra supermercado",
                                 amount = 1500,
-                                createAt = Date(1641078000000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641078000000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.EXPENDITURE,
                                 category = TransactionCategoryEnum.EXPENDITURE_MARKET,
@@ -129,7 +128,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "1",
                                 name = "Cuenta principal",
                                 amount = 5000,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.CREDIT
                             )
@@ -138,7 +137,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "2",
                                 name = "Depósito nómina",
                                 amount = 3000,
-                                createAt = Date(1641078000000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641078000000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.INCOME,
                                 category = TransactionCategoryEnum.INCOME_SALARY,
@@ -147,7 +146,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "2",
                                 name = "Cuenta nómina",
                                 amount = 10000,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.DEBIT
                             )
@@ -161,7 +160,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "3",
                                 name = "Pago alquiler",
                                 amount = 1200,
-                                createAt = Date(1641164400000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641164400000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.EXPENDITURE,
                                 category = TransactionCategoryEnum.EXPENDITURE_SERVICE,
@@ -170,7 +169,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "3",
                                 name = "Cuenta de alquiler",
                                 amount = 3000,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.DEBIT
                             )
@@ -184,7 +183,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "4",
                                 name = "Compra online",
                                 amount = 500,
-                                createAt = Date(1641250800000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.EXPENDITURE,
                                 category = TransactionCategoryEnum.EXPENDITURE_ACQUISITION,
@@ -193,7 +192,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "1",
                                 name = "Cuenta principal",
                                 amount = 4500,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.CREDIT
                             )
@@ -202,7 +201,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "5",
                                 name = "Transferencia amigo",
                                 amount = 200,
-                                createAt = Date(1641250800000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.EXPENDITURE,
                                 category = TransactionCategoryEnum.EXPENDITURE_TRANSFER,
@@ -211,7 +210,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "2",
                                 name = "Cuenta nómina",
                                 amount = 9800,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.SAVING
                             )
@@ -227,7 +226,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "4",
                                 name = "Compra online",
                                 amount = 500,
-                                createAt = Date(1641250800000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.EXPENDITURE,
                                 category = TransactionCategoryEnum.EXPENDITURE_ACQUISITION,
@@ -236,7 +235,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "1",
                                 name = "Cuenta principal",
                                 amount = 4500,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.CREDIT
                             )
@@ -245,7 +244,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "5",
                                 name = "Transferencia amigo",
                                 amount = 200,
-                                createAt = Date(1641250800000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.EXPENDITURE,
                                 category = TransactionCategoryEnum.EXPENDITURE_TRANSFER,
@@ -254,7 +253,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "2",
                                 name = "Cuenta nómina",
                                 amount = 9800,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.SAVING
                             )
@@ -270,7 +269,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "4",
                                 name = "Compra online",
                                 amount = 500,
-                                createAt = Date(1641250800000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.EXPENDITURE,
                                 category = TransactionCategoryEnum.EXPENDITURE_ACQUISITION,
@@ -279,7 +278,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "1",
                                 name = "Cuenta principal",
                                 amount = 4500,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.CREDIT
                             )
@@ -288,7 +287,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "5",
                                 name = "Transferencia amigo",
                                 amount = 200,
-                                createAt = Date(1641250800000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.EXPENDITURE,
                                 category = TransactionCategoryEnum.EXPENDITURE_TRANSFER,
@@ -297,7 +296,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "2",
                                 name = "Cuenta nómina",
                                 amount = 9800,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.SAVING
                             )
@@ -313,7 +312,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "1",
                                 name = "Compra supermercado",
                                 amount = 1500,
-                                createAt = Date(1641078000000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641078000000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.EXPENDITURE,
                                 category = TransactionCategoryEnum.EXPENDITURE_MARKET,
@@ -322,7 +321,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "1",
                                 name = "Cuenta principal",
                                 amount = 5000,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.CREDIT
                             )
@@ -331,7 +330,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "2",
                                 name = "Depósito nómina",
                                 amount = 3000,
-                                createAt = Date(1641078000000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641078000000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.INCOME,
                                 category = TransactionCategoryEnum.INCOME_SALARY,
@@ -340,7 +339,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "2",
                                 name = "Cuenta nómina",
                                 amount = 10000,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.DEBIT
                             )
@@ -356,7 +355,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "3",
                                 name = "Pago alquiler",
                                 amount = 1200,
-                                createAt = Date(1641164400000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641164400000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.EXPENDITURE,
                                 category = TransactionCategoryEnum.EXPENDITURE_SERVICE,
@@ -365,7 +364,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "3",
                                 name = "Cuenta de alquiler",
                                 amount = 3000,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.DEBIT
                             )
@@ -381,7 +380,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "4",
                                 name = "Compra online",
                                 amount = 500,
-                                createAt = Date(1641250800000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.EXPENDITURE,
                                 category = TransactionCategoryEnum.EXPENDITURE_ACQUISITION,
@@ -390,7 +389,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "1",
                                 name = "Cuenta principal",
                                 amount = 4500,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.CREDIT
                             )
@@ -399,7 +398,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "5",
                                 name = "Transferencia amigo",
                                 amount = 200,
-                                createAt = Date(1641250800000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.EXPENDITURE,
                                 category = TransactionCategoryEnum.EXPENDITURE_TRANSFER,
@@ -408,7 +407,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "2",
                                 name = "Cuenta nómina",
                                 amount = 9800,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.SAVING
                             )
@@ -424,7 +423,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "1",
                                 name = "Compra supermercado",
                                 amount = 1500,
-                                createAt = Date(1641078000000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641078000000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.EXPENDITURE,
                                 category = TransactionCategoryEnum.EXPENDITURE_MARKET,
@@ -433,7 +432,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "1",
                                 name = "Cuenta principal",
                                 amount = 5000,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.CREDIT
                             )
@@ -442,7 +441,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "2",
                                 name = "Depósito nómina",
                                 amount = 3000,
-                                createAt = Date(1641078000000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641078000000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.INCOME,
                                 category = TransactionCategoryEnum.INCOME_SALARY,
@@ -451,7 +450,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "2",
                                 name = "Cuenta nómina",
                                 amount = 10000,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.DEBIT
                             )
@@ -465,7 +464,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "3",
                                 name = "Pago alquiler",
                                 amount = 1200,
-                                createAt = Date(1641164400000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641164400000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.EXPENDITURE,
                                 category = TransactionCategoryEnum.EXPENDITURE_SERVICE,
@@ -474,7 +473,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "3",
                                 name = "Cuenta de alquiler",
                                 amount = 3000,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.DEBIT
                             )
@@ -490,7 +489,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "4",
                                 name = "Compra online",
                                 amount = 500,
-                                createAt = Date(1641250800000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.EXPENDITURE,
                                 category = TransactionCategoryEnum.EXPENDITURE_ACQUISITION,
@@ -499,7 +498,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "1",
                                 name = "Cuenta principal",
                                 amount = 4500,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.CREDIT
                             )
@@ -508,7 +507,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "5",
                                 name = "Transferencia amigo",
                                 amount = 200,
-                                createAt = Date(1641250800000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.EXPENDITURE,
                                 category = TransactionCategoryEnum.EXPENDITURE_TRANSFER,
@@ -517,7 +516,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "2",
                                 name = "Cuenta nómina",
                                 amount = 9800,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.SAVING
                             )
@@ -533,7 +532,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "1",
                                 name = "Compra supermercado",
                                 amount = 1500,
-                                createAt = Date(1641078000000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641078000000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.EXPENDITURE,
                                 category = TransactionCategoryEnum.EXPENDITURE_MARKET,
@@ -542,7 +541,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "1",
                                 name = "Cuenta principal",
                                 amount = 5000,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.CREDIT
                             )
@@ -551,7 +550,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "2",
                                 name = "Depósito nómina",
                                 amount = 3000,
-                                createAt = Date(1641078000000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641078000000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.INCOME,
                                 category = TransactionCategoryEnum.INCOME_SALARY,
@@ -560,7 +559,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "2",
                                 name = "Cuenta nómina",
                                 amount = 10000,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.DEBIT
                             )
@@ -574,7 +573,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "3",
                                 name = "Pago alquiler",
                                 amount = 1200,
-                                createAt = Date(1641164400000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641164400000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.EXPENDITURE,
                                 category = TransactionCategoryEnum.EXPENDITURE_SERVICE,
@@ -583,7 +582,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "3",
                                 name = "Cuenta de alquiler",
                                 amount = 3000,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.DEBIT
                             )
@@ -599,7 +598,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "4",
                                 name = "Compra online",
                                 amount = 500,
-                                createAt = Date(1641250800000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.EXPENDITURE,
                                 category = TransactionCategoryEnum.EXPENDITURE_ACQUISITION,
@@ -608,7 +607,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "1",
                                 name = "Cuenta principal",
                                 amount = 4500,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.CREDIT
                             )
@@ -617,7 +616,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "5",
                                 name = "Transferencia amigo",
                                 amount = 200,
-                                createAt = Date(1641250800000), // Misma fecha que TransactionsGroup
+                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
                                 updatedAt = Date(),
                                 type = TransactionTypeEnum.EXPENDITURE,
                                 category = TransactionCategoryEnum.EXPENDITURE_TRANSFER,
@@ -626,7 +625,7 @@ private fun AllTransactionsSuccessScreenPreview() {
                                 id = "2",
                                 name = "Cuenta nómina",
                                 amount = 9800,
-                                createAt = Date(),
+                                createdAt = Date(),
                                 updatedAt = Date(),
                                 type = AccountTypeEnum.SAVING
                             )
@@ -702,7 +701,7 @@ private fun AllTransactionList(
                                 transactionWithAccount.transaction.category.icon
                             val transactionName: String = transactionWithAccount.transaction.name
                             val transactionHour: String = AllTransactionFormatDateUseCase(
-                                transactionWithAccount.transaction.createAt
+                                transactionWithAccount.transaction.createdAt
                             )
                             val transactionAmount: String = currencyVisualTransformation.filter(
                                 AnnotatedString(

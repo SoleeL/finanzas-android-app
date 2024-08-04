@@ -12,10 +12,10 @@ fun TransactionEntity.toModel(): Transaction {
         id = this.id,
         name = this.name,
         amount = this.amount,
-        createAt = Date(this.createAt),
+        createdAt = Date(this.createdAt),
         updatedAt = Date(this.updatedAt),
-        type = TransactionTypeEnum.fromId(id = this.transactionType),
-        category = TransactionCategoryEnum.fromId(id = this.categoryType),
+        type = TransactionTypeEnum.fromId(id = this.type),
+        category = TransactionCategoryEnum.fromId(id = this.category),
         accountId = this.accountId
     )
 }

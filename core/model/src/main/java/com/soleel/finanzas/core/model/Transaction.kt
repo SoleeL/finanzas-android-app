@@ -9,7 +9,7 @@ data class Transaction(
     val id: String,
     var name: String,
     val amount: Int,
-    val createAt: Date,
+    val createdAt: Date,
     val updatedAt: Date,
     val type: TransactionTypeEnum,
     val category: TransactionCategoryEnum,

@@ -1,6 +1,7 @@
 package com.soleel.finanzas.data.account
 
 import com.soleel.finanzas.core.common.enums.AccountTypeEnum
+import com.soleel.finanzas.core.common.enums.SynchronizationEnum
 import com.soleel.finanzas.core.database.entities.AccountEntity
 import com.soleel.finanzas.core.database.extras.AccountWithTotalAmountEntity
 import com.soleel.finanzas.core.model.Account
@@ -10,10 +11,11 @@ import java.util.Date
 fun AccountEntity.toModel(): Account {
     return Account(
         id = this.id,
+        type = AccountTypeEnum.fromId(id = this.type),
         name = this.name,
-        createAt = Date(this.createAt),
+        createdAt = Date(this.createdAt),
         updatedAt = Date(this.updatedAt),
-        type = AccountTypeEnum.fromId(id = this.type)
+        isDeleted = this.isDeleted
     )
 }
 
@@ -24,24 +26,27 @@ fun List<AccountEntity>.toModelList(): List<Account> {
 fun AccountWithTotalAmountEntity.toModel(): Account {
     return Account(
         id = this.accountEntity.id,
+        type = AccountTypeEnum.fromId(id = this.accountEntity.type),
         name = this.accountEntity.name,
         amount = this.totalIncome - this.totalExpense,
-        createAt = Date(this.accountEntity.createAt),
+        createdAt = Date(this.accountEntity.createdAt),
         updatedAt = Date(this.accountEntity.updatedAt),
-        type = AccountTypeEnum.fromId(id = this.accountEntity.type)
+        isDeleted = this.accountEntity.isDeleted,
     )
 }
 
 fun List<AccountWithTotalAmountEntity>.toWithTotalAmountModelList(): List<Account> {
-    return this.map(transform = {it.toModel()})
+    return this.map(transform = { it.toModel() })
 }
 
 fun Account.toEntity(): AccountEntity {
     return AccountEntity(
         id = this.id,
+        type = this.type.id,
         name = this.name,
-        createAt = System.currentTimeMillis(),
+        createdAt = System.currentTimeMillis(),
         updatedAt = System.currentTimeMillis(),
-        type = this.type.id
+        isDeleted = this.isDeleted,
+        synchronization = SynchronizationEnum.PENDING.id
     )
 }

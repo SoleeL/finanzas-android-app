@@ -21,11 +21,11 @@ class AccountRepository @Inject constructor(
     @DefaultDispatcher private val dispatcher: CoroutineDispatcher
 ) : IAccountLocalDataSource {
 
-    override fun getAccount(AccountId: String): Flow<Account?> {
-        return AccountDAO.getAccountById(AccountId).map(transform =  { it.toModel() })
+    override fun getAccount(accountId: String): Flow<Account?> {
+        return AccountDAO.getAccountById(accountId).map(transform =  { it.toModel() })
     }
 
-    override fun getAccountWithForceUpdate(AccountId: String, forceUpdate: Boolean): Account? {
+    override fun getAccountWithForceUpdate(accountId: String, forceUpdate: Boolean): Account? {
         TODO("Not yet implemented")
     }
 
@@ -37,8 +37,8 @@ class AccountRepository @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override fun getAccountWithTotalAmount(AccountId: String): Flow<Account?> {
-        return AccountDAO.getAccountByIdWithTotalsAmount(AccountId).map(transform =  { it.toModel() })
+    override fun getAccountWithTotalAmount(accountId: String): Flow<Account?> {
+        return AccountDAO.getAccountByIdWithTotalsAmount(id = accountId).map(transform =  { it.toModel() })
     }
 
     override fun getAccountsWithTotalAmount(): Flow<List<Account>> {
@@ -49,7 +49,7 @@ class AccountRepository @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun refreshAccount(AccountId: String) {
+    override suspend fun refreshAccount(accountId: String) {
         TODO("Not yet implemented")
     }
 
@@ -64,19 +64,20 @@ class AccountRepository @Inject constructor(
                 UUID.randomUUID().toString()
             })
 
-        val Account = Account(
+        val account = Account(
             id = id,
+            type = type,
             name = name,
             amount = amount,
-            createAt = Date(),
+            createdAt = Date(),
             updatedAt = Date(),
-            type = type
+            isDeleted = false
         )
 
         withContext(
             context = Dispatchers.IO,
             block = {
-                AccountDAO.insert(Account.toEntity())
+                AccountDAO.insert(account.toEntity())
             }
         )
 
@@ -85,14 +86,14 @@ class AccountRepository @Inject constructor(
 
     override suspend fun updateAccount(
         name: String,
-        createAt: Long,
+        createdAt: Long,
         initialAmount: Int,
         accountType: Int
     ) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteAccount(AccountId: String) {
+    override suspend fun deleteAccount(accountId: String) {
         TODO("Not yet implemented")
     }
 }

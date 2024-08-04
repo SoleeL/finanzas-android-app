@@ -25,12 +25,12 @@ class GetMonthlyOfYearTransactionsUseCase @Inject constructor(
 private fun Flow<List<Transaction>>.mapToSummaryByMonthsOfYear(): Flow<List<TransactionsSummary>> {
     return this.map(transform = {transactions ->
         transactions
-            .groupBy(keySelector = { it.createAt.toYearDate()})
+            .groupBy(keySelector = { it.createdAt.toYearDate()})
             .map(transform = { (yearDate, yearTractions) ->
                 TransactionsSummary(
                     dateName = yearDate.toNameMonthOfYear(),
                     transactions = yearTractions
-                        .groupBy(keySelector = { it.createAt.toMonthDate() })
+                        .groupBy(keySelector = { it.createdAt.toMonthDate() })
                         .flatMap(transform =  { (monthDate, monthTransactions) ->
                             listOf(
                                 TransactionSummary(

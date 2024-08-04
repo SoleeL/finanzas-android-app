@@ -27,7 +27,7 @@ class GetAllTransactionsUseCase @Inject constructor(
 private fun Flow<List<TransactionWithAccount>>.mapToGroupByDay(): Flow<List<TransactionsGroup>> {
     return this.map(transform = { transactionsWithAccount ->
         transactionsWithAccount
-            .groupBy(keySelector = { it.transaction.createAt.toDayDate() })
+            .groupBy(keySelector = { it.transaction.createdAt.toDayDate() })
             .map(transform = { (localDate, dailyTransactionsWithAccount) ->
                 TransactionsGroup(
                     date = localDate,
@@ -50,11 +50,12 @@ private fun Flow<List<Transaction>>.mapToWithAccount(
 
                     val accountNotFind = Account(
                         id = "",
+                        type = AccountTypeEnum.CREDIT,
                         name = "null",
                         amount = 0,
-                        createAt = Date(),
+                        createdAt = Date(),
                         updatedAt = Date(),
-                        type = AccountTypeEnum.CREDIT
+                        isDeleted = false
                     )
 
                     TransactionWithAccount(

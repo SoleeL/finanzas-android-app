@@ -8,21 +8,21 @@ import kotlinx.coroutines.flow.Flow
 
 interface IAccountLocalDataSource {
 
-    fun getAccount(AccountId: String): Flow<Account?>
+    fun getAccount(accountId: String): Flow<Account?>
 
-    fun getAccountWithForceUpdate(AccountId: String, forceUpdate: Boolean = false): Account?
+    fun getAccountWithForceUpdate(accountId: String, forceUpdate: Boolean = false): Account?
 
     fun getAccounts(): Flow<List<Account>>
 
     fun getAccountsWithForceUpdate(forceUpdate: Boolean = false): List<Account>
 
-    fun getAccountWithTotalAmount(AccountId: String): Flow<Account?>
+    fun getAccountWithTotalAmount(accountId: String): Flow<Account?>
 
     fun getAccountsWithTotalAmount(): Flow<List<Account>>
 
     suspend fun refreshAccounts()
 
-    suspend fun refreshAccount(AccountId: String)
+    suspend fun refreshAccount(accountId: String)
 
     suspend fun createAccount(
         name: String,
@@ -32,11 +32,11 @@ interface IAccountLocalDataSource {
 
     suspend fun updateAccount(
         name: String,
-        createAt: Long,
+        createdAt: Long,
         initialAmount: Int,
         accountType: Int
     )
 
-    suspend fun deleteAccount(AccountId: String)
+    suspend fun deleteAccount(accountId: String)
 
 }

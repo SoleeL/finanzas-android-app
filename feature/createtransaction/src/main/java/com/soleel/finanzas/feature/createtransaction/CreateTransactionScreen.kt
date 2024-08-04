@@ -83,35 +83,39 @@ private fun TransactionCreateScreenPreview() {
             accounts = listOf(
                 Account(
                     id = "1",
+                    type = AccountTypeEnum.CREDIT,
                     name = "CMR Falabella",
                     amount = 240000,
-                    createAt = Date(),
+                    createdAt = Date(),
                     updatedAt = Date(),
-                    type = AccountTypeEnum.CREDIT,
+                    isDeleted = false
                 ),
                 Account(
                     id = "2",
+                    type = AccountTypeEnum.DEBIT,
                     name = "Falabella debito",
                     amount = 100000,
-                    createAt = Date(),
+                    createdAt = Date(),
                     updatedAt = Date(),
-                    type = AccountTypeEnum.DEBIT,
+                    isDeleted = false
                 ),
                 Account(
                     id = "3",
+                    type = AccountTypeEnum.DEBIT,
                     name = "Cuenta rut",
                     amount = 100000,
-                    createAt = Date(),
+                    createdAt = Date(),
                     updatedAt = Date(),
-                    type = AccountTypeEnum.DEBIT,
+                    isDeleted = false
                 ),
                 Account(
                     id = "4",
+                    type = AccountTypeEnum.SAVING,
                     name = "Racional app",
                     amount = 9000000,
-                    createAt = Date(),
+                    createdAt = Date(),
                     updatedAt = Date(),
-                    type = AccountTypeEnum.SAVING,
+                    isDeleted = false
                 )
             )
         ),
@@ -157,10 +161,10 @@ private fun TransactionCreateScreen(
                             .fillMaxWidth(0.9f)
                             .height(64.dp),
                         enabled = createTransactionUiState.account.id.isNotBlank() &&
-                                0 != createTransactionUiState.transactionType &&
-                                0 != createTransactionUiState.transactionCategory &&
-                                createTransactionUiState.transactionName.isNotBlank() &&
-                                0 != createTransactionUiState.transactionAmount,
+                                0 != createTransactionUiState.type &&
+                                0 != createTransactionUiState.category &&
+                                createTransactionUiState.name.isNotBlank() &&
+                                0 != createTransactionUiState.amount,
                         content = { Text(text = stringResource(id = R.string.save_transaction_button)) }
                     )
                 }
@@ -214,7 +218,7 @@ fun TransactionCreateSuccess(
 
     BackHandler(enabled = true, onBack = { showCancelAlert.value = false == showCancelAlert.value })
 
-    if (createTransactionUiState.isTransactionSaved) {
+    if (createTransactionUiState.isSaved) {
         onBackToPreviousView()
     }
 
@@ -343,10 +347,10 @@ fun SelectTransactionCategoryDropdownMenu(
             .padding(start = 16.dp, end = 16.dp),
         content = {
             LargeDropdownMenu(
-                enabled = 0 != createTransactionUiState.transactionType,
+                enabled = 0 != createTransactionUiState.type,
                 label = "Categoria de transaccion",
                 items = TransactionCategoryEnum.getTransactionCategories(
-                    transactionType = TransactionTypeEnum.fromId(createTransactionUiState.transactionType),
+                    transactionType = TransactionTypeEnum.fromId(createTransactionUiState.type),
                     accountType = AccountTypeEnum.fromId(createTransactionUiState.account.type.id)
                 ),
                 selectedIndex = selectedIndex,
@@ -372,7 +376,7 @@ fun InputTransactionNameTextField(
     onCreateTransactionUiEvent: (CreateTransactionUiEvent) -> Unit
 ) {
     OutlinedTextField(
-        value = createTransactionUiState.transactionName,
+        value = createTransactionUiState.name,
         onValueChange = {
             onCreateTransactionUiEvent(
                 CreateTransactionUiEvent.TransactionNameChanged(
@@ -386,19 +390,19 @@ fun InputTransactionNameTextField(
                 end = 16.dp
             )
             .fillMaxWidth(),
-        enabled = 0 != createTransactionUiState.transactionCategory,
+        enabled = 0 != createTransactionUiState.category,
         label = { Text(text = stringResource(id = R.string.attribute_trasaction_name_field)) },
         supportingText = {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = if (createTransactionUiState.transactionNameError == null)
+                text = if (createTransactionUiState.nameError == null)
                     stringResource(id = R.string.required_field) else
-                    stringResource(id = createTransactionUiState.transactionNameError),
+                    stringResource(id = createTransactionUiState.nameError),
                 textAlign = TextAlign.End,
             )
         },
         trailingIcon = {
-            if (createTransactionUiState.transactionNameError != null) {
+            if (createTransactionUiState.nameError != null) {
                 Icon(
                     imageVector = Icons.Filled.Info,
                     tint = Color.Red, // Cambiar color
@@ -406,7 +410,7 @@ fun InputTransactionNameTextField(
                 )
             }
         },
-        isError = createTransactionUiState.transactionNameError != null,
+        isError = createTransactionUiState.nameError != null,
         singleLine = true
     )
 }
@@ -418,7 +422,7 @@ fun InputTransactionAmountTextField(
     currencyVisualTransformation: CurrencyVisualTransformation
 ) {
     OutlinedTextField(
-        value = if (0 != createTransactionUiState.transactionAmount) createTransactionUiState.transactionAmount.toString() else "",
+        value = if (0 != createTransactionUiState.amount) createTransactionUiState.amount.toString() else "",
         onValueChange = { input: String ->
             val trimmed = input
                 .trimStart('0')
@@ -438,10 +442,10 @@ fun InputTransactionAmountTextField(
                 end = 16.dp
             )
             .fillMaxWidth(),
-        enabled = 0 != createTransactionUiState.transactionCategory,
+        enabled = 0 != createTransactionUiState.category,
         label = { Text(text = stringResource(id = R.string.attribute_trasaction_amount_field)) },
         trailingIcon = {
-            if (null != createTransactionUiState.transactionAmountError) {
+            if (null != createTransactionUiState.amountError) {
                 Icon(
                     imageVector = Icons.Filled.Info,
                     tint = Color.Red, // Cambiar color
@@ -452,13 +456,13 @@ fun InputTransactionAmountTextField(
         supportingText = {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = if (null == createTransactionUiState.transactionAmountError)
+                text = if (null == createTransactionUiState.amountError)
                     stringResource(id = R.string.required_field) else
-                    stringResource(id = createTransactionUiState.transactionAmountError),
+                    stringResource(id = createTransactionUiState.amountError),
                 textAlign = TextAlign.End,
             )
         },
-        isError = createTransactionUiState.transactionAmountError != null,
+        isError = createTransactionUiState.amountError != null,
         visualTransformation = currencyVisualTransformation,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         singleLine = true

@@ -10,8 +10,10 @@ import androidx.room.PrimaryKey
 )
 data class AccountEntity(
     @PrimaryKey @ColumnInfo(name = "id") val id: String,
+    @ColumnInfo(name = "type") var type: Int,
     @ColumnInfo(name = "name") var name: String,
-    @ColumnInfo(name = "create_at") var createAt: Long,
+    @ColumnInfo(name = "created_at") var createdAt: Long,
     @ColumnInfo(name = "updated_at") var updatedAt: Long,
-    @ColumnInfo(name = "type") var type: Int
+    @ColumnInfo(name = "is_deleted") var isDeleted: Boolean,
+    @ColumnInfo(name = "synchronization") var synchronization: Int,
 )
