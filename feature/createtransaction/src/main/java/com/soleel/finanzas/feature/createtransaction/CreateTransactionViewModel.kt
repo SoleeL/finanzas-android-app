@@ -28,6 +28,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.Date
 import javax.inject.Inject
 
@@ -52,7 +55,7 @@ data class CreateTransactionUiState(
     val name: String = "",
     val nameError: Int? = null,
 
-    val date: Date = Date(),
+    val date: Long = 0,
     val dateError: Int? = null,
 
     val amount: Int = 0,
@@ -63,10 +66,11 @@ data class CreateTransactionUiState(
 
 sealed class CreateTransactionUiEvent {
     data class AccountChanged(val account: Account) : CreateTransactionUiEvent()
-    data class TransactionTypeChanged(val transactionType: Int) : CreateTransactionUiEvent()
-    data class TransactionCategoryChanged(val transactionCategory: Int) : CreateTransactionUiEvent()
-    data class TransactionNameChanged(val transactionName: String) : CreateTransactionUiEvent()
-    data class TransactionAmountChanged(val transactionAmount: Int) : CreateTransactionUiEvent()
+    data class TypeChanged(val type: Int) : CreateTransactionUiEvent()
+    data class CategoryChanged(val category: Int) : CreateTransactionUiEvent()
+    data class NameChanged(val name: String) : CreateTransactionUiEvent()
+    data class DateChanged(val date: Long) : CreateTransactionUiEvent()
+    data class AmountChanged(val amount: Int) : CreateTransactionUiEvent()
 
     data object Submit : CreateTransactionUiEvent()
 }
@@ -91,10 +95,10 @@ class CreateTransactionViewModel @Inject constructor(
     var createTransactionUiState by mutableStateOf(CreateTransactionUiState())
 
     private val accountValidator = ValidatorAccountType()
-    private val transactionTypeValidator = ValidatorTransactionType()
-    private val transactionCategoryValidator = ValidatorTransactionCategory()
-    private val transactionNameValidator = ValidatorName()
-    private val transactionAmountValidator = ValidatorTransactionAmount()
+    private val typeValidator = ValidatorTransactionType()
+    private val categoryValidator = ValidatorTransactionCategory()
+    private val nameValidator = ValidatorName()
+    private val amountValidator = ValidatorTransactionAmount()
 
     private val _accountsUiState: Flow<AccountsUiState> = retryableFlowTrigger
         .retryableFlow(flowProvider = { accountUiState(accountRepository = accountRepository) })
@@ -168,10 +172,10 @@ class CreateTransactionViewModel @Inject constructor(
                 validateAccount()
             }
 
-            is CreateTransactionUiEvent.TransactionTypeChanged -> {
+            is CreateTransactionUiEvent.TypeChanged -> {
                 // README: Campo objetivo
                 createTransactionUiState = createTransactionUiState.copy(
-                    type = event.transactionType
+                    type = event.type
                 )
 
                 // README: Campos afectados
@@ -183,21 +187,24 @@ class CreateTransactionViewModel @Inject constructor(
                 validateTransactionType()
             }
 
-            is CreateTransactionUiEvent.TransactionCategoryChanged -> {
+            is CreateTransactionUiEvent.CategoryChanged -> {
                 createTransactionUiState = createTransactionUiState.copy(
-                    category = event.transactionCategory
+                    category = event.category
                 )
                 validateTransactionCategory()
             }
 
-            is CreateTransactionUiEvent.TransactionNameChanged -> {
-                createTransactionUiState =
-                    createTransactionUiState.copy(name = event.transactionName)
+            is CreateTransactionUiEvent.NameChanged -> {
+                createTransactionUiState = createTransactionUiState.copy(name = event.name)
                 validateTransactionName()
             }
 
-            is CreateTransactionUiEvent.TransactionAmountChanged -> {
-                createTransactionUiState = createTransactionUiState.copy(amount = event.transactionAmount)
+            is CreateTransactionUiEvent.DateChanged -> {
+                createTransactionUiState = createTransactionUiState.copy(date = event.date)
+            }
+
+            is CreateTransactionUiEvent.AmountChanged -> {
+                createTransactionUiState = createTransactionUiState.copy(amount = event.amount)
                 validateTransactionAmount()
 //                accountAmountRecalculate()
             }
@@ -224,7 +231,7 @@ class CreateTransactionViewModel @Inject constructor(
     }
 
     private fun validateTransactionType(): Boolean {
-        val transactionTypeResult = transactionTypeValidator.execute(
+        val transactionTypeResult = typeValidator.execute(
             input = createTransactionUiState.type
         )
         createTransactionUiState = createTransactionUiState.copy(
@@ -234,7 +241,7 @@ class CreateTransactionViewModel @Inject constructor(
     }
 
     private fun validateTransactionCategory(): Boolean {
-        val transactionCategoryResult = transactionCategoryValidator.execute(
+        val transactionCategoryResult = categoryValidator.execute(
             input = createTransactionUiState.category
         )
         createTransactionUiState = createTransactionUiState.copy(
@@ -244,8 +251,7 @@ class CreateTransactionViewModel @Inject constructor(
     }
 
     private fun validateTransactionName(): Boolean {
-        val nameResult =
-            transactionNameValidator.execute(input = createTransactionUiState.name)
+        val nameResult = nameValidator.execute(input = createTransactionUiState.name)
         createTransactionUiState = createTransactionUiState.copy(
             nameError = nameResult.errorMessage
         )
@@ -259,7 +265,7 @@ class CreateTransactionViewModel @Inject constructor(
             third = createTransactionUiState.type
         )
 
-        val amountResult = transactionAmountValidator.execute(input = input)
+        val amountResult = amountValidator.execute(input = input)
 
         createTransactionUiState = createTransactionUiState.copy(
             amountError = amountResult.errorMessage
@@ -287,7 +293,7 @@ class CreateTransactionViewModel @Inject constructor(
                     type = createTransactionUiState.type,
                     category = createTransactionUiState.category,
                     name = createTransactionUiState.name,
-                    date = createTransactionUiState.date.time,
+                    date = createTransactionUiState.date,
                     amount = createTransactionUiState.amount,
                     accountId = createTransactionUiState.account.id
                 )

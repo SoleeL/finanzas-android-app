@@ -2,9 +2,11 @@ package com.soleel.finanzas.feature.createtransaction
 
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,14 +16,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -31,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -51,7 +62,11 @@ import com.soleel.finanzas.core.ui.template.CreateTopAppBar
 import com.soleel.finanzas.core.ui.template.LargeDropdownMenu
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.domain.validation.validator.ValidatorTransactionAmount
+import java.text.SimpleDateFormat
+import java.time.Instant
 import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 @Composable
 internal fun CreateTransactionRoute(
@@ -257,6 +272,13 @@ fun TransactionCreateSuccess(
                 onCreateTransactionUiEvent = onCreateTransactionUiEvent
             )
 
+            TransactionDatePickerModal(
+                createTransactionUiState = createTransactionUiState,
+                onCreateTransactionUiEvent = onCreateTransactionUiEvent
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             InputTransactionAmountTextField(
                 createTransactionUiState = createTransactionUiState,
                 onCreateTransactionUiEvent = onCreateTransactionUiEvent,
@@ -321,7 +343,7 @@ fun SelectTransactionTypeDropdownMenu(
                 onItemSelected = { index, transactionType ->
                     selectedIndex = index
                     onCreateTransactionUiEvent(
-                        CreateTransactionUiEvent.TransactionTypeChanged(
+                        CreateTransactionUiEvent.TypeChanged(
                             transactionType.id
                         )
                     )
@@ -357,7 +379,7 @@ fun SelectTransactionCategoryDropdownMenu(
                 onItemSelected = { index, transactionCategory ->
                     selectedIndex = index
                     onCreateTransactionUiEvent(
-                        CreateTransactionUiEvent.TransactionCategoryChanged(
+                        CreateTransactionUiEvent.CategoryChanged(
                             transactionCategory.id
                         )
                     )
@@ -379,7 +401,7 @@ fun InputTransactionNameTextField(
         value = createTransactionUiState.name,
         onValueChange = {
             onCreateTransactionUiEvent(
-                CreateTransactionUiEvent.TransactionNameChanged(
+                CreateTransactionUiEvent.NameChanged(
                     it
                 )
             )
@@ -415,6 +437,77 @@ fun InputTransactionNameTextField(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TransactionDatePickerModal(
+    createTransactionUiState: CreateTransactionUiState,
+    onCreateTransactionUiEvent: (CreateTransactionUiEvent) -> Unit,
+) {
+    var showDialog by remember { mutableStateOf(false) }
+    val datePickerState = rememberDatePickerState()
+
+    val selectedDate = datePickerState.selectedDateMillis?.let {
+        val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).apply {
+            timeZone = TimeZone.getTimeZone("UTC")
+        }
+        formatter.format(Date(it))
+    } ?: ""
+
+    Box(modifier = Modifier.height(IntrinsicSize.Min).padding(start = 16.dp, end = 16.dp)) {
+        OutlinedTextField(
+            label = { Text("Fecha") },
+            value = selectedDate,
+            modifier = Modifier.fillMaxWidth(),
+            enabled = 0 != createTransactionUiState.category,
+            trailingIcon = {
+                val icon =
+                    if (showDialog) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown
+                Icon(icon, "")
+            },
+            onValueChange = { },
+            readOnly = true,
+        )
+
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 8.dp)
+                .clip(MaterialTheme.shapes.extraSmall)
+                .clickable { showDialog = true },
+            color = Color.Transparent,
+        ) {}
+    }
+
+    if (showDialog && 0 != createTransactionUiState.category) {
+        DatePickerDialog(
+            onDismissRequest = { showDialog = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onCreateTransactionUiEvent(
+                            CreateTransactionUiEvent.DateChanged(
+                                datePickerState.selectedDateMillis ?: createTransactionUiState.date
+                            )
+                        )
+                        showDialog = false
+                    },
+                    content = {
+                        Text("OK")
+                    }
+                )
+            },
+            dismissButton = {
+                TextButton(onClick = { showDialog = false }) {
+                    Text("Cancel")
+                }
+            },
+            content = {
+                DatePicker(state = datePickerState)
+            }
+        )
+    }
+}
+
 @Composable
 fun InputTransactionAmountTextField(
     createTransactionUiState: CreateTransactionUiState,
@@ -430,7 +523,7 @@ fun InputTransactionAmountTextField(
 
             if (trimmed.length <= ValidatorTransactionAmount.MAX_CHAR_LIMIT) {
                 onCreateTransactionUiEvent(
-                    CreateTransactionUiEvent.TransactionAmountChanged(
+                    CreateTransactionUiEvent.AmountChanged(
                         if (trimmed.isBlank()) 0 else trimmed.toInt()
                     )
                 )
