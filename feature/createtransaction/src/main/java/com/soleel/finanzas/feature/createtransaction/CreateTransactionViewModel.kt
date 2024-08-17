@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.soleel.finanzas.core.common.enums.AccountTypeEnum
+import com.soleel.finanzas.core.common.eventmanager.SingleEventManager
 import com.soleel.finanzas.core.common.result.Result
 import com.soleel.finanzas.core.common.result.asResult
 import com.soleel.finanzas.core.common.retryflow.RetryableFlowTrigger
@@ -89,7 +90,8 @@ sealed class AccountsUiEvent {
 class CreateTransactionViewModel @Inject constructor(
     private val accountRepository: IAccountLocalDataSource,
     private val transactionRepository: ITransactionLocalDataSource,
-    private val retryableFlowTrigger: RetryableFlowTrigger
+    private val retryableFlowTrigger: RetryableFlowTrigger,
+    val singleEventManager: SingleEventManager
 ) : ViewModel() {
 
     var createTransactionUiState by mutableStateOf(CreateTransactionUiState())

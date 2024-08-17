@@ -35,12 +35,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.soleel.finanzas.core.common.eventmanager.SingleEventManager
+import com.soleel.finanzas.core.ui.util.onSingleClick
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 
 @Composable
 fun <T> LargeDropdownMenu(
     modifier: Modifier = Modifier,
+    singleEventManager: SingleEventManager = SingleEventManager(),
     enabled: Boolean = true,
     label: String,
     notSetLabel: String? = null,
@@ -85,7 +88,12 @@ fun <T> LargeDropdownMenu(
                 .fillMaxSize()
                 .padding(top = 8.dp)
                 .clip(MaterialTheme.shapes.extraSmall)
-                .clickable(enabled = enabled) { expanded = true },
+//                .clickable(enabled = enabled) { expanded = true }
+                .onSingleClick(
+                    singleEventManager = singleEventManager,
+                    onClick = { if (enabled) expanded = true  }
+                )
+            ,
             color = Color.Transparent,
         ) {}
     }

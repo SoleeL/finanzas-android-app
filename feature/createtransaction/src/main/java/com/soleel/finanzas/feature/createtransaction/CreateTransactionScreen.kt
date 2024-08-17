@@ -55,15 +55,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.soleel.finanzas.core.common.enums.AccountTypeEnum
 import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
 import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
+import com.soleel.finanzas.core.common.eventmanager.SingleEventManager
 import com.soleel.finanzas.core.model.Account
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.CancelAlertDialog
 import com.soleel.finanzas.core.ui.template.CreateTopAppBar
 import com.soleel.finanzas.core.ui.template.LargeDropdownMenu
+import com.soleel.finanzas.core.ui.util.onSingleClick
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.domain.validation.validator.ValidatorTransactionAmount
 import java.text.SimpleDateFormat
-import java.time.Instant
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
@@ -78,13 +79,16 @@ internal fun CreateTransactionRoute(
 
     val createTransactionUiState: CreateTransactionUiState = viewModel.createTransactionUiState
 
+    val singleEventManager = viewModel.singleEventManager
+
     TransactionCreateScreen(
         modifier = modifier,
         onBackToPreviousView = onBackToPreviousView,
         accountsUiState = accountsUiState,
         onAccountsUiEvent = viewModel::onAccountsUiEvent,
         createTransactionUiState = createTransactionUiState,
-        onCreateTransactionUiEvent = viewModel::onCreateTransactionUiEvent
+        onCreateTransactionUiEvent = viewModel::onCreateTransactionUiEvent,
+        singleEventManager = singleEventManager
     )
 }
 
@@ -136,7 +140,8 @@ private fun TransactionCreateScreenPreview() {
         ),
         onAccountsUiEvent = {},
         createTransactionUiState = CreateTransactionUiState(),
-        onCreateTransactionUiEvent = {}
+        onCreateTransactionUiEvent = {},
+        singleEventManager = SingleEventManager()
     )
 }
 
@@ -148,19 +153,33 @@ private fun TransactionCreateScreen(
     accountsUiState: AccountsUiState,
     onAccountsUiEvent: (AccountsUiEvent) -> Unit,
     createTransactionUiState: CreateTransactionUiState,
-    onCreateTransactionUiEvent: (CreateTransactionUiEvent) -> Unit
+    onCreateTransactionUiEvent: (CreateTransactionUiEvent) -> Unit,
+    singleEventManager: SingleEventManager
 ) {
-    val externalBackHandler: MutableState<Boolean> =
-        remember(calculation = { mutableStateOf(true) })
 
-    BackHandler(enabled = externalBackHandler.value, onBack = onBackToPreviousView)
+    val showCancelAlert: MutableState<Boolean> = remember(calculation = { mutableStateOf(false) })
+
+    if (showCancelAlert.value) {
+        CancelAlertDialog(
+            onDismiss = { showCancelAlert.value = false },
+            onConfirmation = {
+                showCancelAlert.value = false
+                onBackToPreviousView()
+            },
+            dialogTitle = "¿Quieres volver atras?",
+            dialogText = "Cancelaras la creacion de esta cuenta."
+        )
+    }
+
+    BackHandler(enabled = true, onBack = { showCancelAlert.value = false == showCancelAlert.value })
 
     Scaffold(
         modifier = modifier,
         topBar = {
             CreateTopAppBar(
                 title = R.string.trasaction_create_title,
-                onBackButton = onBackToPreviousView
+                singleEventManager = singleEventManager,
+                onBackButton = { showCancelAlert.value = false == showCancelAlert.value }
             )
         },
         bottomBar = {
@@ -171,10 +190,14 @@ private fun TransactionCreateScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 content = {
                     Button(
-                        onClick = { onCreateTransactionUiEvent(CreateTransactionUiEvent.Submit) },
+                        onClick = { },
                         modifier = Modifier
                             .fillMaxWidth(0.9f)
-                            .height(64.dp),
+                            .height(64.dp)
+                            .onSingleClick(
+                                singleEventManager = singleEventManager,
+                                onClick = { onCreateTransactionUiEvent(CreateTransactionUiEvent.Submit) }
+                            ),
                         enabled = createTransactionUiState.account.id.isNotBlank() &&
                                 0 != createTransactionUiState.type &&
                                 0 != createTransactionUiState.category &&
@@ -188,13 +211,13 @@ private fun TransactionCreateScreen(
         content = {
             when (accountsUiState) {
                 is AccountsUiState.Success -> {
-                    externalBackHandler.value = false
                     TransactionCreateSuccess(
                         modifier = Modifier.padding(it),
                         onBackToPreviousView = onBackToPreviousView,
                         accounts = accountsUiState.accounts,
                         createTransactionUiState = createTransactionUiState,
-                        onCreateTransactionUiEvent = onCreateTransactionUiEvent
+                        onCreateTransactionUiEvent = onCreateTransactionUiEvent,
+                        singleEventManager = singleEventManager
                     )
                 }
 
@@ -215,23 +238,9 @@ fun TransactionCreateSuccess(
     onBackToPreviousView: () -> Unit,
     accounts: List<Account>,
     createTransactionUiState: CreateTransactionUiState,
-    onCreateTransactionUiEvent: (CreateTransactionUiEvent) -> Unit
+    onCreateTransactionUiEvent: (CreateTransactionUiEvent) -> Unit,
+    singleEventManager: SingleEventManager
 ) {
-    val showCancelAlert: MutableState<Boolean> = remember(calculation = { mutableStateOf(false) })
-
-    if (showCancelAlert.value) {
-        CancelAlertDialog(
-            onDismiss = { showCancelAlert.value = false },
-            onConfirmation = {
-                showCancelAlert.value = false
-                onBackToPreviousView()
-            },
-            dialogTitle = "¿Quieres volver atras?",
-            dialogText = "Cancelaras la creacion de esta transaccion."
-        )
-    }
-
-    BackHandler(enabled = true, onBack = { showCancelAlert.value = false == showCancelAlert.value })
 
     if (createTransactionUiState.isSaved) {
         onBackToPreviousView()
@@ -248,7 +257,8 @@ fun TransactionCreateSuccess(
             SelectAccountDropdownMenu(
                 accounts = accounts,
                 onCreateTransactionUiEvent = onCreateTransactionUiEvent,
-                currencyVisualTransformation = currencyVisualTransformation
+                currencyVisualTransformation = currencyVisualTransformation,
+                singleEventManager = singleEventManager
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -292,7 +302,8 @@ fun TransactionCreateSuccess(
 fun SelectAccountDropdownMenu(
     accounts: List<Account>,
     onCreateTransactionUiEvent: (CreateTransactionUiEvent) -> Unit,
-    currencyVisualTransformation: CurrencyVisualTransformation
+    currencyVisualTransformation: CurrencyVisualTransformation,
+    singleEventManager: SingleEventManager
 ) {
     var selectedIndex by remember { mutableIntStateOf(-1) }
     Row(
@@ -301,6 +312,7 @@ fun SelectAccountDropdownMenu(
             .padding(start = 16.dp, end = 16.dp),
         content = {
             LargeDropdownMenu(
+                singleEventManager = singleEventManager,
                 label = "Cuenta de pago",
                 items = accounts,
                 selectedIndex = selectedIndex,
@@ -397,7 +409,7 @@ fun InputTransactionNameTextField(
     createTransactionUiState: CreateTransactionUiState,
     onCreateTransactionUiEvent: (CreateTransactionUiEvent) -> Unit
 ) {
-    OutlinedTextField(
+        OutlinedTextField(
         value = createTransactionUiState.name,
         onValueChange = {
             onCreateTransactionUiEvent(
@@ -443,42 +455,50 @@ fun TransactionDatePickerModal(
     createTransactionUiState: CreateTransactionUiState,
     onCreateTransactionUiEvent: (CreateTransactionUiEvent) -> Unit,
 ) {
-    var showDialog by remember { mutableStateOf(false) }
+    val enabled = 0 != createTransactionUiState.category
+    var showDialog by remember(calculation = { mutableStateOf(false) })
     val datePickerState = rememberDatePickerState()
 
-    val selectedDate = datePickerState.selectedDateMillis?.let {
-        val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).apply {
-            timeZone = TimeZone.getTimeZone("UTC")
-        }
+    val selectedDate = datePickerState.selectedDateMillis?.let(block = {
+        val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            .apply(block = {
+                timeZone = TimeZone.getTimeZone("UTC")
+            })
         formatter.format(Date(it))
-    } ?: ""
+    }) ?: ""
 
-    Box(modifier = Modifier.height(IntrinsicSize.Min).padding(start = 16.dp, end = 16.dp)) {
-        OutlinedTextField(
-            label = { Text("Fecha") },
-            value = selectedDate,
-            modifier = Modifier.fillMaxWidth(),
-            enabled = 0 != createTransactionUiState.category,
-            trailingIcon = {
-                val icon =
-                    if (showDialog) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown
-                Icon(icon, "")
-            },
-            onValueChange = { },
-            readOnly = true,
-        )
+    Box(
+        modifier = Modifier
+            .height(IntrinsicSize.Min)
+            .padding(start = 16.dp, end = 16.dp),
+        content = {
+            OutlinedTextField(
+                label = { Text("Fecha") },
+                value = selectedDate,
+                modifier = Modifier.fillMaxWidth(),
+                enabled = 0 != createTransactionUiState.category,
+                trailingIcon = {
+                    val icon =
+                        if (showDialog) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown
+                    Icon(icon, "")
+                },
+                onValueChange = { },
+                readOnly = true,
+            )
 
-        Surface(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 8.dp)
-                .clip(MaterialTheme.shapes.extraSmall)
-                .clickable { showDialog = true },
-            color = Color.Transparent,
-        ) {}
-    }
+            Surface(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 8.dp)
+                    .clip(MaterialTheme.shapes.extraSmall)
+                    .clickable(enabled = enabled) { showDialog = true },
+                color = Color.Transparent,
+                content = {}
+            )
+        }
+    )
 
-    if (showDialog && 0 != createTransactionUiState.category) {
+    if (enabled && showDialog) {
         DatePickerDialog(
             onDismissRequest = { showDialog = false },
             confirmButton = {
