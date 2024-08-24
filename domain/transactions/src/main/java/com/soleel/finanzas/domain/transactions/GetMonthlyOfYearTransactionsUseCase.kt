@@ -28,6 +28,7 @@ private fun Flow<List<Transaction>>.mapToSummaryByMonthsOfYear(): Flow<List<Tran
             .groupBy(keySelector = { it.date.toYearDate()})
             .map(transform = { (yearDate, yearTractions) ->
                 TransactionsSummary(
+                    localDate = yearDate,
                     dateName = yearDate.toNameMonthOfYear(),
                     transactions = yearTractions
                         .groupBy(keySelector = { it.date.toMonthDate() })
@@ -47,5 +48,6 @@ private fun Flow<List<Transaction>>.mapToSummaryByMonthsOfYear(): Flow<List<Tran
                         })
                 )
             })
+            .sortedByDescending(selector = { it.localDate })
     })
 }

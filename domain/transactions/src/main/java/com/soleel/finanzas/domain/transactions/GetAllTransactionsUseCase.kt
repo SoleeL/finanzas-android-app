@@ -68,5 +68,6 @@ private fun Flow<List<TransactionWithAccount>>.mapToGroupByDay(): Flow<List<Tran
                     transactionsWithAccount = dailyTransactionsWithAccount
                 )
             })
+            .sortedByDescending(selector = { it.localDate })
     })
 }

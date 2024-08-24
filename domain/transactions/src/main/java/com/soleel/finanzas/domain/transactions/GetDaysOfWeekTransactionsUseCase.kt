@@ -29,6 +29,7 @@ private fun Flow<List<Transaction>>.mapToSummaryByDaysOfWeek(): Flow<List<Transa
             .groupBy(keySelector = { it.date.toWeekDate() })
             .map(transform = { (weekDate, weekTransactions) ->
                 TransactionsSummary(
+                    localDate = weekDate,
                     dateName = weekDate.toNameDaysOfWeek(),
                     transactions = weekTransactions
                         .groupBy(keySelector = { it.date.toDayDate() })
@@ -48,5 +49,6 @@ private fun Flow<List<Transaction>>.mapToSummaryByDaysOfWeek(): Flow<List<Transa
                         })
                 )
             })
+            .sortedByDescending(selector = { it.localDate} )
     })
 }
