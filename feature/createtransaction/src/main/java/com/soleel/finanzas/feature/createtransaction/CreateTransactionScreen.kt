@@ -2,7 +2,6 @@ package com.soleel.finanzas.feature.createtransaction
 
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.soleel.finanzas.core.common.enums.AccountTypeEnum
+import com.soleel.finanzas.core.common.enums.SynchronizationEnum
 import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
 import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.common.eventmanager.SingleEventManager
@@ -65,6 +66,8 @@ import com.soleel.finanzas.core.ui.util.onSingleClick
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.domain.validation.validator.ValidatorTransactionAmount
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
@@ -88,6 +91,7 @@ internal fun CreateTransactionRoute(
         onAccountsUiEvent = viewModel::onAccountsUiEvent,
         createTransactionUiState = createTransactionUiState,
         onCreateTransactionUiEvent = viewModel::onCreateTransactionUiEvent,
+        isValidSaveTransaction = viewModel::isValidSaveTransaction,
         singleEventManager = singleEventManager
     )
 }
@@ -105,42 +109,47 @@ private fun TransactionCreateScreenPreview() {
                     type = AccountTypeEnum.CREDIT,
                     name = "CMR Falabella",
                     amount = 240000,
-                    createdAt = Date(),
-                    updatedAt = Date(),
-                    isDeleted = false
+                    createdAt = LocalDateTime.now(),
+                    updatedAt = LocalDateTime.now(),
+                    isDeleted = false,
+                    synchronization = SynchronizationEnum.PENDING
                 ),
                 Account(
                     id = "2",
                     type = AccountTypeEnum.DEBIT,
                     name = "Falabella debito",
                     amount = 100000,
-                    createdAt = Date(),
-                    updatedAt = Date(),
-                    isDeleted = false
+                    createdAt = LocalDateTime.now(),
+                    updatedAt = LocalDateTime.now(),
+                    isDeleted = false,
+                    synchronization = SynchronizationEnum.PENDING
                 ),
                 Account(
                     id = "3",
                     type = AccountTypeEnum.DEBIT,
                     name = "Cuenta rut",
                     amount = 100000,
-                    createdAt = Date(),
-                    updatedAt = Date(),
-                    isDeleted = false
+                    createdAt = LocalDateTime.now(),
+                    updatedAt = LocalDateTime.now(),
+                    isDeleted = false,
+                    synchronization = SynchronizationEnum.PENDING
                 ),
                 Account(
                     id = "4",
                     type = AccountTypeEnum.SAVING,
                     name = "Racional app",
                     amount = 9000000,
-                    createdAt = Date(),
-                    updatedAt = Date(),
-                    isDeleted = false
+                    createdAt = LocalDateTime.now(),
+                    updatedAt = LocalDateTime.now(),
+                    isDeleted = false,
+                    synchronization = SynchronizationEnum.PENDING
                 )
             )
         ),
         onAccountsUiEvent = {},
         createTransactionUiState = CreateTransactionUiState(),
         onCreateTransactionUiEvent = {},
+        isValidSaveTransaction = { true },
         singleEventManager = SingleEventManager()
     )
 }
@@ -154,6 +163,7 @@ private fun TransactionCreateScreen(
     onAccountsUiEvent: (AccountsUiEvent) -> Unit,
     createTransactionUiState: CreateTransactionUiState,
     onCreateTransactionUiEvent: (CreateTransactionUiEvent) -> Unit,
+    isValidSaveTransaction: () -> Boolean,
     singleEventManager: SingleEventManager
 ) {
 
@@ -190,19 +200,15 @@ private fun TransactionCreateScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 content = {
                     Button(
-                        onClick = { },
+                        onClick = { onCreateTransactionUiEvent(CreateTransactionUiEvent.Submit) },
                         modifier = Modifier
                             .fillMaxWidth(0.9f)
                             .height(64.dp)
                             .onSingleClick(
                                 singleEventManager = singleEventManager,
-                                onClick = { onCreateTransactionUiEvent(CreateTransactionUiEvent.Submit) }
+                                onClick = {  }
                             ),
-                        enabled = createTransactionUiState.account.id.isNotBlank() &&
-                                0 != createTransactionUiState.type &&
-                                0 != createTransactionUiState.category &&
-                                createTransactionUiState.name.isNotBlank() &&
-                                0 != createTransactionUiState.amount,
+                        enabled = isValidSaveTransaction(),
                         content = { Text(text = stringResource(id = R.string.save_transaction_button)) }
                     )
                 }
@@ -265,26 +271,30 @@ fun TransactionCreateSuccess(
 
             SelectTransactionTypeDropdownMenu(
                 createTransactionUiState = createTransactionUiState,
-                onCreateTransactionUiEvent = onCreateTransactionUiEvent
+                onCreateTransactionUiEvent = onCreateTransactionUiEvent,
+                singleEventManager = singleEventManager
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             SelectTransactionCategoryDropdownMenu(
                 createTransactionUiState = createTransactionUiState,
-                onCreateTransactionUiEvent = onCreateTransactionUiEvent
+                onCreateTransactionUiEvent = onCreateTransactionUiEvent,
+                singleEventManager = singleEventManager
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             InputTransactionNameTextField(
                 createTransactionUiState = createTransactionUiState,
-                onCreateTransactionUiEvent = onCreateTransactionUiEvent
+                onCreateTransactionUiEvent = onCreateTransactionUiEvent,
+                singleEventManager = singleEventManager
             )
 
             TransactionDatePickerModal(
                 createTransactionUiState = createTransactionUiState,
-                onCreateTransactionUiEvent = onCreateTransactionUiEvent
+                onCreateTransactionUiEvent = onCreateTransactionUiEvent,
+                singleEventManager = singleEventManager
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -292,7 +302,8 @@ fun TransactionCreateSuccess(
             InputTransactionAmountTextField(
                 createTransactionUiState = createTransactionUiState,
                 onCreateTransactionUiEvent = onCreateTransactionUiEvent,
-                currencyVisualTransformation = currencyVisualTransformation
+                currencyVisualTransformation = currencyVisualTransformation,
+                singleEventManager = singleEventManager
             )
         }
     )
@@ -321,7 +332,7 @@ fun SelectAccountDropdownMenu(
                     onCreateTransactionUiEvent(CreateTransactionUiEvent.AccountChanged(account))
                 },
                 selectedItemToStartString = { account: Account ->
-                    "${account.name} - ${account.type.value} "
+                    "${account.type.value} - ${account.name}"
                 },
                 withEndText = true,
                 selectedItemToEndString = { account: Account ->
@@ -329,6 +340,15 @@ fun SelectAccountDropdownMenu(
                         .filter(AnnotatedString(text = account.amount.toString()))
                         .text
                         .toString()
+                },
+                withFieldText = true,
+                selectedItemToFieldString = { account: Account ->
+                    val accountAmount: String = currencyVisualTransformation
+                        .filter(AnnotatedString(text = account.amount.toString()))
+                        .text
+                        .toString()
+
+                    "${account.name} - $accountAmount"
                 }
             )
         }
@@ -339,8 +359,15 @@ fun SelectAccountDropdownMenu(
 fun SelectTransactionTypeDropdownMenu(
     createTransactionUiState: CreateTransactionUiState,
     onCreateTransactionUiEvent: (CreateTransactionUiEvent) -> Unit,
+    singleEventManager: SingleEventManager
 ) {
     var selectedIndex by remember { mutableIntStateOf(-1) }
+
+    if (0 == createTransactionUiState.type) {
+        LaunchedEffect("previousSelection") {
+            selectedIndex = -1
+        }
+    }
 
     Row(
         modifier = Modifier
@@ -348,6 +375,7 @@ fun SelectTransactionTypeDropdownMenu(
             .padding(start = 16.dp, end = 16.dp),
         content = {
             LargeDropdownMenu(
+                singleEventManager = singleEventManager,
                 enabled = createTransactionUiState.account.id.isNotEmpty(),
                 label = "Tipo de transaccion",
                 items = TransactionTypeEnum.entries,
@@ -372,8 +400,15 @@ fun SelectTransactionTypeDropdownMenu(
 fun SelectTransactionCategoryDropdownMenu(
     createTransactionUiState: CreateTransactionUiState,
     onCreateTransactionUiEvent: (CreateTransactionUiEvent) -> Unit,
+    singleEventManager: SingleEventManager
 ) {
     var selectedIndex by remember { mutableIntStateOf(-1) }
+
+    if (0 == createTransactionUiState.category) {
+        LaunchedEffect("previousSelection") {
+            selectedIndex = -1
+        }
+    }
 
     Row(
         modifier = Modifier
@@ -381,6 +416,7 @@ fun SelectTransactionCategoryDropdownMenu(
             .padding(start = 16.dp, end = 16.dp),
         content = {
             LargeDropdownMenu(
+                singleEventManager = singleEventManager,
                 enabled = 0 != createTransactionUiState.type,
                 label = "Categoria de transaccion",
                 items = TransactionCategoryEnum.getTransactionCategories(
@@ -407,9 +443,10 @@ fun SelectTransactionCategoryDropdownMenu(
 @Composable
 fun InputTransactionNameTextField(
     createTransactionUiState: CreateTransactionUiState,
-    onCreateTransactionUiEvent: (CreateTransactionUiEvent) -> Unit
+    onCreateTransactionUiEvent: (CreateTransactionUiEvent) -> Unit,
+    singleEventManager: SingleEventManager
 ) {
-        OutlinedTextField(
+    OutlinedTextField(
         value = createTransactionUiState.name,
         onValueChange = {
             onCreateTransactionUiEvent(
@@ -423,7 +460,11 @@ fun InputTransactionNameTextField(
                 start = 16.dp,
                 end = 16.dp
             )
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .onSingleClick(
+                singleEventManager = singleEventManager,
+                onClick = { }
+            ),
         enabled = 0 != createTransactionUiState.category,
         label = { Text(text = stringResource(id = R.string.attribute_trasaction_name_field)) },
         supportingText = {
@@ -454,12 +495,21 @@ fun InputTransactionNameTextField(
 fun TransactionDatePickerModal(
     createTransactionUiState: CreateTransactionUiState,
     onCreateTransactionUiEvent: (CreateTransactionUiEvent) -> Unit,
+    singleEventManager: SingleEventManager
 ) {
+
+//    val localDateTime: LocalDateTime = LocalDateTime.now()
+//    val zonedDateTime: ZonedDateTime = localDateTime.atZone(ZoneId.systemDefault())
+//    zonedDateTime.toInstant().toEpochMilli()
+//
     val enabled = 0 != createTransactionUiState.category
     var showDialog by remember(calculation = { mutableStateOf(false) })
-    val datePickerState = rememberDatePickerState()
+    val datePickerState = rememberDatePickerState(
+        yearRange = 2020..LocalDateTime.now().year,
+//        initialSelectedDateMillis = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+    )
 
-    val selectedDate = datePickerState.selectedDateMillis?.let(block = {
+    val selectedDate: String = datePickerState.selectedDateMillis?.let(block = {
         val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             .apply(block = {
                 timeZone = TimeZone.getTimeZone("UTC")
@@ -491,7 +541,11 @@ fun TransactionDatePickerModal(
                     .fillMaxSize()
                     .padding(top = 8.dp)
                     .clip(MaterialTheme.shapes.extraSmall)
-                    .clickable(enabled = enabled) { showDialog = true },
+//                    .clickable(enabled = enabled) { showDialog = true }
+                        .onSingleClick(
+                        singleEventManager = singleEventManager,
+                        onClick = { if (enabled) showDialog = true }
+                    ),
                 color = Color.Transparent,
                 content = {}
             )
@@ -521,8 +575,14 @@ fun TransactionDatePickerModal(
                     Text("Cancel")
                 }
             },
+
             content = {
-                DatePicker(state = datePickerState)
+                DatePicker(
+                    state = datePickerState,
+                    dateValidator = { date ->
+                        date <= LocalDateTime.now().atZone(ZoneId.of("UTC")).toInstant().toEpochMilli()
+                    }
+                )
             }
         )
     }
@@ -532,7 +592,8 @@ fun TransactionDatePickerModal(
 fun InputTransactionAmountTextField(
     createTransactionUiState: CreateTransactionUiState,
     onCreateTransactionUiEvent: (CreateTransactionUiEvent) -> Unit,
-    currencyVisualTransformation: CurrencyVisualTransformation
+    currencyVisualTransformation: CurrencyVisualTransformation,
+    singleEventManager: SingleEventManager
 ) {
     OutlinedTextField(
         value = if (0 != createTransactionUiState.amount) createTransactionUiState.amount.toString() else "",
@@ -554,7 +615,11 @@ fun InputTransactionAmountTextField(
                 start = 16.dp,
                 end = 16.dp
             )
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .onSingleClick(
+                singleEventManager = singleEventManager,
+                onClick = { }
+            ),
         enabled = 0 != createTransactionUiState.category,
         label = { Text(text = stringResource(id = R.string.attribute_trasaction_amount_field)) },
         trailingIcon = {

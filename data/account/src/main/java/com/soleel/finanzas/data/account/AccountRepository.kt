@@ -1,6 +1,7 @@
 package com.soleel.finanzas.data.account
 
 import com.soleel.finanzas.core.common.enums.AccountTypeEnum
+import com.soleel.finanzas.core.common.enums.SynchronizationEnum
 import com.soleel.finanzas.core.database.daos.AccountDAO
 import com.soleel.finanzas.core.model.Account
 import com.soleel.finanzas.data.account.di.DefaultDispatcher
@@ -10,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
 import java.util.Date
 import java.util.UUID
 import javax.inject.Inject
@@ -69,9 +71,10 @@ class AccountRepository @Inject constructor(
             type = type,
             name = name,
             amount = amount,
-            createdAt = Date(),
-            updatedAt = Date(),
-            isDeleted = false
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now(),
+            isDeleted = false,
+            synchronization = SynchronizationEnum.PENDING
         )
 
         withContext(

@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.soleel.finanzas.core.common.enums.AccountTypeEnum
 import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
 import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
+import com.soleel.finanzas.core.common.eventmanager.SingleEventManager
 import com.soleel.finanzas.data.account.interfaces.IAccountLocalDataSource
 import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
 import com.soleel.finanzas.domain.validation.validator.ValidatorAccountAmount
@@ -26,7 +27,7 @@ data class CreateAccountUi(
     val name: String = "",
     val nameError: Int? = null,
 
-    val amount: String = "",
+    val amount: Int = 0,
     val amountError: Int? = null,
 
     val isAccountSaved: Boolean = false
@@ -35,7 +36,7 @@ data class CreateAccountUi(
 sealed class CreateAccountEventUi {
     data class TypeChanged(val accountType: Int) : CreateAccountEventUi()
     data class NameChanged(val name: String) : CreateAccountEventUi()
-    data class AmountChanged(val amount: String) : CreateAccountEventUi()
+    data class AmountChanged(val amount: Int) : CreateAccountEventUi()
 
     data object Submit : CreateAccountEventUi()
 }
@@ -43,7 +44,8 @@ sealed class CreateAccountEventUi {
 @HiltViewModel
 class CreateAccountViewModel @Inject constructor(
     private val accountRepository: IAccountLocalDataSource,
-    private val transactionRepository: ITransactionLocalDataSource
+    private val transactionRepository: ITransactionLocalDataSource,
+    val singleEventManager: SingleEventManager
 ) : ViewModel() {
 
     var createAccountUi by mutableStateOf(CreateAccountUi())
@@ -56,7 +58,7 @@ class CreateAccountViewModel @Inject constructor(
         when (event) {
             is CreateAccountEventUi.TypeChanged -> {
                 createAccountUi = createAccountUi.copy(type = event.accountType)
-                validateAccountType()
+                validateType()
             }
 
             is CreateAccountEventUi.NameChanged -> {
@@ -70,7 +72,7 @@ class CreateAccountViewModel @Inject constructor(
             }
 
             is CreateAccountEventUi.Submit -> {
-                if (validateAccountType()
+                if (validateType()
                     && validateName()
                     && validateAmount()
                 ) {
@@ -80,7 +82,7 @@ class CreateAccountViewModel @Inject constructor(
         }
     }
 
-    private fun validateAccountType(): Boolean {
+    private fun validateType(): Boolean {
         val accountTypeResult = accountTypeValidator.execute(input = AccountTypeEnum.fromId(createAccountUi.type))
         createAccountUi = createAccountUi.copy(typeError = accountTypeResult.errorMessage)
         return accountTypeResult.successful
@@ -100,6 +102,14 @@ class CreateAccountViewModel @Inject constructor(
             amountError = amountResult.errorMessage
         )
         return amountResult.successful
+    }
+
+    fun isValidSaveTransaction(): Boolean {
+        val isValidSaveType: Boolean = 0 != createAccountUi.type && validateType()
+        val isValidSaveName: Boolean = createAccountUi.name.isNotBlank() && validateName()
+        val isValidSaveAmount: Boolean = 0 != createAccountUi.amount && validateAmount()
+
+        return isValidSaveType && isValidSaveName && isValidSaveAmount
     }
 
     private fun saveAccount() {

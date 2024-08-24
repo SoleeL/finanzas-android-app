@@ -6,8 +6,16 @@ enum class SynchronizationEnum(
 ) {
     PENDING(id = 1, value = "Pendiente"), // Estado cuando se crea o actualiza un registro
     QUEUED(id = 2, value = "Encolado"),
-    SYNCED(id = 3, value = "Sincronizado"),
+    SYNCED(id = 3, value = "Sincronizado");
+
+    companion object {
+        fun fromId(id: Int): SynchronizationEnum {
+            val synchronizationEnum: SynchronizationEnum? = SynchronizationEnum.entries.find(predicate = { it.id == id })
+            return synchronizationEnum ?: PENDING
+        }
+    }
 }
+
 
 // TODO: Implementar modulo de sincronizacion
 //{

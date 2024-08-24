@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.soleel.finanzas.core.common.enums.AccountTypeEnum
+import com.soleel.finanzas.core.common.enums.SynchronizationEnum
 import com.soleel.finanzas.core.common.eventmanager.SingleEventManager
 import com.soleel.finanzas.core.common.result.Result
 import com.soleel.finanzas.core.common.result.asResult
@@ -29,9 +30,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.time.Instant
 import java.time.LocalDateTime
-import java.time.ZoneOffset
 import java.util.Date
 import javax.inject.Inject
 
@@ -42,8 +41,10 @@ data class CreateTransactionUiState(
         type = AccountTypeEnum.CREDIT,
         name = "",
         amount = 0,
-        createdAt = Date(),
-        updatedAt = Date()
+        createdAt = LocalDateTime.now(),
+        updatedAt = LocalDateTime.now(),
+        isDeleted = false,
+        synchronization = SynchronizationEnum.PENDING
     ),
     val accountError: Int? = null,
 
@@ -261,9 +262,9 @@ class CreateTransactionViewModel @Inject constructor(
     }
 
     private fun validateTransactionAmount(): Boolean {
-        val input = Triple<Int, Int, Int>(
+        val input = Triple<Int, Account, Int>(
             first = createTransactionUiState.amount,
-            second = createTransactionUiState.account.amount,
+            second = createTransactionUiState.account,
             third = createTransactionUiState.type
         )
 
@@ -286,6 +287,22 @@ class CreateTransactionViewModel @Inject constructor(
 //            else -> initialAccountAmount
 //        }
 //    }
+
+    fun isValidSaveTransaction(): Boolean {
+        val isValidSaveAccount: Boolean = createTransactionUiState.account.id.isNotBlank() && validateAccount()
+        val isValidSaveType: Boolean = 0 != createTransactionUiState.type && validateTransactionType()
+        val isValidSaveCategory: Boolean = 0 != createTransactionUiState.category && validateTransactionCategory()
+        val isValidSaveName = createTransactionUiState.name.isNotBlank() && validateTransactionName()
+        val isValidSaveDate = 0L != createTransactionUiState.date
+        val isValidSaveAmount = 0 != createTransactionUiState.amount && validateTransactionAmount()
+
+        return isValidSaveAccount &&
+                isValidSaveType &&
+                isValidSaveCategory &&
+                isValidSaveName &&
+                isValidSaveDate &&
+                isValidSaveAmount
+    }
 
     private fun saveTransaction() {
         viewModelScope.launch(

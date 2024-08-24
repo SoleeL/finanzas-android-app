@@ -53,6 +53,8 @@ fun <T> LargeDropdownMenu(
     selectedItemToStartString: (T) -> String = { it.toString() },
     withEndText: Boolean = false,
     selectedItemToEndString: (T) -> String = { it.toString() },
+    withFieldText: Boolean = false,
+    selectedItemToFieldString: (T) -> String = { it.toString() },
     drawItem: @Composable (String, String, Boolean, Boolean, () -> Unit) -> Unit = { itemNameStart, itemNameEnd, selected, itemEnabled, onClick ->
         LargeDropdownMenuItem(
             textStart = itemNameStart,
@@ -68,10 +70,10 @@ fun <T> LargeDropdownMenu(
     Box(modifier = modifier.height(IntrinsicSize.Min)) {
         OutlinedTextField(
             label = { Text(label) },
-            value = items.getOrNull(selectedIndex)?.let {
-                if (withEndText) selectedItemToStartString(it) + " (${selectedItemToEndString(it)})"
+            value = items.getOrNull(selectedIndex)?.let(block = {
+                if (withFieldText) selectedItemToFieldString(it)
                 else selectedItemToStartString(it)
-            } ?: "",
+            }) ?: "",
             enabled = enabled,
             modifier = Modifier.fillMaxWidth(),
             trailingIcon = {

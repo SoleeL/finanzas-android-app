@@ -33,17 +33,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.soleel.finanzas.core.common.enums.AccountTypeEnum
-import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
 import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
-import com.soleel.finanzas.core.model.Account
-import com.soleel.finanzas.core.model.Transaction
-import com.soleel.finanzas.core.model.TransactionWithAccount
 import com.soleel.finanzas.core.model.TransactionsGroup
 import com.soleel.finanzas.core.ui.theme.TransactionTypeExpenditureBackgroundColor
 import com.soleel.finanzas.core.ui.theme.TransactionTypeIncomeBackgroundColor
@@ -56,7 +50,7 @@ import com.soleel.finanzas.feature.transactions.TransactionsGroupUiState
 import com.soleel.finanzas.feature.transactions.TransactionsLoadingScreen
 import com.soleel.finanzas.feature.transactions.TransactionsUiEvent
 import com.soleel.finanzas.feature.transactions.TransactionsViewModel
-import java.util.Date
+import java.time.LocalDate
 
 
 @Composable
@@ -104,538 +98,543 @@ private fun AllTransactionsListScreen(
         is TransactionsGroupUiState.Loading -> TransactionsLoadingScreen()
     }
 }
-
-@Composable
-@Preview
-private fun AllTransactionsSuccessScreenPreview() {
-    Column(modifier = Modifier.background(color = Color.White), content = {
-        AllTransactionsSuccessScreen(
-            allTransactionsGroup = listOf(
-                TransactionsGroup(
-                    date = Date(1641078000000), // Fecha 1 (por ejemplo: 1 de enero de 2022)
-                    transactionsWithAccount = listOf(
-                        TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "1",
-                                name = "Compra supermercado",
-                                amount = 1500,
-                                createdAt = Date(1641078000000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.EXPENDITURE,
-                                category = TransactionCategoryEnum.EXPENDITURE_MARKET,
-                                accountId = "1"
-                            ), account = Account(
-                                id = "1",
-                                name = "Cuenta principal",
-                                amount = 5000,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.CREDIT
-                            )
-                        ), TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "2",
-                                name = "Depósito nómina",
-                                amount = 3000,
-                                createdAt = Date(1641078000000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.INCOME,
-                                category = TransactionCategoryEnum.INCOME_SALARY,
-                                accountId = "2"
-                            ), account = Account(
-                                id = "2",
-                                name = "Cuenta nómina",
-                                amount = 10000,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.DEBIT
-                            )
-                        )
-                    )
-                ), TransactionsGroup(
-                    date = Date(1641164400000), // Fecha 2 (por ejemplo: 2 de enero de 2022)
-                    transactionsWithAccount = listOf(
-                        TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "3",
-                                name = "Pago alquiler",
-                                amount = 1200,
-                                createdAt = Date(1641164400000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.EXPENDITURE,
-                                category = TransactionCategoryEnum.EXPENDITURE_SERVICE,
-                                accountId = "3"
-                            ), account = Account(
-                                id = "3",
-                                name = "Cuenta de alquiler",
-                                amount = 3000,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.DEBIT
-                            )
-                        )
-                    )
-                ), TransactionsGroup(
-                    date = Date(1641250800000), // Fecha 3 (por ejemplo: 3 de enero de 2022)
-                    transactionsWithAccount = listOf(
-                        TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "4",
-                                name = "Compra online",
-                                amount = 500,
-                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.EXPENDITURE,
-                                category = TransactionCategoryEnum.EXPENDITURE_ACQUISITION,
-                                accountId = "1"
-                            ), account = Account(
-                                id = "1",
-                                name = "Cuenta principal",
-                                amount = 4500,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.CREDIT
-                            )
-                        ), TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "5",
-                                name = "Transferencia amigo",
-                                amount = 200,
-                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.EXPENDITURE,
-                                category = TransactionCategoryEnum.EXPENDITURE_TRANSFER,
-                                accountId = "2"
-                            ), account = Account(
-                                id = "2",
-                                name = "Cuenta nómina",
-                                amount = 9800,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.SAVING
-                            )
-                        )
-                    )
-                ),
-
-                TransactionsGroup(
-                    date = Date(1641250800000), // Fecha 3 (por ejemplo: 3 de enero de 2022)
-                    transactionsWithAccount = listOf(
-                        TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "4",
-                                name = "Compra online",
-                                amount = 500,
-                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.EXPENDITURE,
-                                category = TransactionCategoryEnum.EXPENDITURE_ACQUISITION,
-                                accountId = "1"
-                            ), account = Account(
-                                id = "1",
-                                name = "Cuenta principal",
-                                amount = 4500,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.CREDIT
-                            )
-                        ), TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "5",
-                                name = "Transferencia amigo",
-                                amount = 200,
-                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.EXPENDITURE,
-                                category = TransactionCategoryEnum.EXPENDITURE_TRANSFER,
-                                accountId = "2"
-                            ), account = Account(
-                                id = "2",
-                                name = "Cuenta nómina",
-                                amount = 9800,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.SAVING
-                            )
-                        )
-                    )
-                ),
-
-                TransactionsGroup(
-                    date = Date(1641250800000), // Fecha 3 (por ejemplo: 3 de enero de 2022)
-                    transactionsWithAccount = listOf(
-                        TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "4",
-                                name = "Compra online",
-                                amount = 500,
-                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.EXPENDITURE,
-                                category = TransactionCategoryEnum.EXPENDITURE_ACQUISITION,
-                                accountId = "1"
-                            ), account = Account(
-                                id = "1",
-                                name = "Cuenta principal",
-                                amount = 4500,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.CREDIT
-                            )
-                        ), TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "5",
-                                name = "Transferencia amigo",
-                                amount = 200,
-                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.EXPENDITURE,
-                                category = TransactionCategoryEnum.EXPENDITURE_TRANSFER,
-                                accountId = "2"
-                            ), account = Account(
-                                id = "2",
-                                name = "Cuenta nómina",
-                                amount = 9800,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.SAVING
-                            )
-                        )
-                    )
-                ),
-
-                TransactionsGroup(
-                    date = Date(1641078000000), // Fecha 1 (por ejemplo: 1 de enero de 2022)
-                    transactionsWithAccount = listOf(
-                        TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "1",
-                                name = "Compra supermercado",
-                                amount = 1500,
-                                createdAt = Date(1641078000000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.EXPENDITURE,
-                                category = TransactionCategoryEnum.EXPENDITURE_MARKET,
-                                accountId = "1"
-                            ), account = Account(
-                                id = "1",
-                                name = "Cuenta principal",
-                                amount = 5000,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.CREDIT
-                            )
-                        ), TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "2",
-                                name = "Depósito nómina",
-                                amount = 3000,
-                                createdAt = Date(1641078000000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.INCOME,
-                                category = TransactionCategoryEnum.INCOME_SALARY,
-                                accountId = "2"
-                            ), account = Account(
-                                id = "2",
-                                name = "Cuenta nómina",
-                                amount = 10000,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.DEBIT
-                            )
-                        )
-                    )
-                ),
-
-                TransactionsGroup(
-                    date = Date(1641164400000), // Fecha 2 (por ejemplo: 2 de enero de 2022)
-                    transactionsWithAccount = listOf(
-                        TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "3",
-                                name = "Pago alquiler",
-                                amount = 1200,
-                                createdAt = Date(1641164400000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.EXPENDITURE,
-                                category = TransactionCategoryEnum.EXPENDITURE_SERVICE,
-                                accountId = "3"
-                            ), account = Account(
-                                id = "3",
-                                name = "Cuenta de alquiler",
-                                amount = 3000,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.DEBIT
-                            )
-                        )
-                    )
-                ),
-
-                TransactionsGroup(
-                    date = Date(1641250800000), // Fecha 3 (por ejemplo: 3 de enero de 2022)
-                    transactionsWithAccount = listOf(
-                        TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "4",
-                                name = "Compra online",
-                                amount = 500,
-                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.EXPENDITURE,
-                                category = TransactionCategoryEnum.EXPENDITURE_ACQUISITION,
-                                accountId = "1"
-                            ), account = Account(
-                                id = "1",
-                                name = "Cuenta principal",
-                                amount = 4500,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.CREDIT
-                            )
-                        ), TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "5",
-                                name = "Transferencia amigo",
-                                amount = 200,
-                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.EXPENDITURE,
-                                category = TransactionCategoryEnum.EXPENDITURE_TRANSFER,
-                                accountId = "2"
-                            ), account = Account(
-                                id = "2",
-                                name = "Cuenta nómina",
-                                amount = 9800,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.SAVING
-                            )
-                        )
-                    )
-                ),
-
-                TransactionsGroup(
-                    date = Date(1641078000000), // Fecha 1 (por ejemplo: 1 de enero de 2022)
-                    transactionsWithAccount = listOf(
-                        TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "1",
-                                name = "Compra supermercado",
-                                amount = 1500,
-                                createdAt = Date(1641078000000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.EXPENDITURE,
-                                category = TransactionCategoryEnum.EXPENDITURE_MARKET,
-                                accountId = "1"
-                            ), account = Account(
-                                id = "1",
-                                name = "Cuenta principal",
-                                amount = 5000,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.CREDIT
-                            )
-                        ), TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "2",
-                                name = "Depósito nómina",
-                                amount = 3000,
-                                createdAt = Date(1641078000000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.INCOME,
-                                category = TransactionCategoryEnum.INCOME_SALARY,
-                                accountId = "2"
-                            ), account = Account(
-                                id = "2",
-                                name = "Cuenta nómina",
-                                amount = 10000,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.DEBIT
-                            )
-                        )
-                    )
-                ), TransactionsGroup(
-                    date = Date(1641164400000), // Fecha 2 (por ejemplo: 2 de enero de 2022)
-                    transactionsWithAccount = listOf(
-                        TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "3",
-                                name = "Pago alquiler",
-                                amount = 1200,
-                                createdAt = Date(1641164400000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.EXPENDITURE,
-                                category = TransactionCategoryEnum.EXPENDITURE_SERVICE,
-                                accountId = "3"
-                            ), account = Account(
-                                id = "3",
-                                name = "Cuenta de alquiler",
-                                amount = 3000,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.DEBIT
-                            )
-                        )
-                    )
-                ),
-
-                TransactionsGroup(
-                    date = Date(1641250800000), // Fecha 3 (por ejemplo: 3 de enero de 2022)
-                    transactionsWithAccount = listOf(
-                        TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "4",
-                                name = "Compra online",
-                                amount = 500,
-                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.EXPENDITURE,
-                                category = TransactionCategoryEnum.EXPENDITURE_ACQUISITION,
-                                accountId = "1"
-                            ), account = Account(
-                                id = "1",
-                                name = "Cuenta principal",
-                                amount = 4500,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.CREDIT
-                            )
-                        ), TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "5",
-                                name = "Transferencia amigo",
-                                amount = 200,
-                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.EXPENDITURE,
-                                category = TransactionCategoryEnum.EXPENDITURE_TRANSFER,
-                                accountId = "2"
-                            ), account = Account(
-                                id = "2",
-                                name = "Cuenta nómina",
-                                amount = 9800,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.SAVING
-                            )
-                        )
-                    )
-                ),
-
-                TransactionsGroup(
-                    date = Date(1641078000000), // Fecha 1 (por ejemplo: 1 de enero de 2022)
-                    transactionsWithAccount = listOf(
-                        TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "1",
-                                name = "Compra supermercado",
-                                amount = 1500,
-                                createdAt = Date(1641078000000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.EXPENDITURE,
-                                category = TransactionCategoryEnum.EXPENDITURE_MARKET,
-                                accountId = "1"
-                            ), account = Account(
-                                id = "1",
-                                name = "Cuenta principal",
-                                amount = 5000,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.CREDIT
-                            )
-                        ), TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "2",
-                                name = "Depósito nómina",
-                                amount = 3000,
-                                createdAt = Date(1641078000000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.INCOME,
-                                category = TransactionCategoryEnum.INCOME_SALARY,
-                                accountId = "2"
-                            ), account = Account(
-                                id = "2",
-                                name = "Cuenta nómina",
-                                amount = 10000,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.DEBIT
-                            )
-                        )
-                    )
-                ), TransactionsGroup(
-                    date = Date(1641164400000), // Fecha 2 (por ejemplo: 2 de enero de 2022)
-                    transactionsWithAccount = listOf(
-                        TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "3",
-                                name = "Pago alquiler",
-                                amount = 1200,
-                                createdAt = Date(1641164400000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.EXPENDITURE,
-                                category = TransactionCategoryEnum.EXPENDITURE_SERVICE,
-                                accountId = "3"
-                            ), account = Account(
-                                id = "3",
-                                name = "Cuenta de alquiler",
-                                amount = 3000,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.DEBIT
-                            )
-                        )
-                    )
-                ),
-
-                TransactionsGroup(
-                    date = Date(1641250800000), // Fecha 3 (por ejemplo: 3 de enero de 2022)
-                    transactionsWithAccount = listOf(
-                        TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "4",
-                                name = "Compra online",
-                                amount = 500,
-                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.EXPENDITURE,
-                                category = TransactionCategoryEnum.EXPENDITURE_ACQUISITION,
-                                accountId = "1"
-                            ), account = Account(
-                                id = "1",
-                                name = "Cuenta principal",
-                                amount = 4500,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.CREDIT
-                            )
-                        ), TransactionWithAccount(
-                            transaction = Transaction(
-                                id = "5",
-                                name = "Transferencia amigo",
-                                amount = 200,
-                                createdAt = Date(1641250800000), // Misma fecha que TransactionsGroup
-                                updatedAt = Date(),
-                                type = TransactionTypeEnum.EXPENDITURE,
-                                category = TransactionCategoryEnum.EXPENDITURE_TRANSFER,
-                                accountId = "2"
-                            ), account = Account(
-                                id = "2",
-                                name = "Cuenta nómina",
-                                amount = 9800,
-                                createdAt = Date(),
-                                updatedAt = Date(),
-                                type = AccountTypeEnum.SAVING
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    })
-}
+//
+//@Composable
+//@Preview
+//private fun AllTransactionsSuccessScreenPreview() {
+//    Column(modifier = Modifier.background(color = Color.White), content = {
+//        AllTransactionsSuccessScreen(
+//            allTransactionsGroup = listOf(
+//                TransactionsGroup(
+//                    localDate = LocalDate.ofInstant(Instant.ofEpochMilli(1641078000000), ZoneId.systemDefault()), // Fecha 1 (por ejemplo: 1 de enero de 2022)
+//                    transactionsWithAccount = listOf(
+//                        TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "1",
+//                                name = "Compra supermercado",
+//                                amount = 1500,
+//                                date = LocalDateTime.ofInstant(Instant.ofEpochMilli(1641078000000), ZoneId.systemDefault()),
+//                                createdAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(1641078000000), ZoneId.systemDefault()), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(1641078000000), ZoneId.systemDefault()),
+//                                type = TransactionTypeEnum.EXPENDITURE,
+//                                category = TransactionCategoryEnum.EXPENDITURE_MARKET,
+//                                accountId = "1",
+//                                isDeleted = false,
+//                                synchronization = SynchronizationEnum.PENDING
+//                            ),
+//                            account = Account(
+//                                id = "1",
+//                                name = "Cuenta principal",
+//                                amount = 5000,
+//                                createdAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(1641078000000), ZoneId.systemDefault()),
+//                                updatedAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(1641078000000), ZoneId.systemDefault()),
+//                                type = AccountTypeEnum.CREDIT,
+//                                synchronization = SynchronizationEnum.PENDING
+//                            )
+//                        ), TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "2",
+//                                name = "Depósito nómina",
+//                                amount = 3000,
+//                                createdAt = LocalDate(1641078000000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.INCOME,
+//                                category = TransactionCategoryEnum.INCOME_SALARY,
+//                                accountId = "2"
+//                            ), account = Account(
+//                                id = "2",
+//                                name = "Cuenta nómina",
+//                                amount = 10000,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.DEBIT
+//                            )
+//                        )
+//                    )
+//                ), TransactionsGroup(
+//                    localDate = LocalDate(1641164400000), // Fecha 2 (por ejemplo: 2 de enero de 2022)
+//                    transactionsWithAccount = listOf(
+//                        TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "3",
+//                                name = "Pago alquiler",
+//                                amount = 1200,
+//                                createdAt = LocalDate(1641164400000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.EXPENDITURE,
+//                                category = TransactionCategoryEnum.EXPENDITURE_SERVICE,
+//                                accountId = "3"
+//                            ), account = Account(
+//                                id = "3",
+//                                name = "Cuenta de alquiler",
+//                                amount = 3000,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.DEBIT
+//                            )
+//                        )
+//                    )
+//                ), TransactionsGroup(
+//                    localDate = LocalDate(1641250800000), // Fecha 3 (por ejemplo: 3 de enero de 2022)
+//                    transactionsWithAccount = listOf(
+//                        TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "4",
+//                                name = "Compra online",
+//                                amount = 500,
+//                                createdAt = LocalDate(1641250800000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.EXPENDITURE,
+//                                category = TransactionCategoryEnum.EXPENDITURE_ACQUISITION,
+//                                accountId = "1"
+//                            ), account = Account(
+//                                id = "1",
+//                                name = "Cuenta principal",
+//                                amount = 4500,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.CREDIT
+//                            )
+//                        ), TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "5",
+//                                name = "Transferencia amigo",
+//                                amount = 200,
+//                                createdAt = LocalDate(1641250800000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.EXPENDITURE,
+//                                category = TransactionCategoryEnum.EXPENDITURE_TRANSFER,
+//                                accountId = "2"
+//                            ), account = Account(
+//                                id = "2",
+//                                name = "Cuenta nómina",
+//                                amount = 9800,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.SAVING
+//                            )
+//                        )
+//                    )
+//                ),
+//
+//                TransactionsGroup(
+//                    localDate = LocalDate(1641250800000), // Fecha 3 (por ejemplo: 3 de enero de 2022)
+//                    transactionsWithAccount = listOf(
+//                        TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "4",
+//                                name = "Compra online",
+//                                amount = 500,
+//                                createdAt = LocalDate(1641250800000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.EXPENDITURE,
+//                                category = TransactionCategoryEnum.EXPENDITURE_ACQUISITION,
+//                                accountId = "1"
+//                            ), account = Account(
+//                                id = "1",
+//                                name = "Cuenta principal",
+//                                amount = 4500,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.CREDIT
+//                            )
+//                        ), TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "5",
+//                                name = "Transferencia amigo",
+//                                amount = 200,
+//                                createdAt = LocalDate(1641250800000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.EXPENDITURE,
+//                                category = TransactionCategoryEnum.EXPENDITURE_TRANSFER,
+//                                accountId = "2"
+//                            ), account = Account(
+//                                id = "2",
+//                                name = "Cuenta nómina",
+//                                amount = 9800,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.SAVING
+//                            )
+//                        )
+//                    )
+//                ),
+//
+//                TransactionsGroup(
+//                    localDate = LocalDate(1641250800000), // Fecha 3 (por ejemplo: 3 de enero de 2022)
+//                    transactionsWithAccount = listOf(
+//                        TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "4",
+//                                name = "Compra online",
+//                                amount = 500,
+//                                createdAt = LocalDate(1641250800000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.EXPENDITURE,
+//                                category = TransactionCategoryEnum.EXPENDITURE_ACQUISITION,
+//                                accountId = "1"
+//                            ), account = Account(
+//                                id = "1",
+//                                name = "Cuenta principal",
+//                                amount = 4500,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.CREDIT
+//                            )
+//                        ), TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "5",
+//                                name = "Transferencia amigo",
+//                                amount = 200,
+//                                createdAt = LocalDate(1641250800000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.EXPENDITURE,
+//                                category = TransactionCategoryEnum.EXPENDITURE_TRANSFER,
+//                                accountId = "2"
+//                            ), account = Account(
+//                                id = "2",
+//                                name = "Cuenta nómina",
+//                                amount = 9800,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.SAVING
+//                            )
+//                        )
+//                    )
+//                ),
+//
+//                TransactionsGroup(
+//                    localDate = LocalDate(1641078000000), // Fecha 1 (por ejemplo: 1 de enero de 2022)
+//                    transactionsWithAccount = listOf(
+//                        TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "1",
+//                                name = "Compra supermercado",
+//                                amount = 1500,
+//                                createdAt = LocalDate(1641078000000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.EXPENDITURE,
+//                                category = TransactionCategoryEnum.EXPENDITURE_MARKET,
+//                                accountId = "1"
+//                            ), account = Account(
+//                                id = "1",
+//                                name = "Cuenta principal",
+//                                amount = 5000,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.CREDIT
+//                            )
+//                        ), TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "2",
+//                                name = "Depósito nómina",
+//                                amount = 3000,
+//                                createdAt = LocalDate(1641078000000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.INCOME,
+//                                category = TransactionCategoryEnum.INCOME_SALARY,
+//                                accountId = "2"
+//                            ), account = Account(
+//                                id = "2",
+//                                name = "Cuenta nómina",
+//                                amount = 10000,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.DEBIT
+//                            )
+//                        )
+//                    )
+//                ),
+//
+//                TransactionsGroup(
+//                    localDate = LocalDate(1641164400000), // Fecha 2 (por ejemplo: 2 de enero de 2022)
+//                    transactionsWithAccount = listOf(
+//                        TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "3",
+//                                name = "Pago alquiler",
+//                                amount = 1200,
+//                                createdAt = LocalDate(1641164400000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.EXPENDITURE,
+//                                category = TransactionCategoryEnum.EXPENDITURE_SERVICE,
+//                                accountId = "3"
+//                            ), account = Account(
+//                                id = "3",
+//                                name = "Cuenta de alquiler",
+//                                amount = 3000,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.DEBIT
+//                            )
+//                        )
+//                    )
+//                ),
+//
+//                TransactionsGroup(
+//                    localDate = LocalDate(1641250800000), // Fecha 3 (por ejemplo: 3 de enero de 2022)
+//                    transactionsWithAccount = listOf(
+//                        TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "4",
+//                                name = "Compra online",
+//                                amount = 500,
+//                                createdAt = LocalDate(1641250800000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.EXPENDITURE,
+//                                category = TransactionCategoryEnum.EXPENDITURE_ACQUISITION,
+//                                accountId = "1"
+//                            ), account = Account(
+//                                id = "1",
+//                                name = "Cuenta principal",
+//                                amount = 4500,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.CREDIT
+//                            )
+//                        ), TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "5",
+//                                name = "Transferencia amigo",
+//                                amount = 200,
+//                                createdAt = LocalDate(1641250800000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.EXPENDITURE,
+//                                category = TransactionCategoryEnum.EXPENDITURE_TRANSFER,
+//                                accountId = "2"
+//                            ), account = Account(
+//                                id = "2",
+//                                name = "Cuenta nómina",
+//                                amount = 9800,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.SAVING
+//                            )
+//                        )
+//                    )
+//                ),
+//
+//                TransactionsGroup(
+//                    localDate = LocalDate(1641078000000), // Fecha 1 (por ejemplo: 1 de enero de 2022)
+//                    transactionsWithAccount = listOf(
+//                        TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "1",
+//                                name = "Compra supermercado",
+//                                amount = 1500,
+//                                createdAt = LocalDate(1641078000000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.EXPENDITURE,
+//                                category = TransactionCategoryEnum.EXPENDITURE_MARKET,
+//                                accountId = "1"
+//                            ), account = Account(
+//                                id = "1",
+//                                name = "Cuenta principal",
+//                                amount = 5000,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.CREDIT
+//                            )
+//                        ), TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "2",
+//                                name = "Depósito nómina",
+//                                amount = 3000,
+//                                createdAt = LocalDate(1641078000000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.INCOME,
+//                                category = TransactionCategoryEnum.INCOME_SALARY,
+//                                accountId = "2"
+//                            ), account = Account(
+//                                id = "2",
+//                                name = "Cuenta nómina",
+//                                amount = 10000,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.DEBIT
+//                            )
+//                        )
+//                    )
+//                ), TransactionsGroup(
+//                    localDate = LocalDate(1641164400000), // Fecha 2 (por ejemplo: 2 de enero de 2022)
+//                    transactionsWithAccount = listOf(
+//                        TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "3",
+//                                name = "Pago alquiler",
+//                                amount = 1200,
+//                                createdAt = LocalDate(1641164400000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.EXPENDITURE,
+//                                category = TransactionCategoryEnum.EXPENDITURE_SERVICE,
+//                                accountId = "3"
+//                            ), account = Account(
+//                                id = "3",
+//                                name = "Cuenta de alquiler",
+//                                amount = 3000,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.DEBIT
+//                            )
+//                        )
+//                    )
+//                ),
+//
+//                TransactionsGroup(
+//                    localDate = LocalDate(1641250800000), // Fecha 3 (por ejemplo: 3 de enero de 2022)
+//                    transactionsWithAccount = listOf(
+//                        TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "4",
+//                                name = "Compra online",
+//                                amount = 500,
+//                                createdAt = LocalDate(1641250800000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.EXPENDITURE,
+//                                category = TransactionCategoryEnum.EXPENDITURE_ACQUISITION,
+//                                accountId = "1"
+//                            ), account = Account(
+//                                id = "1",
+//                                name = "Cuenta principal",
+//                                amount = 4500,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.CREDIT
+//                            )
+//                        ), TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "5",
+//                                name = "Transferencia amigo",
+//                                amount = 200,
+//                                createdAt = LocalDate(1641250800000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.EXPENDITURE,
+//                                category = TransactionCategoryEnum.EXPENDITURE_TRANSFER,
+//                                accountId = "2"
+//                            ), account = Account(
+//                                id = "2",
+//                                name = "Cuenta nómina",
+//                                amount = 9800,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.SAVING
+//                            )
+//                        )
+//                    )
+//                ),
+//
+//                TransactionsGroup(
+//                    localDate = LocalDate(1641078000000), // Fecha 1 (por ejemplo: 1 de enero de 2022)
+//                    transactionsWithAccount = listOf(
+//                        TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "1",
+//                                name = "Compra supermercado",
+//                                amount = 1500,
+//                                createdAt = LocalDate(1641078000000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.EXPENDITURE,
+//                                category = TransactionCategoryEnum.EXPENDITURE_MARKET,
+//                                accountId = "1"
+//                            ), account = Account(
+//                                id = "1",
+//                                name = "Cuenta principal",
+//                                amount = 5000,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.CREDIT
+//                            )
+//                        ), TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "2",
+//                                name = "Depósito nómina",
+//                                amount = 3000,
+//                                createdAt = LocalDate(1641078000000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.INCOME,
+//                                category = TransactionCategoryEnum.INCOME_SALARY,
+//                                accountId = "2"
+//                            ), account = Account(
+//                                id = "2",
+//                                name = "Cuenta nómina",
+//                                amount = 10000,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.DEBIT
+//                            )
+//                        )
+//                    )
+//                ), TransactionsGroup(
+//                    localDate = LocalDate(1641164400000), // Fecha 2 (por ejemplo: 2 de enero de 2022)
+//                    transactionsWithAccount = listOf(
+//                        TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "3",
+//                                name = "Pago alquiler",
+//                                amount = 1200,
+//                                createdAt = LocalDate(1641164400000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.EXPENDITURE,
+//                                category = TransactionCategoryEnum.EXPENDITURE_SERVICE,
+//                                accountId = "3"
+//                            ), account = Account(
+//                                id = "3",
+//                                name = "Cuenta de alquiler",
+//                                amount = 3000,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.DEBIT
+//                            )
+//                        )
+//                    )
+//                ),
+//
+//                TransactionsGroup(
+//                    localDate = LocalDate(1641250800000), // Fecha 3 (por ejemplo: 3 de enero de 2022)
+//                    transactionsWithAccount = listOf(
+//                        TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "4",
+//                                name = "Compra online",
+//                                amount = 500,
+//                                createdAt = LocalDate(1641250800000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.EXPENDITURE,
+//                                category = TransactionCategoryEnum.EXPENDITURE_ACQUISITION,
+//                                accountId = "1"
+//                            ), account = Account(
+//                                id = "1",
+//                                name = "Cuenta principal",
+//                                amount = 4500,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.CREDIT
+//                            )
+//                        ), TransactionWithAccount(
+//                            transaction = Transaction(
+//                                id = "5",
+//                                name = "Transferencia amigo",
+//                                amount = 200,
+//                                createdAt = LocalDate(1641250800000), // Misma fecha que TransactionsGroup
+//                                updatedAt = LocalDate(),
+//                                type = TransactionTypeEnum.EXPENDITURE,
+//                                category = TransactionCategoryEnum.EXPENDITURE_TRANSFER,
+//                                accountId = "2"
+//                            ), account = Account(
+//                                id = "2",
+//                                name = "Cuenta nómina",
+//                                amount = 9800,
+//                                createdAt = LocalDate(),
+//                                updatedAt = LocalDate(),
+//                                type = AccountTypeEnum.SAVING
+//                            )
+//                        )
+//                    )
+//                )
+//            )
+//        )
+//    })
+//}
 
 @Composable
 private fun AllTransactionsSuccessScreen(
@@ -680,7 +679,7 @@ private fun AllTransactionList(
                 action = { group ->
                     stickyHeader(
                         content = {
-                            TransactionsGroupDate(date = group.date)
+                            TransactionsGroupDate(localDate = group.localDate)
                         }
                     )
 
@@ -701,7 +700,7 @@ private fun AllTransactionList(
                                 transactionWithAccount.transaction.category.icon
                             val transactionName: String = transactionWithAccount.transaction.name
                             val transactionHour: String = AllTransactionFormatDateUseCase(
-                                transactionWithAccount.transaction.createdAt
+                                transactionWithAccount.transaction.date
                             )
                             val transactionAmount: String = currencyVisualTransformation.filter(
                                 AnnotatedString(
@@ -730,7 +729,7 @@ private fun AllTransactionList(
 
 @Composable
 private fun TransactionsGroupDate(
-    date: Date
+    localDate: LocalDate
 ) {
     Row(
         modifier = Modifier
@@ -739,7 +738,7 @@ private fun TransactionsGroupDate(
         horizontalArrangement = Arrangement.Start,
         content = {
             Text(
-                text = AllTransactionsGroupDateUseCase(date),
+                text = AllTransactionsGroupDateUseCase(localDate),
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
             )

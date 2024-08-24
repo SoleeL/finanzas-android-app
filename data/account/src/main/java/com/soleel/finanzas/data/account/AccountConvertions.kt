@@ -5,6 +5,9 @@ import com.soleel.finanzas.core.common.enums.SynchronizationEnum
 import com.soleel.finanzas.core.database.entities.AccountEntity
 import com.soleel.finanzas.core.database.extras.AccountWithTotalAmountEntity
 import com.soleel.finanzas.core.model.Account
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.Date
 
 
@@ -13,9 +16,10 @@ fun AccountEntity.toModel(): Account {
         id = this.id,
         type = AccountTypeEnum.fromId(id = this.type),
         name = this.name,
-        createdAt = Date(this.createdAt),
-        updatedAt = Date(this.updatedAt),
-        isDeleted = this.isDeleted
+        createdAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(this.createdAt), ZoneId.systemDefault()),
+        updatedAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(this.updatedAt), ZoneId.systemDefault()),
+        isDeleted = this.isDeleted,
+        synchronization = SynchronizationEnum.fromId(this.synchronization)
     )
 }
 
@@ -29,9 +33,10 @@ fun AccountWithTotalAmountEntity.toModel(): Account {
         type = AccountTypeEnum.fromId(id = this.accountEntity.type),
         name = this.accountEntity.name,
         amount = this.totalIncome - this.totalExpense,
-        createdAt = Date(this.accountEntity.createdAt),
-        updatedAt = Date(this.accountEntity.updatedAt),
+        createdAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(this.accountEntity.createdAt), ZoneId.systemDefault()),
+        updatedAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(this.accountEntity.updatedAt), ZoneId.systemDefault()),
         isDeleted = this.accountEntity.isDeleted,
+        synchronization = SynchronizationEnum.fromId(this.accountEntity.synchronization)
     )
 }
 

@@ -1,21 +1,22 @@
 package com.soleel.finanzas.domain.validation.validator
 
 import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
+import com.soleel.finanzas.core.model.Account
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.domain.validation.generic.InValidation
 import com.soleel.finanzas.domain.validation.model.ResultValidation
 
 
-class ValidatorTransactionAmount : InValidation<Triple<Int, Int, Int>, ResultValidation> {
+class ValidatorTransactionAmount : InValidation<Triple<Int, Account, Int>, ResultValidation> {
 
     companion object {
         const val MAX_CHAR_LIMIT: Int = 8
         const val MAX_AMOUNT_LIMIT: Int = 9999999
     }
 
-    override fun execute(input: Triple<Int, Int, Int>): ResultValidation {
+    override fun execute(input: Triple<Int, Account, Int>): ResultValidation {
 
-        if (0 == input.second) {
+        if ("" == input.second.name) {
             return ResultValidation(
                 successful = false,
                 errorMessage = R.string.account_not_selected_error_message
@@ -50,8 +51,8 @@ class ValidatorTransactionAmount : InValidation<Triple<Int, Int, Int>, ResultVal
             )
         }
 
-        if (TransactionTypeEnum.INCOME.id == input.third
-            && MAX_AMOUNT_LIMIT < input.first + input.second
+        if (TransactionTypeEnum.INCOME.id == input.second.type.id
+            && MAX_AMOUNT_LIMIT < input.first + input.second.amount
         ) {
             return ResultValidation(
                 successful = false,
@@ -60,7 +61,7 @@ class ValidatorTransactionAmount : InValidation<Triple<Int, Int, Int>, ResultVal
         }
 
         if (TransactionTypeEnum.EXPENDITURE.id == input.third
-            && 0 > input.second - input.first
+            && 0 > input.second.amount - input.first
         ) {
             return ResultValidation(
                 successful = false,

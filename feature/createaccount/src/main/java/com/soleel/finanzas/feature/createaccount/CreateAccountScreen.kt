@@ -13,15 +13,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -32,25 +27,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.soleel.finanzas.core.common.enums.AccountTypeEnum
-import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
+import com.soleel.finanzas.core.common.eventmanager.SingleEventManager
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.template.CancelAlertDialog
 import com.soleel.finanzas.core.ui.template.CreateTopAppBar
 import com.soleel.finanzas.core.ui.template.LargeDropdownMenu
-import com.soleel.finanzas.core.ui.uivalues.AccountUIValues
-import com.soleel.finanzas.core.ui.uivalues.getAccountUI
+import com.soleel.finanzas.core.ui.util.onSingleClick
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
+import com.soleel.finanzas.domain.validation.validator.ValidatorAccountAmount
 import com.soleel.finanzas.domain.validation.validator.ValidatorName
-import com.soleel.finanzas.domain.validation.validator.ValidatorTransactionAmount
 
 
 @Composable
@@ -61,11 +53,15 @@ internal fun CreateAccountRoute(
 ) {
     val accountCreateUi = viewModel.createAccountUi
 
+    val singleEventManager = viewModel.singleEventManager
+
     CreateAccountScreen(
         modifier = modifier,
         onBackToPreviousView = onBackToPreviousView,
         accountCreateUi = accountCreateUi,
-        onAccountCreateEventUi = viewModel::onCreateAccountEventUi
+        onAccountCreateEventUi = viewModel::onCreateAccountEventUi,
+        isValidSaveAccount = viewModel::isValidSaveTransaction,
+        singleEventManager = singleEventManager
     )
 }
 
@@ -78,9 +74,11 @@ fun AccountAmountScreenPreview() {
         accountCreateUi = CreateAccountUi(
             type = AccountTypeEnum.INVESTMENT.id,
             name = "Cuenta corriente",
-            amount = "$340,000"
+            amount = 340000
         ),
-        onAccountCreateEventUi = {}
+        onAccountCreateEventUi = {},
+        isValidSaveAccount = { true },
+        singleEventManager = SingleEventManager()
     )
 }
 
@@ -90,9 +88,11 @@ internal fun CreateAccountScreen(
     modifier: Modifier,
     onBackToPreviousView: () -> Unit,
     accountCreateUi: CreateAccountUi,
-    onAccountCreateEventUi: (CreateAccountEventUi) -> Unit
+    onAccountCreateEventUi: (CreateAccountEventUi) -> Unit,
+    isValidSaveAccount: () -> Boolean,
+    singleEventManager: SingleEventManager
 ) {
-    val showCancelAlert: MutableState<Boolean> = remember(calculation =  { mutableStateOf(false) })
+    val showCancelAlert: MutableState<Boolean> = remember(calculation = { mutableStateOf(false) })
 
     if (showCancelAlert.value) {
         CancelAlertDialog(
@@ -116,6 +116,7 @@ internal fun CreateAccountScreen(
         topBar = {
             CreateTopAppBar(
                 title = R.string.account_create_title,
+                singleEventManager = singleEventManager,
                 onBackButton = { showCancelAlert.value = true }
             )
         },
@@ -130,10 +131,12 @@ internal fun CreateAccountScreen(
                         onClick = { onAccountCreateEventUi(CreateAccountEventUi.Submit) },
                         modifier = Modifier
                             .fillMaxWidth(0.9f)
-                            .height(64.dp),
-                        enabled = 0 != accountCreateUi.type
-                                && accountCreateUi.name.isNotBlank()
-                                && accountCreateUi.amount.isNotBlank(),
+                            .height(64.dp)
+                            .onSingleClick(
+                                singleEventManager = singleEventManager,
+                                onClick = { }
+                            ),
+                        enabled = isValidSaveAccount(),
                         content = { Text(text = stringResource(id = R.string.save_account_button)) }
                     )
                 }
@@ -148,6 +151,7 @@ internal fun CreateAccountScreen(
                     SelectTypeAccountDropdownMenu(
                         accountCreateUi = accountCreateUi,
                         onAccountCreateEventUi = onAccountCreateEventUi,
+                        singleEventManager = singleEventManager
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -170,7 +174,8 @@ internal fun CreateAccountScreen(
 @Composable
 fun SelectTypeAccountDropdownMenu(
     accountCreateUi: CreateAccountUi,
-    onAccountCreateEventUi: (CreateAccountEventUi) -> Unit
+    onAccountCreateEventUi: (CreateAccountEventUi) -> Unit,
+    singleEventManager: SingleEventManager
 ) {
     var selectedIndex by remember { mutableIntStateOf(-1) }
 
@@ -180,6 +185,7 @@ fun SelectTypeAccountDropdownMenu(
             .padding(start = 16.dp, end = 16.dp),
         content = {
             LargeDropdownMenu(
+                singleEventManager = singleEventManager,
                 label = "Tipo de cuenta",
                 items = AccountTypeEnum.entries,
                 selectedIndex = selectedIndex,
@@ -251,43 +257,26 @@ fun EnterAccountAmountTextField(
         mutableStateOf(CurrencyVisualTransformation(currencyCode = "USD"))
     })
 
-    val accountUIValues: AccountUIValues = remember(calculation = {
-        getAccountUI(
-            accountTypeEnum = AccountTypeEnum.fromId(accountCreateUi.type),
-            accountName = accountCreateUi.name,
-            accountAmount = ""
-        )
-    })
-
-    val originAmount: String = remember(calculation = {
-        accountUIValues.amount
-    })
-
-    if (accountCreateUi.amount.isNotBlank()) {
-        accountUIValues.amount = currencyVisualTransformation
-            .filter(AnnotatedString(text = accountCreateUi.amount))
-            .text
-            .toString()
-    } else {
-        accountUIValues.amount = originAmount
-    }
-
     OutlinedTextField(
-        value = accountCreateUi.amount,
-        onValueChange = { input ->
+        value = if (0 != accountCreateUi.amount) accountCreateUi.amount.toString() else "",
+        onValueChange = { input: String ->
             val trimmed = input
                 .trimStart('0')
                 .trim(predicate = { it.isDigit().not() })
 
-            if (trimmed.length <= ValidatorTransactionAmount.MAX_CHAR_LIMIT) {
-                onAccountCreateEventUi(CreateAccountEventUi.AmountChanged(trimmed))
+            if (trimmed.length <= ValidatorAccountAmount.MAX_AMOUNT_LIMIT) {
+                onAccountCreateEventUi(
+                    CreateAccountEventUi.AmountChanged(
+                        if (trimmed.isBlank()) 0
+                        else trimmed.toInt()
+                    )
+                )
             }
         },
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp),
-        enabled = 0 != accountCreateUi.type
-                && accountCreateUi.name.isNotBlank(),
+        enabled = 0 != accountCreateUi.type && accountCreateUi.name.isNotBlank(),
         label = { Text(text = stringResource(id = R.string.attribute_account_amount_field)) },
         trailingIcon = {
             if (null != accountCreateUi.amountError) {
