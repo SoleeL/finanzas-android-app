@@ -33,13 +33,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.soleel.finanzas.core.common.enums.AccountTypeEnum
+import com.soleel.finanzas.core.model.enums.AccountTypeEnum
 import com.soleel.finanzas.core.common.eventmanager.SingleEventManager
 import com.soleel.finanzas.core.ui.R
-import com.soleel.finanzas.core.ui.template.CancelAlertDialog
-import com.soleel.finanzas.core.ui.template.CreateTopAppBar
-import com.soleel.finanzas.core.ui.template.LargeDropdownMenu
-import com.soleel.finanzas.core.ui.util.onSingleClick
+import com.soleel.finanzas.core.component.CancelAlertDialog
+import com.soleel.finanzas.core.component.CreateTopAppBar
+import com.soleel.finanzas.core.component.LargeDropdownMenu
+import com.soleel.finanzas.core.component.onSingleClick
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.domain.validation.validator.ValidatorAccountAmount
 import com.soleel.finanzas.domain.validation.validator.ValidatorName
@@ -95,7 +95,7 @@ internal fun CreateAccountScreen(
     val showCancelAlert: MutableState<Boolean> = remember(calculation = { mutableStateOf(false) })
 
     if (showCancelAlert.value) {
-        CancelAlertDialog(
+        com.soleel.finanzas.core.component.CancelAlertDialog(
             onDismiss = { showCancelAlert.value = false },
             onConfirmation = {
                 showCancelAlert.value = false
@@ -114,7 +114,7 @@ internal fun CreateAccountScreen(
 
     Scaffold(
         topBar = {
-            CreateTopAppBar(
+            com.soleel.finanzas.core.component.CreateTopAppBar(
                 title = R.string.account_create_title,
                 singleEventManager = singleEventManager,
                 onBackButton = { showCancelAlert.value = true }
@@ -184,7 +184,7 @@ fun SelectTypeAccountDropdownMenu(
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp),
         content = {
-            LargeDropdownMenu(
+            com.soleel.finanzas.core.component.LargeDropdownMenu(
                 singleEventManager = singleEventManager,
                 label = "Tipo de cuenta",
                 items = AccountTypeEnum.entries,

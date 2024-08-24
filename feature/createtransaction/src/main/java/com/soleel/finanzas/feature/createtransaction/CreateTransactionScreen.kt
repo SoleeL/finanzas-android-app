@@ -52,17 +52,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.soleel.finanzas.core.common.enums.AccountTypeEnum
-import com.soleel.finanzas.core.common.enums.SynchronizationEnum
-import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
-import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
+import com.soleel.finanzas.core.model.enums.AccountTypeEnum
+import com.soleel.finanzas.core.model.enums.SynchronizationEnum
+import com.soleel.finanzas.core.model.enums.TransactionCategoryEnum
+import com.soleel.finanzas.core.model.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.common.eventmanager.SingleEventManager
 import com.soleel.finanzas.core.model.Account
 import com.soleel.finanzas.core.ui.R
-import com.soleel.finanzas.core.ui.template.CancelAlertDialog
-import com.soleel.finanzas.core.ui.template.CreateTopAppBar
-import com.soleel.finanzas.core.ui.template.LargeDropdownMenu
-import com.soleel.finanzas.core.ui.util.onSingleClick
+import com.soleel.finanzas.core.component.CancelAlertDialog
+import com.soleel.finanzas.core.component.CreateTopAppBar
+import com.soleel.finanzas.core.component.LargeDropdownMenu
+import com.soleel.finanzas.core.component.onSingleClick
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.domain.validation.validator.ValidatorTransactionAmount
 import java.text.SimpleDateFormat
@@ -108,7 +108,7 @@ private fun TransactionCreateScreenPreview() {
                     id = "1",
                     type = AccountTypeEnum.CREDIT,
                     name = "CMR Falabella",
-                    amount = 240000,
+                    totalAmount = 240000,
                     createdAt = LocalDateTime.now(),
                     updatedAt = LocalDateTime.now(),
                     isDeleted = false,
@@ -118,7 +118,7 @@ private fun TransactionCreateScreenPreview() {
                     id = "2",
                     type = AccountTypeEnum.DEBIT,
                     name = "Falabella debito",
-                    amount = 100000,
+                    totalAmount = 100000,
                     createdAt = LocalDateTime.now(),
                     updatedAt = LocalDateTime.now(),
                     isDeleted = false,
@@ -128,7 +128,7 @@ private fun TransactionCreateScreenPreview() {
                     id = "3",
                     type = AccountTypeEnum.DEBIT,
                     name = "Cuenta rut",
-                    amount = 100000,
+                    totalAmount = 100000,
                     createdAt = LocalDateTime.now(),
                     updatedAt = LocalDateTime.now(),
                     isDeleted = false,
@@ -138,7 +138,7 @@ private fun TransactionCreateScreenPreview() {
                     id = "4",
                     type = AccountTypeEnum.SAVING,
                     name = "Racional app",
-                    amount = 9000000,
+                    totalAmount = 9000000,
                     createdAt = LocalDateTime.now(),
                     updatedAt = LocalDateTime.now(),
                     isDeleted = false,
@@ -170,7 +170,7 @@ private fun TransactionCreateScreen(
     val showCancelAlert: MutableState<Boolean> = remember(calculation = { mutableStateOf(false) })
 
     if (showCancelAlert.value) {
-        CancelAlertDialog(
+        com.soleel.finanzas.core.component.CancelAlertDialog(
             onDismiss = { showCancelAlert.value = false },
             onConfirmation = {
                 showCancelAlert.value = false
@@ -186,7 +186,7 @@ private fun TransactionCreateScreen(
     Scaffold(
         modifier = modifier,
         topBar = {
-            CreateTopAppBar(
+            com.soleel.finanzas.core.component.CreateTopAppBar(
                 title = R.string.trasaction_create_title,
                 singleEventManager = singleEventManager,
                 onBackButton = { showCancelAlert.value = false == showCancelAlert.value }
@@ -322,7 +322,7 @@ fun SelectAccountDropdownMenu(
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp),
         content = {
-            LargeDropdownMenu(
+            com.soleel.finanzas.core.component.LargeDropdownMenu(
                 singleEventManager = singleEventManager,
                 label = "Cuenta de pago",
                 items = accounts,
@@ -337,14 +337,14 @@ fun SelectAccountDropdownMenu(
                 withEndText = true,
                 selectedItemToEndString = { account: Account ->
                     currencyVisualTransformation
-                        .filter(AnnotatedString(text = account.amount.toString()))
+                        .filter(AnnotatedString(text = account.totalAmount.toString()))
                         .text
                         .toString()
                 },
                 withFieldText = true,
                 selectedItemToFieldString = { account: Account ->
                     val accountAmount: String = currencyVisualTransformation
-                        .filter(AnnotatedString(text = account.amount.toString()))
+                        .filter(AnnotatedString(text = account.totalAmount.toString()))
                         .text
                         .toString()
 
@@ -374,7 +374,7 @@ fun SelectTransactionTypeDropdownMenu(
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp),
         content = {
-            LargeDropdownMenu(
+            com.soleel.finanzas.core.component.LargeDropdownMenu(
                 singleEventManager = singleEventManager,
                 enabled = createTransactionUiState.account.id.isNotEmpty(),
                 label = "Tipo de transaccion",
@@ -415,7 +415,7 @@ fun SelectTransactionCategoryDropdownMenu(
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp),
         content = {
-            LargeDropdownMenu(
+            com.soleel.finanzas.core.component.LargeDropdownMenu(
                 singleEventManager = singleEventManager,
                 enabled = 0 != createTransactionUiState.type,
                 label = "Categoria de transaccion",
@@ -514,7 +514,7 @@ fun TransactionDatePickerModal(
             .apply(block = {
                 timeZone = TimeZone.getTimeZone("UTC")
             })
-        formatter.format(Date(it))
+        formatter.format(   Date(it))
     }) ?: ""
 
     Box(

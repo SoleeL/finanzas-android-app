@@ -82,6 +82,7 @@ class TransactionsViewModel @Inject constructor(
     }
 
     val allTransactionsUiState: StateFlow<TransactionsGroupUiState> = _allTransactionsUiState
+        .onStart(action = { delay(500) })
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),

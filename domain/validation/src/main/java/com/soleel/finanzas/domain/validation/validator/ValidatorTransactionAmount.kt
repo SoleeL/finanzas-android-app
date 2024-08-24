@@ -1,6 +1,6 @@
 package com.soleel.finanzas.domain.validation.validator
 
-import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
+import com.soleel.finanzas.core.model.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.model.Account
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.domain.validation.generic.InValidation
@@ -52,7 +52,7 @@ class ValidatorTransactionAmount : InValidation<Triple<Int, Account, Int>, Resul
         }
 
         if (TransactionTypeEnum.INCOME.id == input.second.type.id
-            && MAX_AMOUNT_LIMIT < input.first + input.second.amount
+            && MAX_AMOUNT_LIMIT < input.first + input.second.totalAmount
         ) {
             return ResultValidation(
                 successful = false,
@@ -61,7 +61,7 @@ class ValidatorTransactionAmount : InValidation<Triple<Int, Account, Int>, Resul
         }
 
         if (TransactionTypeEnum.EXPENDITURE.id == input.third
-            && 0 > input.second.amount - input.first
+            && 0 > input.second.totalAmount - input.first
         ) {
             return ResultValidation(
                 successful = false,

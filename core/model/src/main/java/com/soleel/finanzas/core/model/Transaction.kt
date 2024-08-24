@@ -1,10 +1,9 @@
 package com.soleel.finanzas.core.model
 
-import com.soleel.finanzas.core.common.enums.SynchronizationEnum
-import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
-import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
+import com.soleel.finanzas.core.model.enums.SynchronizationEnum
+import com.soleel.finanzas.core.model.enums.TransactionCategoryEnum
+import com.soleel.finanzas.core.model.enums.TransactionTypeEnum
 import java.time.LocalDateTime
-import java.util.Date
 
 
 data class Transaction(

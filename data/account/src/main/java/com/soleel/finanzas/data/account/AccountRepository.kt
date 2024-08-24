@@ -1,7 +1,7 @@
 package com.soleel.finanzas.data.account
 
-import com.soleel.finanzas.core.common.enums.AccountTypeEnum
-import com.soleel.finanzas.core.common.enums.SynchronizationEnum
+import com.soleel.finanzas.core.model.enums.AccountTypeEnum
+import com.soleel.finanzas.core.model.enums.SynchronizationEnum
 import com.soleel.finanzas.core.database.daos.AccountDAO
 import com.soleel.finanzas.core.model.Account
 import com.soleel.finanzas.data.account.di.DefaultDispatcher
@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
-import java.util.Date
 import java.util.UUID
 import javax.inject.Inject
 
@@ -39,12 +38,12 @@ class AccountRepository @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override fun getAccountWithTotalAmount(accountId: String): Flow<Account?> {
-        return AccountDAO.getAccountByIdWithTotalsAmount(id = accountId).map(transform =  { it.toModel() })
+    override fun getAccountWithTransactionInfo(accountId: String): Flow<Account?> {
+        return AccountDAO.getAccountByIdWithTotalsAmount(id = accountId).map(transform = { it.toModel() })
     }
 
-    override fun getAccountsWithTotalAmount(): Flow<List<Account>> {
-        return AccountDAO.getAccountsWithTotalsAmount().map(transform =  { it.toWithTotalAmountModelList() })
+    override fun getAccountsWithTransactionInfo(): Flow<List<Account>> {
+        return AccountDAO.getAccountsWithTransactionalInfo().map(transform =  { it.toWithTotalAmountModelList() })
     }
 
     override suspend fun refreshAccounts() {
@@ -70,7 +69,7 @@ class AccountRepository @Inject constructor(
             id = id,
             type = type,
             name = name,
-            amount = amount,
+            totalAmount = amount,
             createdAt = LocalDateTime.now(),
             updatedAt = LocalDateTime.now(),
             isDeleted = false,

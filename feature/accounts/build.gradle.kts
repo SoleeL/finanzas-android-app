@@ -7,3 +7,10 @@ plugins {
 android {
     namespace = "com.soleel.finanzas.feature.accounts"
 }
+
+dependencies {
+    api(projects.core.common)
+    api(projects.core.component)
+    api(projects.data.account)
+    api(projects.domain.visualtransformation)
+}

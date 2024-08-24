@@ -1,8 +1,8 @@
 package com.soleel.finanzas.data.transaction
 
-import com.soleel.finanzas.core.common.enums.SynchronizationEnum
-import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
-import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
+import com.soleel.finanzas.core.model.enums.SynchronizationEnum
+import com.soleel.finanzas.core.model.enums.TransactionCategoryEnum
+import com.soleel.finanzas.core.model.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.database.entities.TransactionEntity
 import com.soleel.finanzas.core.model.Transaction
 import java.time.Instant

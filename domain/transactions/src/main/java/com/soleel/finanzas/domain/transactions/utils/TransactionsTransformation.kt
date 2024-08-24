@@ -1,6 +1,6 @@
 package com.soleel.finanzas.domain.transactions.utils
 
-import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
+import com.soleel.finanzas.core.model.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.model.Transaction
 
 fun List<Transaction>.summaryIncome(): Int = this.sumOf(

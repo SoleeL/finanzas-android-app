@@ -1,6 +1,6 @@
 package com.soleel.finanzas.data.transaction
 
-import com.soleel.finanzas.core.common.enums.SynchronizationEnum
+import com.soleel.finanzas.core.model.enums.SynchronizationEnum
 import com.soleel.finanzas.core.database.daos.TransactionDAO
 import com.soleel.finanzas.core.database.entities.TransactionEntity
 import com.soleel.finanzas.core.model.Transaction

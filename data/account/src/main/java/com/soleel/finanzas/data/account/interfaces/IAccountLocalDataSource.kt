@@ -1,7 +1,7 @@
 package com.soleel.finanzas.data.account.interfaces
 
 
-import com.soleel.finanzas.core.common.enums.AccountTypeEnum
+import com.soleel.finanzas.core.model.enums.AccountTypeEnum
 import com.soleel.finanzas.core.model.Account
 import kotlinx.coroutines.flow.Flow
 
@@ -16,9 +16,9 @@ interface IAccountLocalDataSource {
 
     fun getAccountsWithForceUpdate(forceUpdate: Boolean = false): List<Account>
 
-    fun getAccountWithTotalAmount(accountId: String): Flow<Account?>
+    fun getAccountWithTransactionInfo(accountId: String): Flow<Account?>
 
-    fun getAccountsWithTotalAmount(): Flow<List<Account>>
+    fun getAccountsWithTransactionInfo(): Flow<List<Account>>
 
     suspend fun refreshAccounts()
 

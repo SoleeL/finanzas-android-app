@@ -7,9 +7,9 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.database.entities.AccountEntity
-import com.soleel.finanzas.core.database.extras.AccountWithTotalAmountEntity
+import com.soleel.finanzas.core.database.extras.AccountWithTransactionInfoEntity
+import com.soleel.finanzas.core.model.enums.TransactionTypeEnum
 import kotlinx.coroutines.flow.Flow
 
 
@@ -22,20 +22,6 @@ interface AccountDAO {
     @Query("SELECT * FROM account_table")
     fun getAllAccount(): Flow<List<AccountEntity>>
 
-    @Transaction
-    @Query("""
-        SELECT 
-            account_table.*,
-            SUM(CASE WHEN transaction_table.type = :incomeType THEN transaction_table.amount ELSE 0 END) as totalIncome,
-            SUM(CASE WHEN transaction_table.type = :expenseType THEN transaction_table.amount ELSE 0 END) as totalExpense
-        FROM account_table 
-        LEFT JOIN transaction_table ON account_table.id = transaction_table.account_id 
-        GROUP BY account_table.id""")
-    fun getAccountsWithTotalsAmount(
-        incomeType: Int = TransactionTypeEnum.INCOME.id,
-        expenseType: Int = TransactionTypeEnum.EXPENDITURE.id
-    ): Flow<List<AccountWithTotalAmountEntity>>
-
     @Query("SELECT * FROM account_table WHERE id = :id")
     fun getAccountById(id: String): Flow<AccountEntity>
 
@@ -43,8 +29,9 @@ interface AccountDAO {
     @Query("""
         SELECT 
             account_table.*,
-            SUM(CASE WHEN transaction_table.type = :incomeType THEN transaction_table.amount ELSE 0 END) as totalIncome,
-            SUM(CASE WHEN transaction_table.type = :expenseType THEN transaction_table.amount ELSE 0 END) as totalExpense
+            SUM(CASE WHEN transaction_table.type = :incomeType THEN transaction_table.amount ELSE 0 END) as total_income,
+            SUM(CASE WHEN transaction_table.type = :expenseType THEN transaction_table.amount ELSE 0 END) as total_expense,
+            COUNT(*) as transactions_number
         FROM account_table 
         LEFT JOIN transaction_table ON account_table.id = transaction_table.account_id 
         WHERE account_table.id = :id 
@@ -53,7 +40,22 @@ interface AccountDAO {
         incomeType: Int = TransactionTypeEnum.INCOME.id,
         expenseType: Int = TransactionTypeEnum.EXPENDITURE.id,
         id: String
-    ): Flow<AccountWithTotalAmountEntity>
+    ): Flow<AccountWithTransactionInfoEntity>
+
+    @Transaction
+    @Query("""
+        SELECT 
+            account_table.*,
+            SUM(CASE WHEN transaction_table.type = :incomeType THEN transaction_table.amount ELSE 0 END) as total_income,
+            SUM(CASE WHEN transaction_table.type = :expenseType THEN transaction_table.amount ELSE 0 END) as total_expense,
+            COUNT(*) as transactions_number
+        FROM account_table 
+        LEFT JOIN transaction_table ON account_table.id = transaction_table.account_id 
+        GROUP BY account_table.id""")
+    fun getAccountsWithTransactionalInfo(
+        incomeType: Int = TransactionTypeEnum.INCOME.id,
+        expenseType: Int = TransactionTypeEnum.EXPENDITURE.id
+    ): Flow<List<AccountWithTransactionInfoEntity>>
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun update(accountEntity: AccountEntity)

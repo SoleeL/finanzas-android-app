@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.soleel.finanzas.core.common.enums.AccountTypeEnum
-import com.soleel.finanzas.core.common.enums.SynchronizationEnum
+import com.soleel.finanzas.core.model.enums.AccountTypeEnum
+import com.soleel.finanzas.core.model.enums.SynchronizationEnum
 import com.soleel.finanzas.core.common.eventmanager.SingleEventManager
 import com.soleel.finanzas.core.common.result.Result
 import com.soleel.finanzas.core.common.result.asResult
@@ -31,7 +31,6 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
-import java.util.Date
 import javax.inject.Inject
 
 
@@ -40,7 +39,7 @@ data class CreateTransactionUiState(
         id = "",
         type = AccountTypeEnum.CREDIT,
         name = "",
-        amount = 0,
+        totalAmount = 0,
         createdAt = LocalDateTime.now(),
         updatedAt = LocalDateTime.now(),
         isDeleted = false,
@@ -109,7 +108,7 @@ class CreateTransactionViewModel @Inject constructor(
     private fun accountUiState(
         accountRepository: IAccountLocalDataSource,
     ): Flow<AccountsUiState> {
-        return accountRepository.getAccountsWithTotalAmount()
+        return accountRepository.getAccountsWithTransactionInfo()
             .asResult()
             .map(transform = this::getData)
     }

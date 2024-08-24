@@ -8,5 +8,5 @@ android {
 
 dependencies {
     api(projects.core.ui)
-    api(projects.data.account)
+    api(projects.core.model)
 }

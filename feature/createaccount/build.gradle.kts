@@ -10,6 +10,7 @@ android {
 
 dependencies {
     api(projects.core.common)
+    api(projects.core.component)
     api(projects.data.account)
     api(projects.data.transaction)
     api(projects.domain.validation)
