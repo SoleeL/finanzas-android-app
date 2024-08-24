@@ -20,10 +20,11 @@ interface ITransactionLocalDataSource {
     suspend fun refreshTransaction(transactionId: String)
 
     suspend fun createTransaction(
+        type: Int,
+        category: Int,
         name: String,
+        date: Long,
         amount: Int,
-        transactionType: Int,
-        transactionCategory: Int,
         accountId: String
     ): String
 

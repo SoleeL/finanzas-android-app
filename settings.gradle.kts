@@ -6,6 +6,7 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -29,14 +30,13 @@ include(":data:transaction")
 
 include(":domain:formatdate")
 include(":domain:transactions")
-include(":domain:transactions")
 include(":domain:validation")
 include(":domain:visualtransformation")
 
 include(":feature:add")
 include(":feature:accounts")
-include(":feature:accountcreate")
+include(":feature:createaccount")
+include(":feature:createtransaction")
 include(":feature:profile")
 include(":feature:stats")
 include(":feature:transactions")
-include(":feature:transactioncreate")

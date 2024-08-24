@@ -11,7 +11,6 @@ import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +19,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.soleel.finanzas.core.ui.R
 
 
@@ -27,14 +27,11 @@ import com.soleel.finanzas.core.ui.R
 @Composable
 fun FabMenuHidePreview() {
     AddMenuFAB(
-        hideFloatingAddMenu = {},
         shouldShowExtendAddMenu = false,
         showExtendAddMenu = {},
         hideExtendAddMenu = {},
-        hideTransactionsTab = {},
-        hideBottomBar = {},
-        toAccountCreate = {},
-        toTransactionCreate = {},
+        onNavigateToCreateAccount = {},
+        onNavigateToCreateTransaction = {},
         viewModel = AddMenuFABViewModelMock()
     )
 }
@@ -43,63 +40,33 @@ fun FabMenuHidePreview() {
 @Composable
 fun FabMenuShowPreview() {
     AddMenuFAB(
-        hideFloatingAddMenu = {},
         shouldShowExtendAddMenu = true,
         showExtendAddMenu = {},
         hideExtendAddMenu = {},
-        hideTransactionsTab = {},
-        hideBottomBar = {},
-        toAccountCreate = {},
-        toTransactionCreate = {},
+        onNavigateToCreateAccount = {},
+        onNavigateToCreateTransaction = {},
         viewModel = AddMenuFABViewModelMock()
     )
 }
 
 @Composable
 fun AddMenuFAB(
-    hideFloatingAddMenu: () -> Unit,
     shouldShowExtendAddMenu: Boolean,
     showExtendAddMenu: () -> Unit,
     hideExtendAddMenu: () -> Unit,
-    hideTransactionsTab: () -> Unit,
-    hideBottomBar: () -> Unit,
-    toAccountCreate: () -> Unit,
-    toTransactionCreate: () -> Unit,
+    onNavigateToCreateAccount: () -> Unit,
+    onNavigateToCreateTransaction: () -> Unit,
     viewModel: AddMenuFABViewModel = hiltViewModel()
 ) {
-    val accountsUiState: AddUiState by viewModel.addUiState.collectAsState()
-
-//    val statusMenu: MutableState<Boolean> = remember { mutableStateOf(false) }
+    val accountsUiState: AddUiState by viewModel.addUiState.collectAsStateWithLifecycle()
 
     Column(
         content = {
             if (shouldShowExtendAddMenu) {
-                Column(
-                    horizontalAlignment = Alignment.End,
-                    content = {
-                        if (false == accountsUiState.isAccountEmpty) {
-                            ItemMenuFAB(
-                                onClick = {
-                                    toTransactionCreate()
-                                    hideFloatingAddMenu()
-                                    hideTransactionsTab()
-                                    hideBottomBar()
-                                },
-                                icon = R.drawable.ic_add_transaction,
-                                text = "Crear transacción"
-                            )
-                        }
-                        ItemMenuFAB(
-                            onClick = {
-                                toAccountCreate()
-                                hideFloatingAddMenu()
-                                hideTransactionsTab()
-                                hideBottomBar()
-                            },
-                            icon = R.drawable.ic_add_account,
-                            text = "Crear cuenta",
-                        )
-                    }
+                ExtendMenuFAB(
+                    isAccountsEmpty = accountsUiState.isAccountsEmpty,
+                    onNavigateToCreateAccount = onNavigateToCreateAccount,
+                    onNavigateToCreateTransaction = onNavigateToCreateTransaction
                 )
             }
 
@@ -123,6 +90,31 @@ fun AddMenuFAB(
 }
 
 @Composable
+fun ExtendMenuFAB(
+    isAccountsEmpty: Boolean,
+    onNavigateToCreateAccount: () -> Unit,
+    onNavigateToCreateTransaction: () -> Unit,
+) {
+    Column(
+        horizontalAlignment = Alignment.End,
+        content = {
+            if (false == isAccountsEmpty) {
+                ItemMenuFAB(
+                    onClick = onNavigateToCreateTransaction,
+                    icon = R.drawable.ic_add_transaction,
+                    text = "Crear transacción"
+                )
+            }
+            ItemMenuFAB(
+                onClick = onNavigateToCreateAccount,
+                icon = R.drawable.ic_add_account,
+                text = "Crear cuenta",
+            )
+        }
+    )
+}
+
+@Composable
 fun ItemMenuFAB(
     onClick: () -> Unit,
     icon: Int,
@@ -132,10 +124,10 @@ fun ItemMenuFAB(
         modifier = Modifier.padding(bottom = 10.dp),
         text = { Text(text = text) },
         icon = { Icon(imageVector = ImageVector.vectorResource(icon), contentDescription = null) },
-        onClick = { onClick() },
+        onClick = onClick,
         elevation = FloatingActionButtonDefaults.elevation(
             defaultElevation = 0.dp,
             pressedElevation = 0.dp
-        ),
+        )
     )
 }

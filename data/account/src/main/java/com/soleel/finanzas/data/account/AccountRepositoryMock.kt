@@ -1,19 +1,21 @@
 package com.soleel.finanzas.data.account
 
 import com.soleel.finanzas.core.common.enums.AccountTypeEnum
+import com.soleel.finanzas.core.common.enums.SynchronizationEnum
 import com.soleel.finanzas.core.model.Account
 import com.soleel.finanzas.data.account.interfaces.IAccountLocalDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import java.time.LocalDateTime
 import java.util.Date
 
 class AccountRepositoryMock : IAccountLocalDataSource {
-    override fun getAccount(AccountId: String): Flow<Account?> {
+    override fun getAccount(accountId: String): Flow<Account?> {
         TODO("Not yet implemented")
     }
 
     override fun getAccountWithForceUpdate(
-        AccountId: String,
+        accountId: String,
         forceUpdate: Boolean
     ): Account? {
         TODO("Not yet implemented")
@@ -24,19 +26,23 @@ class AccountRepositoryMock : IAccountLocalDataSource {
             listOf(
                 Account(
                     id = "1",
+                    type = AccountTypeEnum.CREDIT,
                     name = "Account 1",
                     amount = 1000,
-                    createAt = Date(),
-                    updatedAt = Date(),
-                    type = AccountTypeEnum.CREDIT
+                    createdAt = LocalDateTime.now(),
+                    updatedAt = LocalDateTime.now(),
+                    isDeleted = false,
+                    synchronization = SynchronizationEnum.PENDING
                 ),
                 Account(
                     id = "2",
+                    type = AccountTypeEnum.DEBIT,
                     name = "Account 2",
                     amount = 2000,
-                    createAt = Date(),
-                    updatedAt = Date(),
-                    type = AccountTypeEnum.DEBIT
+                    createdAt = LocalDateTime.now(),
+                    updatedAt = LocalDateTime.now(),
+                    isDeleted = false,
+                    synchronization = SynchronizationEnum.PENDING
                 )
             )
         )
@@ -46,7 +52,7 @@ class AccountRepositoryMock : IAccountLocalDataSource {
         TODO("Not yet implemented")
     }
 
-    override fun getAccountWithTotalAmount(AccountId: String): Flow<Account?> {
+    override fun getAccountWithTotalAmount(accountId: String): Flow<Account?> {
         TODO("Not yet implemented")
     }
 
@@ -58,7 +64,7 @@ class AccountRepositoryMock : IAccountLocalDataSource {
         TODO("Not yet implemented")
     }
 
-    override suspend fun refreshAccount(AccountId: String) {
+    override suspend fun refreshAccount(accountId: String) {
         TODO("Not yet implemented")
     }
 
@@ -68,14 +74,14 @@ class AccountRepositoryMock : IAccountLocalDataSource {
 
     override suspend fun updateAccount(
         name: String,
-        createAt: Long,
+        createdAt: Long,
         initialAmount: Int,
         accountType: Int
     ) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteAccount(AccountId: String) {
+    override suspend fun deleteAccount(accountId: String) {
         TODO("Not yet implemented")
     }
 

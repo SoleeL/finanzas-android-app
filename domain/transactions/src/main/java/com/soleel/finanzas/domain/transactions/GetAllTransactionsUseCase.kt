@@ -1,6 +1,7 @@
 package com.soleel.finanzas.domain.transactions
 
 import com.soleel.finanzas.core.common.enums.AccountTypeEnum
+import com.soleel.finanzas.core.common.enums.SynchronizationEnum
 import com.soleel.finanzas.core.model.Account
 import com.soleel.finanzas.core.model.Transaction
 import com.soleel.finanzas.core.model.TransactionWithAccount
@@ -11,6 +12,7 @@ import com.soleel.finanzas.domain.transactions.utils.toDayDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import java.time.LocalDateTime
 import java.util.Date
 import javax.inject.Inject
 
@@ -22,19 +24,6 @@ class GetAllTransactionsUseCase @Inject constructor(
     operator fun invoke(): Flow<List<TransactionsGroup>> = transactionRepository.getTransactionsByCreatedOrder()
         .mapToWithAccount(accounts = accountRepository.getAccounts())
         .mapToGroupByDay()
-}
-
-private fun Flow<List<TransactionWithAccount>>.mapToGroupByDay(): Flow<List<TransactionsGroup>> {
-    return this.map(transform = { transactionsWithAccount ->
-        transactionsWithAccount
-            .groupBy(keySelector = { it.transaction.createAt.toDayDate() })
-            .map(transform = { (localDate, dailyTransactionsWithAccount) ->
-                TransactionsGroup(
-                    date = localDate,
-                    transactionsWithAccount = dailyTransactionsWithAccount
-                )
-            })
-    })
 }
 
 private fun Flow<List<Transaction>>.mapToWithAccount(
@@ -50,11 +39,13 @@ private fun Flow<List<Transaction>>.mapToWithAccount(
 
                     val accountNotFind = Account(
                         id = "",
+                        type = AccountTypeEnum.CREDIT,
                         name = "null",
                         amount = 0,
-                        createAt = Date(),
-                        updatedAt = Date(),
-                        type = AccountTypeEnum.CREDIT
+                        createdAt = LocalDateTime.now(),
+                        updatedAt = LocalDateTime.now(),
+                        isDeleted = false,
+                        synchronization = SynchronizationEnum.PENDING
                     )
 
                     TransactionWithAccount(
@@ -65,4 +56,18 @@ private fun Flow<List<Transaction>>.mapToWithAccount(
             )
         }
     )
+}
+
+private fun Flow<List<TransactionWithAccount>>.mapToGroupByDay(): Flow<List<TransactionsGroup>> {
+    return this.map(transform = { transactionsWithAccount ->
+        transactionsWithAccount
+            .groupBy(keySelector = { it.transaction.date.toDayDate() })
+            .map(transform = { (localDate, dailyTransactionsWithAccount) ->
+                TransactionsGroup(
+                    localDate = localDate,
+                    transactionsWithAccount = dailyTransactionsWithAccount
+                )
+            })
+            .sortedByDescending(selector = { it.localDate })
+    })
 }

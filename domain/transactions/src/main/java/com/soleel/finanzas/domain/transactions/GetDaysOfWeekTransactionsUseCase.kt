@@ -26,12 +26,13 @@ class GetDaysOfWeekTransactionsUseCase @Inject constructor(
 private fun Flow<List<Transaction>>.mapToSummaryByDaysOfWeek(): Flow<List<TransactionsSummary>> {
     return this.map(transform = { transactions ->
         transactions
-            .groupBy(keySelector = { it.createAt.toWeekDate() })
+            .groupBy(keySelector = { it.date.toWeekDate() })
             .map(transform = { (weekDate, weekTransactions) ->
                 TransactionsSummary(
+                    localDate = weekDate,
                     dateName = weekDate.toNameDaysOfWeek(),
                     transactions = weekTransactions
-                        .groupBy(keySelector = { it.createAt.toDayDate() })
+                        .groupBy(keySelector = { it.date.toDayDate() })
                         .flatMap(transform = { (dayDate, dayTransactions) ->
                             listOf(
                                 TransactionSummary(
@@ -48,5 +49,6 @@ private fun Flow<List<Transaction>>.mapToSummaryByDaysOfWeek(): Flow<List<Transa
                         })
                 )
             })
+            .sortedByDescending(selector = { it.localDate} )
     })
 }

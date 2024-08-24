@@ -1,5 +1,6 @@
 package com.soleel.finanzas.data.transaction
 
+import com.soleel.finanzas.core.common.enums.SynchronizationEnum
 import com.soleel.finanzas.core.database.daos.TransactionDAO
 import com.soleel.finanzas.core.database.entities.TransactionEntity
 import com.soleel.finanzas.core.model.Transaction
@@ -54,10 +55,11 @@ class TransactionRepository @Inject constructor(
     }
 
     override suspend fun createTransaction(
+        type: Int,
+        category: Int,
         name: String,
+        date: Long,
         amount: Int,
-        transactionType: Int,
-        transactionCategory: Int,
         accountId: String
     ): String {
 
@@ -65,17 +67,21 @@ class TransactionRepository @Inject constructor(
             context = dispatcher,
             block = {
                 UUID.randomUUID().toString()
-            })
+            }
+        )
 
         val transaction = TransactionEntity(
             id = id,
+            type = type,
+            category = category,
             name = name,
+            date = date,
             amount = amount,
-            createAt = System.currentTimeMillis(),
+            accountId = accountId,
+            createdAt = System.currentTimeMillis(),
             updatedAt = System.currentTimeMillis(),
-            transactionType = transactionType,
-            categoryType = transactionCategory,
-            accountId = accountId
+            isDeleted = false,
+            synchronization = SynchronizationEnum.PENDING.id
         )
 
         withContext(

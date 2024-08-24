@@ -25,12 +25,13 @@ class GetWeeklyOfMonthTransactionsUseCase @Inject constructor(
 private fun Flow<List<Transaction>>.mapToSummaryByWeeksOfMonth(): Flow<List<TransactionsSummary>> {
     return this.map(transform = { transactions ->
         transactions
-            .groupBy(keySelector = { it.createAt.toMonthDate() })
+            .groupBy(keySelector = { it.date.toMonthDate() })
             .map(transform = { (monthDate, monthTransactions) ->
                 TransactionsSummary(
+                    localDate = monthDate,
                     dateName = monthDate.toNameWeekOfMonth(),
                     transactions = monthTransactions
-                        .groupBy(keySelector = { it.createAt.toWeekDate() })
+                        .groupBy(keySelector = { it.date.toWeekDate() })
                         .flatMap(transform = { (weekDate, weekTransactions) ->
                             listOf(
                                 TransactionSummary(
@@ -47,5 +48,6 @@ private fun Flow<List<Transaction>>.mapToSummaryByWeeksOfMonth(): Flow<List<Tran
                         })
                 )
             })
+            .sortedByDescending(selector = { it.localDate })
     })
 }
