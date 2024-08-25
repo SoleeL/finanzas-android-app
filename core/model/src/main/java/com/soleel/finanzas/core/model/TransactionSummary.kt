@@ -1,6 +1,6 @@
 package com.soleel.finanzas.core.model
 
-import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
+import com.soleel.finanzas.core.model.enums.TransactionTypeEnum
 
 
 data class TransactionSummary (

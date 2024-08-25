@@ -1,13 +1,12 @@
 package com.soleel.finanzas.data.account
 
-import com.soleel.finanzas.core.common.enums.AccountTypeEnum
-import com.soleel.finanzas.core.common.enums.SynchronizationEnum
+import com.soleel.finanzas.core.model.enums.AccountTypeEnum
+import com.soleel.finanzas.core.model.enums.SynchronizationEnum
 import com.soleel.finanzas.core.model.Account
 import com.soleel.finanzas.data.account.interfaces.IAccountLocalDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import java.time.LocalDateTime
-import java.util.Date
 
 class AccountRepositoryMock : IAccountLocalDataSource {
     override fun getAccount(accountId: String): Flow<Account?> {
@@ -28,7 +27,7 @@ class AccountRepositoryMock : IAccountLocalDataSource {
                     id = "1",
                     type = AccountTypeEnum.CREDIT,
                     name = "Account 1",
-                    amount = 1000,
+                    totalAmount = 1000,
                     createdAt = LocalDateTime.now(),
                     updatedAt = LocalDateTime.now(),
                     isDeleted = false,
@@ -38,7 +37,7 @@ class AccountRepositoryMock : IAccountLocalDataSource {
                     id = "2",
                     type = AccountTypeEnum.DEBIT,
                     name = "Account 2",
-                    amount = 2000,
+                    totalAmount = 2000,
                     createdAt = LocalDateTime.now(),
                     updatedAt = LocalDateTime.now(),
                     isDeleted = false,
@@ -52,11 +51,11 @@ class AccountRepositoryMock : IAccountLocalDataSource {
         TODO("Not yet implemented")
     }
 
-    override fun getAccountWithTotalAmount(accountId: String): Flow<Account?> {
+    override fun getAccountWithTransactionInfo(accountId: String): Flow<Account?> {
         TODO("Not yet implemented")
     }
 
-    override fun getAccountsWithTotalAmount(): Flow<List<Account>> {
+    override fun getAccountsWithTransactionInfo(): Flow<List<Account>> {
         TODO("Not yet implemented")
     }
 

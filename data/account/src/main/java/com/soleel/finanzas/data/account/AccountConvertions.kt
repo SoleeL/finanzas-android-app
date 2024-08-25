@@ -1,14 +1,13 @@
 package com.soleel.finanzas.data.account
 
-import com.soleel.finanzas.core.common.enums.AccountTypeEnum
-import com.soleel.finanzas.core.common.enums.SynchronizationEnum
+import com.soleel.finanzas.core.model.enums.AccountTypeEnum
+import com.soleel.finanzas.core.model.enums.SynchronizationEnum
 import com.soleel.finanzas.core.database.entities.AccountEntity
-import com.soleel.finanzas.core.database.extras.AccountWithTotalAmountEntity
+import com.soleel.finanzas.core.database.extras.AccountWithTransactionInfoEntity
 import com.soleel.finanzas.core.model.Account
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.util.Date
 
 
 fun AccountEntity.toModel(): Account {
@@ -27,12 +26,15 @@ fun List<AccountEntity>.toModelList(): List<Account> {
     return this.map(transform = { it.toModel() })
 }
 
-fun AccountWithTotalAmountEntity.toModel(): Account {
+fun AccountWithTransactionInfoEntity.toModel(): Account {
     return Account(
         id = this.accountEntity.id,
         type = AccountTypeEnum.fromId(id = this.accountEntity.type),
         name = this.accountEntity.name,
-        amount = this.totalIncome - this.totalExpense,
+        totalIncome = this.totalIncome,
+        totalExpense = this.totalExpense,
+        totalAmount = this.totalIncome - this.totalExpense,
+        transactionsNumber = this.transactionsNumber,
         createdAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(this.accountEntity.createdAt), ZoneId.systemDefault()),
         updatedAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(this.accountEntity.updatedAt), ZoneId.systemDefault()),
         isDeleted = this.accountEntity.isDeleted,
@@ -40,7 +42,7 @@ fun AccountWithTotalAmountEntity.toModel(): Account {
     )
 }
 
-fun List<AccountWithTotalAmountEntity>.toWithTotalAmountModelList(): List<Account> {
+fun List<AccountWithTransactionInfoEntity>.toWithTotalAmountModelList(): List<Account> {
     return this.map(transform = { it.toModel() })
 }
 

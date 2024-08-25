@@ -6,7 +6,3 @@ plugins {
 android {
     namespace = "com.soleel.finanzas.core.ui"
 }
-
-dependencies {
-    api(projects.core.common)
-}

@@ -33,16 +33,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.model.TransactionsGroup
+import com.soleel.finanzas.core.model.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.ui.theme.TransactionTypeExpenditureBackgroundColor
 import com.soleel.finanzas.core.ui.theme.TransactionTypeIncomeBackgroundColor
 import com.soleel.finanzas.core.ui.theme.TransactionTypeLetterColor
-import com.soleel.finanzas.domain.formatdate.AllTransactionFormatDateUseCase
 import com.soleel.finanzas.domain.formatdate.AllTransactionsGroupDateUseCase
 import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
 import com.soleel.finanzas.feature.transactions.TransactionsErrorScreen
@@ -83,7 +83,8 @@ private fun AllTransactionsListScreen(
         enabled = true,
         onBack = {
             finishApp(context)
-        })
+        }
+    )
 
     when (allTransactionsGroupUiState) {
         is TransactionsGroupUiState.Success -> AllTransactionsSuccessScreen(
@@ -687,36 +688,22 @@ private fun AllTransactionList(
                         items = group.transactionsWithAccount,
                         itemContent = { transactionWithAccount ->
 
-                            val transactionType: TransactionTypeEnum =
-                                transactionWithAccount.transaction.type
+                            val transactionTypeColor: Color = if (transactionWithAccount.transaction.type == TransactionTypeEnum.INCOME)
+                                TransactionTypeIncomeBackgroundColor else TransactionTypeExpenditureBackgroundColor
 
-                            val transactionTypeIcon: Int = transactionType.icon
-                            val transactionTypeName: String = transactionType.value
-                            val transactionTypeColor: Color =
-                                if (TransactionTypeEnum.INCOME == transactionType) TransactionTypeIncomeBackgroundColor
-                                else TransactionTypeExpenditureBackgroundColor
-
-                            val transactionCategoryIcon: Int =
-                                transactionWithAccount.transaction.category.icon
-                            val transactionName: String = transactionWithAccount.transaction.name
-                            val transactionHour: String = AllTransactionFormatDateUseCase(
-                                transactionWithAccount.transaction.date
-                            )
-                            val transactionAmount: String = currencyVisualTransformation.filter(
-                                AnnotatedString(
-                                    text = transactionWithAccount.transaction.amount.toString()
-                                )
-                            ).text.toString()
-                            val accountTypeName: String = transactionWithAccount.account.type.value
-
-                            TransactionGroupItem(transactionTypeIcon = transactionTypeIcon,
-                                transactionTypeName = transactionTypeName,
+                            TransactionGroupItem(
+                                transactionTypeIcon = transactionWithAccount.transaction.type.icon,
+                                transactionTypeName = transactionWithAccount.transaction.type.value,
                                 transactionTypeColor = transactionTypeColor,
-                                transactionCategoryIcon = transactionCategoryIcon,
-                                transactionName = transactionName,
-                                transactionHour = transactionHour,
-                                transactionAmount = transactionAmount,
-                                accountTypeName = accountTypeName,
+                                transactionCategoryIcon = transactionWithAccount.transaction.category.icon,
+                                transactionCategoryName = transactionWithAccount.transaction.category.value,
+                                transactionName = transactionWithAccount.transaction.name,
+                                transactionAmount = currencyVisualTransformation.filter(
+                                    AnnotatedString(
+                                        text = transactionWithAccount.transaction.amount.toString()
+                                    )
+                                ).text.toString(),
+                                accountTypeName = transactionWithAccount.account.type.value,
                                 onClick = {}
                             )
                         }
@@ -752,8 +739,8 @@ private fun TransactionGroupItem(
     transactionTypeName: String,
     transactionTypeColor: Color,
     transactionCategoryIcon: Int,
+    transactionCategoryName: String,
     transactionName: String,
-    transactionHour: String,
     transactionAmount: String,
     accountTypeName: String,
     onClick: () -> Unit
@@ -771,10 +758,10 @@ private fun TransactionGroupItem(
                 transactionTypeColor = transactionTypeColor
             )
             TransactionDetailRow(
-                transactionCategoryIcon = transactionCategoryIcon,
-                transactionName = transactionName,
-                transactionHour = transactionHour,
-                transactionAmount = transactionAmount,
+                categoryIcon = transactionCategoryIcon,
+                categoryName = transactionCategoryName,
+                name = transactionName,
+                amount = transactionAmount,
                 accountTypeName = accountTypeName
             )
         }
@@ -815,10 +802,10 @@ private fun TransactionTypeRow(
 
 @Composable
 private fun TransactionDetailRow(
-    transactionCategoryIcon: Int,
-    transactionName: String,
-    transactionHour: String,
-    transactionAmount: String,
+    categoryIcon: Int,
+    categoryName: String,
+    name: String,
+    amount: String,
     accountTypeName: String
 ) {
     Row(
@@ -829,37 +816,45 @@ private fun TransactionDetailRow(
         content = {
             Column(content = {
                 Icon(
-                    painter = painterResource(id = transactionCategoryIcon),
+                    painter = painterResource(id = categoryIcon),
                     contentDescription = "Transaction type",
-                    modifier = Modifier.size(36.dp)
+                    modifier = Modifier.size(48.dp)
                 )
             })
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
+
+            Column(
                 content = {
-                    Column(
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         content = {
                             Text(
-                                text = transactionName,
-                                style = MaterialTheme.typography.titleMedium
+                                text = name,
+                                style = MaterialTheme.typography.titleLarge,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(1f)
                             )
 
                             Text(
-                                text = transactionHour,
-                                style = MaterialTheme.typography.bodyMedium
+                                text = amount,
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier.padding(start = 8.dp)
                             )
                         }
                     )
 
-                    Column(
-                        horizontalAlignment = Alignment.End,
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         content = {
                             Text(
-                                text = transactionAmount,
-                                style = MaterialTheme.typography.titleMedium
+                                text = categoryName,
+                                style = MaterialTheme.typography.bodyMedium
                             )
 
                             Text(

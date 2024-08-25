@@ -1,7 +1,7 @@
 package com.soleel.finanzas.domain.transactions
 
-import com.soleel.finanzas.core.common.enums.AccountTypeEnum
-import com.soleel.finanzas.core.common.enums.SynchronizationEnum
+import com.soleel.finanzas.core.model.enums.AccountTypeEnum
+import com.soleel.finanzas.core.model.enums.SynchronizationEnum
 import com.soleel.finanzas.core.model.Account
 import com.soleel.finanzas.core.model.Transaction
 import com.soleel.finanzas.core.model.TransactionWithAccount
@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import java.time.LocalDateTime
-import java.util.Date
 import javax.inject.Inject
 
 class GetAllTransactionsUseCase @Inject constructor(
@@ -41,7 +40,7 @@ private fun Flow<List<Transaction>>.mapToWithAccount(
                         id = "",
                         type = AccountTypeEnum.CREDIT,
                         name = "null",
-                        amount = 0,
+                        totalAmount = 0,
                         createdAt = LocalDateTime.now(),
                         updatedAt = LocalDateTime.now(),
                         isDeleted = false,

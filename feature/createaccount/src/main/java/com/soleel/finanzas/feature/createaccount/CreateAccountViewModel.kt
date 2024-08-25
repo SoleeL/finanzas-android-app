@@ -5,9 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.soleel.finanzas.core.common.enums.AccountTypeEnum
-import com.soleel.finanzas.core.common.enums.TransactionCategoryEnum
-import com.soleel.finanzas.core.common.enums.TransactionTypeEnum
+import com.soleel.finanzas.core.model.enums.AccountTypeEnum
+import com.soleel.finanzas.core.model.enums.TransactionCategoryEnum
+import com.soleel.finanzas.core.model.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.common.eventmanager.SingleEventManager
 import com.soleel.finanzas.data.account.interfaces.IAccountLocalDataSource
 import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
