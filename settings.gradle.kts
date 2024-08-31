@@ -30,6 +30,7 @@ include(":data:account")
 include(":data:transaction")
 
 include(":domain:formatdate")
+include(":domain:stats")
 include(":domain:transactions")
 include(":domain:validation")
 include(":domain:visualtransformation")

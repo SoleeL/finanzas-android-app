@@ -18,7 +18,7 @@ import javax.inject.Inject
 class GetWeeklyOfMonthTransactionsUseCase @Inject constructor(
     private val transactionRepository: ITransactionLocalDataSource
 ) {
-    operator fun invoke(): Flow<List<TransactionsSummary>> = transactionRepository.getTransactionsByCreatedOrder()
+    operator fun invoke(): Flow<List<TransactionsSummary>> = transactionRepository.getTransactions()
         .mapToSummaryByWeeksOfMonth()
 }
 

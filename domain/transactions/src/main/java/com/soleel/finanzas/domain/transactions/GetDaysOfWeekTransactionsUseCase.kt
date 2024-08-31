@@ -19,7 +19,7 @@ class GetDaysOfWeekTransactionsUseCase @Inject constructor(
     private val transactionRepository: ITransactionLocalDataSource
 ) {
     operator fun invoke(): Flow<List<TransactionsSummary>> =
-        transactionRepository.getTransactionsByCreatedOrder()
+        transactionRepository.getTransactions()
             .mapToSummaryByDaysOfWeek()
 }
 

@@ -20,7 +20,7 @@ class GetAllTransactionsUseCase @Inject constructor(
     private val accountRepository: IAccountLocalDataSource,
 ) {
     // Listado de transacciones agrupadas por dia/fecha
-    operator fun invoke(): Flow<List<TransactionsGroup>> = transactionRepository.getTransactionsByCreatedOrder()
+    operator fun invoke(): Flow<List<TransactionsGroup>> = transactionRepository.getTransactions()
         .mapToWithAccount(accounts = accountRepository.getAccounts())
         .mapToGroupByDay()
 }

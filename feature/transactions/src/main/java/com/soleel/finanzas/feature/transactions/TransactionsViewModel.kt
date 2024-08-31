@@ -58,7 +58,7 @@ class TransactionsViewModel @Inject constructor(
     private val getWeeklyOfMonthTransactionsUseCase: GetWeeklyOfMonthTransactionsUseCase,
     private val getMonthlyOfYearTransactionsUseCase: GetMonthlyOfYearTransactionsUseCase,
 
-    private val retryableFlowTrigger: RetryableFlowTrigger,
+    private val retryableFlowTrigger: RetryableFlowTrigger
 ) : ViewModel() {
 
     private val transactionsArgs: TransactionsArgs = TransactionsArgs(savedStateHandle)
