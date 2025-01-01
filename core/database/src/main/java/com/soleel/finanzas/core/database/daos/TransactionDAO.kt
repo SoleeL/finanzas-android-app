@@ -19,9 +19,6 @@ interface TransactionDAO {
     @Query("SELECT * FROM transaction_table")
     fun getTransactions(): Flow<List<TransactionEntity>>
 
-    @Query("SELECT * FROM transaction_table ORDER BY created_at DESC")
-    fun getTransactionsByCreatedOrder(): Flow<List<TransactionEntity>>
-
     @Query("SELECT * FROM transaction_table WHERE id = :id")
     fun getTransactionForTransactionId(id: String): Flow<TransactionEntity>
 

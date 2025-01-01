@@ -36,12 +36,6 @@ class TransactionRepository @Inject constructor(
             .map(transform = {it.toModelList()})
     }
 
-    override fun getTransactionsByCreatedOrder(): Flow<List<Transaction>> {
-        return transactionDAO
-            .getTransactionsByCreatedOrder()
-            .map(transform =  { it.toModelList() })
-    }
-
     override fun getTransactionsWithForceUpdate(forceUpdate: Boolean): List<Transaction> {
         TODO("Not yet implemented")
     }

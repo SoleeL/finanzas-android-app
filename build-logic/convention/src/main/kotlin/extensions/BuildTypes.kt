@@ -8,7 +8,7 @@ fun Project.configureBuildTypes(
 ) {
     commonExtension.apply {
         buildTypes {
-            getByName("release"){
+            getByName("release") {
                 isMinifyEnabled = false
                 proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
