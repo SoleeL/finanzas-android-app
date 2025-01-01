@@ -25,6 +25,11 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     applicationId = Config.android.applicationId
                     versionCode = Config.android.versionCode
                     versionName = Config.android.versionName
+
+                    proguardFiles(
+                        getDefaultProguardFile("proguard-android-optimize.txt"),
+                        "proguard-rules.pro"
+                    )
                 }
 
                 configureAndroidKotlin(this)
