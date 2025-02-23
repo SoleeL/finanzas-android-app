@@ -1,15 +1,42 @@
 package config
 
 import org.gradle.api.JavaVersion
+import java.io.File
 
 object Config {
+
+    fun generateVersionName(): String {
+        val major: Int = 1 // Actualizacion de la app
+        val minor: Int = 0 // Actualizacion del negocio (modificaciones o nuevas funcionalidades)
+        val patch: Int = 0 // Correcciones y
+
+        // Obtener el número de commits desde el último tag
+        val commitCount: Int = getGitCommitCount()
+
+        return "$major.$minor.$patch-$commitCount"
+    }
+
+    fun getGitCommitCount(): Int {
+        val process = ProcessBuilder("git", "rev-list", "--count", "HEAD")
+            .directory(File("./"))
+            .start()
+        val output = process.inputStream.bufferedReader().readText().trim()
+        return output.toIntOrNull() ?: 0
+    }
+
+    fun generateVersionCode(): Int {
+        // Puedes usar el timestamp para asegurar que el versionCode siempre sea único
+        val timestamp: Long = System.currentTimeMillis()
+        return (timestamp / 1000).toInt() // Dividir por 1000 para evitar valores demasiado grandes
+    }
+
     val android = AndroidConfig(
         minSdkVersion = 30,
         targetSdkVersion = 33,
         compileSdkVersion = 34,
         applicationId = "com.soleel.finanzas",
-        versionCode = 1,
-        versionName = "1.0",
+        versionCode = generateVersionCode(),
+        versionName = generateVersionName(),
         nameSpace = "com.soleel.finanzas"
     )
 

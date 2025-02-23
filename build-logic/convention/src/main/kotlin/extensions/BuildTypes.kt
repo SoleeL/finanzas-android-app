@@ -1,20 +1,31 @@
 package extensions
 
-import com.android.build.api.dsl.CommonExtension
+import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.dsl.LibraryExtension
 import org.gradle.api.Project
 
 fun Project.configureBuildTypes(
-    commonExtension: CommonExtension<*, *, *, *>
+    appExtension: ApplicationExtension
 ) {
-    commonExtension.apply {
+    appExtension.apply {
         buildTypes {
-            getByName("release") {
+            release {
                 isMinifyEnabled = false
-                proguardFiles(
-                    getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro"
-                )
+                isJniDebuggable = false
+            }
+
+            debug {
+                isMinifyEnabled = false
+                isJniDebuggable = true
+                applicationIdSuffix = ".debug"
+                resValue("string", "app_name", "finanzas_debug")
             }
         }
     }
+}
+
+fun Project.configureBuildTypes(
+    libraryExtension: LibraryExtension
+) {
+    return
 }
