@@ -1,0 +1,3 @@
+package com.soleel.finanzas.data.transaction.interfaces
+
+interface ITransactionRemoteDataSource
