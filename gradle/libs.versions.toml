@@ -14,11 +14,15 @@ kotlinGradlePlugin = "1.8.21"
 hilt = "2.49"
 hilt-navigation-version = "1.1.0"
 androidx-lifecycle = "2.6.2"
-androidx-navigation = "2.7.6"
 kotlinx-coroutines = "1.7.3"
 ksp = "1.9.10-1.0.13"
 room = "2.6.1"
 
+androidx-navigation-version = "2.8.2"
+kotlinx-serialization-version = "1.6.3"
+kotlin-parcelize-version = "1.8.10"
+
+datastore-preferences-version = "1.1.2"
 
 ## plugins
 android-application = "8.2.0"
@@ -35,7 +39,10 @@ androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtim
 androidx-tracing-ktx = { group = "androidx.tracing", name = "tracing-ktx", version.ref = "androidx-tracing" }
 
 compose-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle"}
-compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
+
+compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-navigation-version" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-version" }
+
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
 compose-ui = { module = "androidx.compose.ui:ui" }
 compose-ui-text = { module = "androidx.compose.ui:ui-text-android" }
@@ -69,10 +76,12 @@ room-runtime = {group = "androidx.room", name = "room-runtime", version.ref="roo
 room-compiler = {group = "androidx.room", name = "room-compiler", version.ref="room"}
 room-common = {group = "androidx.room", name = "room-common", version.ref="room"}
 
+#dataStore
+datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore-preferences-version" }
+
 # Dependencies of the included build-logic
 android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
-
 
 [bundles]
 compose = ["compose-ui","compose-ui-text", "compose-ui-graphics", "compose-ui-tooling-preview", "compose-material3"]
@@ -81,6 +90,7 @@ compose = ["compose-ui","compose-ui-text", "compose-ui-graphics", "compose-ui-to
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-application" }
 android-kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "android-kotlin" }
+jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "android-kotlin" }
 org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org-jetbrains-kotlin-jvm" }
 com-android-library = { id = "com.android.library", version.ref = "android-application" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }

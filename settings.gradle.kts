@@ -28,6 +28,7 @@ include(":core:ui")
 
 include(":data:account")
 include(":data:transaction")
+include(":data:preferences")
 
 include(":domain:formatdate")
 include(":domain:stats")
@@ -35,10 +36,18 @@ include(":domain:transactions")
 include(":domain:validation")
 include(":domain:visualtransformation")
 
-include(":feature:add")
-include(":feature:accounts")
-include(":feature:createaccount")
-include(":feature:createtransaction")
-include(":feature:profile")
-include(":feature:stats")
-include(":feature:transactions")
+//include(":feature:add")
+//include(":feature:accounts")
+//include(":feature:createaccount")
+//include(":feature:createtransaction")
+//include(":feature:profile")
+//include(":feature:stats")
+//include(":feature:transactions")
+
+// NUEVAS
+include(":feature:login")
+include(":feature:configuration")
+include(":feature:home")
+
+//include(":feature:calculator")
+//

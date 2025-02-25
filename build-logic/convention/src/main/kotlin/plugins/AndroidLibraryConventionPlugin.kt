@@ -13,6 +13,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.library")
                 apply("kotlin-android")
+                apply("kotlinx-serialization")
             }
 
             extensions.configure<LibraryExtension> {
