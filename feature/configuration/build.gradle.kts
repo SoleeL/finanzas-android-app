@@ -7,3 +7,7 @@ plugins {
 android {
     namespace = "com.soleel.finanzas.feature.configuration"
 }
+
+dependencies {
+    implementation(projects.data.preferences)
+}

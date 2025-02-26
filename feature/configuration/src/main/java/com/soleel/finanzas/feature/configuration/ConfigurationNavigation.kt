@@ -1,9 +1,9 @@
 package com.soleel.finanzas.feature.configuration
 
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.soleel.finanzas.data.preferences.AppPreferences
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -34,99 +34,70 @@ object Password
 object Backup
 
 fun NavGraphBuilder.configurationNavigationGraph(
-    navHostController: NavHostController,
+    backToPrevious: () -> Unit,
+    navigateToCurrencyScreen: () -> Unit,
+    navigateToPaymentsScreen: () -> Unit,
+    navigateToCalendarScreen: () -> Unit,
+    navigateToThemeScreen: () -> Unit,
+    navigateToNotificationsScreen: () -> Unit,
+    navigateToPasswordScreen: () -> Unit,
+    navigateToBackupScreen: () -> Unit,
+    navigateToHomeGraph: () -> Unit,
     appPreferences: AppPreferences
 ) {
     navigation<ConfigurationGraph>(startDestination = Language) {
         composable<Language> {
             LanguageScreen(
-                onContinue = {
-                    navHostController.navigate(Currency)
-                }
+                onContinue = navigateToCurrencyScreen
             )
         }
 
         composable<Currency> {
             CurrencyScreen(
-                onBackPress = {
-                    navHostController.popBackStack()
-                },
-                onContinue = {
-                    navHostController.navigate(Payments)
-                }
+                onBackPress = backToPrevious,
+                onContinue = navigateToPaymentsScreen
             )
         }
 
         composable<Payments> {
             PaymentsScreen(
-                onBackPress = {
-                    navHostController.popBackStack()
-                },
-                onContinue = {
-                    navHostController.navigate(Calendar)
-                }
+                onBackPress = backToPrevious,
+                onContinue = navigateToCalendarScreen
             )
         }
 
         composable<Calendar> {
             CalendarScreen(
-                onBackPress = {
-                    navHostController.popBackStack()
-                },
-                onContinue = {
-                    navHostController.navigate(Theme)
-                }
+                onBackPress = backToPrevious,
+                onContinue = navigateToThemeScreen
             )
         }
 
         composable<Theme> {
             ThemeScreen(
-                onBackPress = {
-                    navHostController.popBackStack()
-                },
-                onContinue = {
-                    navHostController.navigate(Notifications)
-                }
+                onBackPress = backToPrevious,
+                onContinue = navigateToNotificationsScreen
             )
         }
 
         composable<Notifications> {
             NotificationsScreen(
-                onBackPress = {
-                    navHostController.popBackStack()
-                },
-                onContinue = {
-                    navHostController.navigate(Password)
-                }
+                onBackPress = backToPrevious,
+                onContinue = navigateToPasswordScreen
             )
         }
 
         composable<Password> {
             PasswordScreen(
-                onBackPress = {
-                    navHostController.popBackStack()
-                },
-                onContinue = {
-                    navHostController.navigate(Backup)
-                }
+                onBackPress = backToPrevious,
+                onContinue = navigateToBackupScreen
             )
         }
 
         composable<Backup> {
             BackupScreen(
-                onBackPress = {
-                    navHostController.popBackStack()
-                },
-                onContinue = {
-                    navHostController.navigate(
-                        route = HomeGraph,
-                        builder = {
-                            popUpTo(ConfigurationGraph) {
-                                inclusive = true
-                            }
-                        }
-                    )
-                }
+                onBackPress = backToPrevious,
+                onContinue = navigateToHomeGraph
             )
         }
     }

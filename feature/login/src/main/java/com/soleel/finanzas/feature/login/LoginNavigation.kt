@@ -17,45 +17,24 @@ object Login
 object Signup
 
 fun NavGraphBuilder.loginNavigationGraph(
-    navHostController: NavHostController,
+    navigateToHomeGraph: () -> Unit,
+    navigateToSignupScreen: () -> Unit,
+    backToLoginScreen: () -> Unit,
+    navigateToConfigureGraph: () -> Unit,
     appPreferences: AppPreferences
 ) {
     navigation<LoginGraph>(startDestination = Login) {
         composable<Login> {
             LoginScreen(
-                onLoginClick = {
-                    navHostController.navigate(
-                        route = HomeGraph,
-                        builder = {
-                            popUpTo(LoginGraph) {
-                                inclusive = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    )
-                },
-                onRegisterClick = {
-                    navHostController.navigate(Signup)
-                }
+                onLoginClick = navigateToHomeGraph,
+                onRegisterClick = navigateToSignupScreen
             )
         }
 
         composable<Signup> {
             SignupScreen(
-                onBackPress = {
-                    navHostController.popBackStack() // Regresa a Login
-                },
-                onContinue = {
-                    navHostController.navigate(
-                        route = ConfigurationGraph,
-                        builder = {
-                            popUpTo(LoginGraph) {
-                                inclusive = true
-                            }
-                        }
-                    )
-                }
+                onBackPress = backToLoginScreen,
+                onContinue = navigateToConfigureGraph
             )
         }
     }
