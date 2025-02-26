@@ -1,5 +1,7 @@
 package com.soleel.finanzas.feature.home
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -9,12 +11,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -67,8 +73,8 @@ sealed class HomeTopBarScreens<T>(val name: String, val icon: Int, val route: T)
 @Composable
 fun HomeScreen(parentNavHostController: NavHostController) {
     val navHostController: NavHostController = rememberNavController()
-    val navBackStackEntry by navHostController.currentBackStackEntryAsState()
-    val currentDestination: NavDestination? = navBackStackEntry?.destination
+    val currentDestination: NavDestination? = navHostController.currentBackStackEntryAsState()
+        .value?.destination
 
     val topBarScreens: List<HomeTopBarScreens<*>> = remember(
         calculation = {
@@ -97,7 +103,7 @@ fun HomeScreen(parentNavHostController: NavHostController) {
 //                },
                 actions = {
                     topBarScreens.forEach(action = { screen ->
-                        val isSelected: Boolean = currentDestination?.route == screen.route
+                        val isSelected = currentDestination?.hasRoute(screen::class) == true
                         IconButton(
                             onClick = {
                                 // LA PRIMERA NAVEGACION AL GRAPH NO SE CONSIDERA EL COMO NAVEGA AL PRIMERA SCREEN
@@ -116,6 +122,7 @@ fun HomeScreen(parentNavHostController: NavHostController) {
                                                     id = navHostController.graph
                                                         .findStartDestination().id,
                                                     popUpToBuilder = {
+                                                        //inclusive = true // SI QUIERO QUE SOLO EXISTA 1 SCREEN A LA VEZ Y AL RETROCER SE CIERRE LA APP
                                                         saveState = true
                                                     }
                                                 )
@@ -142,20 +149,21 @@ fun HomeScreen(parentNavHostController: NavHostController) {
             NavHost(
                 navController = navHostController,
                 startDestination = HomeTopBarScreens.Calculator,
-                modifier = Modifier.padding(paddingValues)
-            ) {
-                composable<HomeTopBarScreens.Calculator> {
-                    CalculatorScreen()
-                }
+                modifier = Modifier.padding(paddingValues),
+                builder = {
+                    composable<HomeTopBarScreens.Calculator> {
+                        CalculatorScreen()
+                    }
 
-                composable<HomeTopBarScreens.Transactions> {
-                    TransactionsScreen()
-                }
+                    composable<HomeTopBarScreens.Transactions> {
+                        TransactionsScreen()
+                    }
 
-                composable<HomeTopBarScreens.Accounts> {
-                    AccountsScreen()
+                    composable<HomeTopBarScreens.Accounts> {
+                        AccountsScreen()
+                    }
                 }
-            }
+            )
         }
     )
 }
