@@ -1,4 +1,4 @@
-package com.soleel.finanzas.feature.home
+package com.soleel.finanzas.feature.menu
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

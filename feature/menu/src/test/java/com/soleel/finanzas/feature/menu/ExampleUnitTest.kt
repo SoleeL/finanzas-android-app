@@ -1,4 +1,4 @@
-package com.soleel.finanzas.feature.calculator
+package com.soleel.finanzas.feature.menu
 
 import org.junit.Test
 

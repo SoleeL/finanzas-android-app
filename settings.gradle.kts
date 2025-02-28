@@ -51,3 +51,4 @@ include(":feature:home")
 
 //include(":feature:calculator")
 //
+include(":feature:menu")

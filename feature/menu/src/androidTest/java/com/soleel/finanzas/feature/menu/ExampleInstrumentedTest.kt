@@ -1,4 +1,4 @@
-package com.soleel.finanzas.feature.calculator
+package com.soleel.finanzas.feature.menu
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.soleel.finanzas.feature.calculator.test", appContext.packageName)
+        assertEquals("com.soleel.finanzas.feature.menu.test", appContext.packageName)
     }
 }

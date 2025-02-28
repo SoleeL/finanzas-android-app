@@ -16,6 +16,7 @@ dependencies {
     implementation(projects.feature.login)
     implementation(projects.feature.configuration)
     implementation(projects.feature.home)
+    implementation(projects.feature.menu)
 
 //    implementation(projects.feature.add)
 //    implementation(projects.feature.accounts)

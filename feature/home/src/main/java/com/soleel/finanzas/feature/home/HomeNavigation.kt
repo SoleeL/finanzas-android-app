@@ -1,7 +1,5 @@
 package com.soleel.finanzas.feature.home
 
-import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -11,16 +9,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -31,17 +25,17 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.data.preferences.AppPreferences
+import com.soleel.finanzas.feature.home.calculator.CalculatorScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
 object HomeGraph
 
 fun NavGraphBuilder.homeNavigationGraph(
-    navHostController: NavHostController,
     appPreferences: AppPreferences
 ) {
     composable<HomeGraph> {
-        HomeScreen(navHostController)
+        HomeScreen()
     }
 }
 
@@ -71,7 +65,7 @@ sealed class HomeTopBarScreens<T>(val name: String, val icon: Int, val route: T)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(parentNavHostController: NavHostController) {
+fun HomeScreen() {
     val navHostController: NavHostController = rememberNavController()
     val currentDestination: NavDestination? = navHostController.currentBackStackEntryAsState()
         .value?.destination
@@ -122,7 +116,7 @@ fun HomeScreen(parentNavHostController: NavHostController) {
                                                     id = navHostController.graph
                                                         .findStartDestination().id,
                                                     popUpToBuilder = {
-                                                        //inclusive = true // SI QUIERO QUE SOLO EXISTA 1 SCREEN A LA VEZ Y AL RETROCER SE CIERRE LA APP
+                                                        //inclusive = true // SI QUIERO QUE SOLO EXISTA 1 SCREEN A LA VEZ Y AL RETROCEDER SE CIERRE LA APP
                                                         saveState = true
                                                     }
                                                 )
