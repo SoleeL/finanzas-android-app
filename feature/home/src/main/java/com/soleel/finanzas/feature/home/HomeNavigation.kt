@@ -24,6 +24,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.soleel.finanzas.core.ui.R
+import com.soleel.finanzas.core.ui.theme.SmartphonePreview
 import com.soleel.finanzas.data.preferences.AppPreferences
 import com.soleel.finanzas.feature.home.calculator.CalculatorScreen
 import kotlinx.serialization.Serializable
@@ -61,6 +62,12 @@ sealed class HomeTopBarScreens<T>(val name: String, val icon: Int, val route: T)
         icon = R.drawable.ic_accounts,
         route = Accounts
     )
+}
+
+@SmartphonePreview
+@Composable
+fun HomeScreenPreview() {
+    HomeScreen()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

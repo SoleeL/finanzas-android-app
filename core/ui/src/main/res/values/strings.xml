@@ -4,7 +4,11 @@
 
     <!-- COMMON STRINGS -->
     <string name="required_field">"*requerido"</string>
+    <string name="not_required_field">"*not required"</string>
     <string name="next_step">"Siguiente"</string>
+
+    <!-- CALCULATOR STRINGS -->
+    <string name="calculator_item_name">"Nombre del item %d"</string>
 
     <!-- CREATE TRANSACTION STRINGS -->
     <string name="account_create_title">"Crear cuenta de pagos"</string>
