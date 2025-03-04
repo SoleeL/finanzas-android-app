@@ -8,7 +8,7 @@
     <string name="next_step">"Siguiente"</string>
 
     <!-- CALCULATOR STRINGS -->
-    <string name="calculator_item_name">"Nombre del item %d"</string>
+    <string name="calculator_item_name_label">"Nombre del item"</string>
 
     <!-- CREATE TRANSACTION STRINGS -->
     <string name="account_create_title">"Crear cuenta de pagos"</string>

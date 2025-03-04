@@ -1,4 +1,4 @@
-package com.soleel.finanzas.core.ui.theme
+package com.soleel.finanzas.core.ui.utils
 
 import androidx.compose.ui.tooling.preview.Preview
 

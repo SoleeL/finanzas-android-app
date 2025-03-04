@@ -3,22 +3,27 @@ package com.soleel.finanzas.feature.home.calculator
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import com.soleel.finanzas.core.ui.R
 
 data class ItemUi(
     val value: Int = 0,
     val valueError: Int? = null,
 
-    val quantity: Float = 0f,
+    val quantity: Float = 1f,
     val quantityError: Int? = null,
+
+    val subtract: Int = 0,
+    val subtractError: Int? = null,
 
     val name: String = "",
     val nameError: Int? = null,
 
-    val isSubtract: Boolean = false,
     val isMultiply: Boolean = false,
+    val isSubtract: Boolean = false,
     val isDecimal: Boolean = false,
 )
 
@@ -29,7 +34,7 @@ sealed class CalculatorButtonEventUi {
     data object Subtract : CalculatorButtonEventUi()
     data object Add : CalculatorButtonEventUi()
     data object Delete : CalculatorButtonEventUi()
-    data object Decimal : CalculatorButtonEventUi() // TODO: Convertir a SPECIAL -> Multiply - Decimal, Subtract - Percentage/Currency
+    data object Decimal : CalculatorButtonEventUi() // TODO: Convertir a SPECIAL -> Add - Catalog, Multiply - Decimal, Subtract - Percentage/Currency
 }
 
 @HiltViewModel
@@ -78,7 +83,7 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
                 // 2. Mostrar icono de multiplicacion entre QuantityTextField y ValueTextField
                 // 3. Cambiar funcionamiento de los demas operadores
                 if (currentItemUi.value > 0) {
-                    _currentItemUi = currentItemUi.copy(quantity = 1f, isMultiply = true)
+                    _currentItemUi = currentItemUi.copy(isMultiply = true)
                 }
             }
 
@@ -89,6 +94,10 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
             }
 
             is CalculatorButtonEventUi.Add -> {
+                if (currentItemUi.name.isBlank()) {
+                    _currentItemUi = currentItemUi.copy(name = "item ${itemsInCartUi.size + 1}")
+                }
+
                 _itemsInCartUi = itemsInCartUi + currentItemUi
                 _currentItemUi = ItemUi()
             }
