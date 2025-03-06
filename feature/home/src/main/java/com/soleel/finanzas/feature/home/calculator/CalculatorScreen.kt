@@ -3,16 +3,13 @@ package com.soleel.finanzas.feature.home.calculator
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Info
@@ -29,6 +26,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -56,7 +54,8 @@ fun CalculatorScreen(
         mutableStateOf(CLPCurrencyVisualTransformation())
     })
 
-    Column(modifier = Modifier.fillMaxSize(),
+    Column(
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween,
         content = {
             Column(
@@ -69,7 +68,9 @@ fun CalculatorScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
-                                color = if (currentItemUi.isMultiply) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else Color.Transparent,
+                                color = if (currentItemUi.isEditMultiply) MaterialTheme.colorScheme.primary.copy(
+                                    alpha = 0.1f
+                                ) else Color.Transparent,
                                 shape = RoundedCornerShape(12.dp)
                             )
                             .padding(start = 8.dp, end = 8.dp, top = 2.dp, bottom = 2.dp),
@@ -77,16 +78,14 @@ fun CalculatorScreen(
                         content = {
                             Text(
                                 text = "Cantidad",
-                                style = MaterialTheme.typography.headlineSmall
+                                style = MaterialTheme.typography.headlineSmall,
+                                color = MaterialTheme.colorScheme.secondary
                             )
 
-                            BasicTextField(
-                                enabled = false,
-                                value = currentItemUi.quantity.toString(),
-                                onValueChange = { },
-                                modifier = Modifier.width(IntrinsicSize.Min),
-                                textStyle = MaterialTheme.typography.headlineSmall,
-                                singleLine = true
+                            Text(
+                                text = currentItemUi.quantity.toString(),
+                                style = MaterialTheme.typography.headlineSmall,
+                                color = MaterialTheme.colorScheme.secondary
                             )
                         }
                     )
@@ -95,7 +94,9 @@ fun CalculatorScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
-                                color = if (currentItemUi.isMultiply || currentItemUi.isSubtract) Color.Transparent else MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                                color = if (currentItemUi.isEditMultiply || currentItemUi.isEditSubtract) Color.Transparent else MaterialTheme.colorScheme.primary.copy(
+                                    alpha = 0.1f
+                                ),
                                 shape = RoundedCornerShape(12.dp)
                             )
                             .padding(start = 8.dp, end = 8.dp, top = 2.dp, bottom = 2.dp),
@@ -110,11 +111,13 @@ fun CalculatorScreen(
                             Text(
                                 text = "Producto",
                                 style = MaterialTheme.typography.headlineSmall,
+                                color = MaterialTheme.colorScheme.secondary
                             )
 
                             Text(
                                 text = currentItemValueAmountCLP,
                                 style = MaterialTheme.typography.headlineSmall,
+                                color = MaterialTheme.colorScheme.secondary
                             )
                         }
                     )
@@ -123,7 +126,9 @@ fun CalculatorScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
-                                color = if (currentItemUi.isSubtract) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else Color.Transparent,
+                                color = if (currentItemUi.isEditSubtract) MaterialTheme.colorScheme.primary.copy(
+                                    alpha = 0.1f
+                                ) else Color.Transparent,
                                 shape = RoundedCornerShape(12.dp)
                             )
                             .padding(start = 8.dp, end = 8.dp, top = 2.dp, bottom = 2.dp),
@@ -137,12 +142,14 @@ fun CalculatorScreen(
 
                             Text(
                                 text = "Desc.",
-                                style = MaterialTheme.typography.headlineSmall
+                                style = MaterialTheme.typography.headlineSmall,
+                                color = MaterialTheme.colorScheme.secondary
                             )
 
                             Text(
                                 text = currentItemSubtractAmountCLP,
                                 style = MaterialTheme.typography.headlineSmall,
+                                color = MaterialTheme.colorScheme.secondary
                             )
                         }
                     )
@@ -153,9 +160,10 @@ fun CalculatorScreen(
                             .padding(start = 8.dp, end = 8.dp, top = 2.dp, bottom = 2.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         content = {
+                            val totalAmount: Int = ((currentItemUi.quantity * currentItemUi.value) - currentItemUi.subtract).toInt()
                             val currentItemTotalAmountCLP: String = currencyVisualTransformation
                                 .filter(
-                                    AnnotatedString(text = ((currentItemUi.quantity * currentItemUi.value) - currentItemUi.subtract).toString())
+                                    AnnotatedString(text = totalAmount.toString())
                                 )
                                 .text.toString()
 
@@ -173,7 +181,8 @@ fun CalculatorScreen(
                 }
             )
 
-            // TODO: Falta que esto suelte el foco cuando se presione hacia atras/ocultar o en otra elemento de la vista
+            // TODO: No logro que al presionar 'Back' y tras bajarse el teclado el foco en el
+            //  TextField se libere, el cursor sigue marcando el foco.
             OutlinedTextField(
                 value = currentItemUi.name,
                 onValueChange = { calculatorViewModel.onNameChanged(name = it) },
@@ -212,6 +221,7 @@ fun CalculatorScreen(
                     errorBorderColor = Color.Transparent,
                 )
             )
+
 
             buttons.forEach(
                 action = { row ->
@@ -288,20 +298,23 @@ val buttons: List<List<CalculatorButtonEventUi>> = listOf(
         CalculatorButtonEventUi.Number(8),
         CalculatorButtonEventUi.Number(9),
         CalculatorButtonEventUi.Clear
-    ), listOf(
+    ),
+    listOf(
         CalculatorButtonEventUi.Number(4),
         CalculatorButtonEventUi.Number(5),
         CalculatorButtonEventUi.Number(6),
         CalculatorButtonEventUi.Multiply
-    ), listOf(
+    ),
+    listOf(
         CalculatorButtonEventUi.Number(1),
         CalculatorButtonEventUi.Number(2),
         CalculatorButtonEventUi.Number(3),
         CalculatorButtonEventUi.Subtract
-    ), listOf(
+    ),
+    listOf(
         CalculatorButtonEventUi.Delete,
         CalculatorButtonEventUi.Number(0),
-        CalculatorButtonEventUi.Decimal,
+        CalculatorButtonEventUi.Especial,
         CalculatorButtonEventUi.Add
     )
 )
@@ -312,23 +325,31 @@ val operatorButtons: List<CalculatorButtonEventUi> = listOf(
     CalculatorButtonEventUi.Subtract,
     CalculatorButtonEventUi.Add,
     CalculatorButtonEventUi.Delete,
-    CalculatorButtonEventUi.Decimal
+    CalculatorButtonEventUi.Especial
 )
 
 @Composable
 fun CalculatorButton(
-    button: CalculatorButtonEventUi, currentItemUi: ItemUi, onClick: () -> Unit, modifier: Modifier
+    modifier: Modifier,
+    button: CalculatorButtonEventUi,
+    currentItemUi: ItemUi,
+    onClick: () -> Unit
 ) {
-    // TODO Ocultar boton ',' (o ESPECIAL) cuando se esta en el valor del producto
     Button(onClick = onClick,
         modifier = modifier
             .aspectRatio(1f)
+            .alpha(if (button is CalculatorButtonEventUi.Especial && currentItemUi.isEditValue) 0f else 1f)
             .padding(4.dp),
         enabled = when (button) {
             is CalculatorButtonEventUi.Number -> true
-            is CalculatorButtonEventUi.Clear, is CalculatorButtonEventUi.Multiply, is CalculatorButtonEventUi.Subtract, is CalculatorButtonEventUi.Add, is CalculatorButtonEventUi.Delete -> currentItemUi.value > 0
 
-            is CalculatorButtonEventUi.Decimal -> currentItemUi.quantity > 0
+            is CalculatorButtonEventUi.Clear,
+            is CalculatorButtonEventUi.Multiply,
+            is CalculatorButtonEventUi.Subtract,
+            is CalculatorButtonEventUi.Add,
+            is CalculatorButtonEventUi.Delete -> currentItemUi.value > 0
+
+            is CalculatorButtonEventUi.Especial -> !currentItemUi.isEditValue
         },
         shape = CircleShape,
         colors = if (button in operatorButtons) {
@@ -348,7 +369,13 @@ fun CalculatorButton(
                     is CalculatorButtonEventUi.Subtract -> "-"
                     is CalculatorButtonEventUi.Add -> "+"
                     is CalculatorButtonEventUi.Delete -> "<-"
-                    is CalculatorButtonEventUi.Decimal -> ","
+                    is CalculatorButtonEventUi.Especial -> {
+                        if (currentItemUi.isEditValue) "" // TODO: Esto esta bien!
+                        else if (currentItemUi.isEditMultiply) ","
+                        else if (currentItemUi.isEditSubtract && !currentItemUi.isPercentageSubtract) "%"
+                        else if (currentItemUi.isEditSubtract && currentItemUi.isPercentageSubtract) "$"
+                        else "%"
+                    }
                 },
                 style = MaterialTheme.typography.headlineMedium,
             )

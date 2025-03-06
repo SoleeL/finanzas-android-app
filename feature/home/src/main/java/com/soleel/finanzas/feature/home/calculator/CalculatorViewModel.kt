@@ -3,11 +3,9 @@ package com.soleel.finanzas.feature.home.calculator
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import com.soleel.finanzas.core.ui.R
 
 data class ItemUi(
     val value: Int = 0,
@@ -22,9 +20,13 @@ data class ItemUi(
     val name: String = "",
     val nameError: Int? = null,
 
-    val isMultiply: Boolean = false,
-    val isSubtract: Boolean = false,
-    val isDecimal: Boolean = false,
+    val isEditValue: Boolean = true,
+
+    val isEditMultiply: Boolean = false,
+    val isEditDecimal: Boolean = false,
+
+    val isEditSubtract: Boolean = false,
+    val isPercentageSubtract: Boolean = false
 )
 
 sealed class CalculatorButtonEventUi {
@@ -34,7 +36,9 @@ sealed class CalculatorButtonEventUi {
     data object Subtract : CalculatorButtonEventUi()
     data object Add : CalculatorButtonEventUi()
     data object Delete : CalculatorButtonEventUi()
-    data object Decimal : CalculatorButtonEventUi() // TODO: Convertir a SPECIAL -> Add - Catalog, Multiply - Decimal, Subtract - Percentage/Currency
+
+    //    data object Decimal : CalculatorButtonEventUi() // TODO: Convertir a SPECIAL -> Add - Catalog, Multiply - Decimal, Subtract - Percentage/Currency
+    data object Especial : CalculatorButtonEventUi()
 }
 
 @HiltViewModel
@@ -51,27 +55,7 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
 
     fun onButtonCalculatorEvent(event: CalculatorButtonEventUi) {
         when (event) {
-            is CalculatorButtonEventUi.Number -> {
-                // TODO: Que pasa con el 0??
-
-                _currentItemUi = if (currentItemUi.isMultiply) {
-                    if (currentItemUi.isDecimal) {
-                        val quantityIntPart = currentItemUi.quantity.toInt()
-                        val quantityDecimalPart: Float =
-                            currentItemUi.quantity - currentItemUi.quantity.toInt()
-                        val quantityDecimalPartToInt: Int =
-                            quantityDecimalPart.toString().substringAfter(".").toInt()
-                        val decimalResult: Int = (quantityDecimalPartToInt * 10) + event.value
-
-                        currentItemUi.copy(quantity = "$quantityIntPart.$decimalResult".toFloat())
-                    } else {
-                        currentItemUi.copy(quantity = currentItemUi.quantity + event.value)
-                    }
-                } else {
-                    currentItemUi.copy(value = currentItemUi.value * 10 + event.value)
-                }
-            }
-
+            is CalculatorButtonEventUi.Number -> calculateEvent(event.value)
             is CalculatorButtonEventUi.Clear -> {
                 if (currentItemUi.value > 0) {
                     _currentItemUi = ItemUi()
@@ -83,13 +67,23 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
                 // 2. Mostrar icono de multiplicacion entre QuantityTextField y ValueTextField
                 // 3. Cambiar funcionamiento de los demas operadores
                 if (currentItemUi.value > 0) {
-                    _currentItemUi = currentItemUi.copy(isMultiply = true)
+                    _currentItemUi = currentItemUi.copy(
+                        isEditValue = false,
+                        isEditMultiply = true,
+//                        isEditDecimal = false, // TODO: Definir segun si se pasa desde otro estado
+                        isEditSubtract = false
+                    )
                 }
             }
 
             is CalculatorButtonEventUi.Subtract -> {
                 if (currentItemUi.value > 0) {
-                    _currentItemUi = currentItemUi.copy(isSubtract = true)
+                    _currentItemUi = currentItemUi.copy(
+                        isEditValue = false,
+                        isEditMultiply = false,
+                        isEditDecimal = false,
+                        isEditSubtract = true
+                    )
                 }
             }
 
@@ -103,11 +97,11 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
             }
 
             is CalculatorButtonEventUi.Delete -> {
-                if (currentItemUi.isMultiply) {
+                if (currentItemUi.isEditMultiply) {
 
                 }
 
-                if (currentItemUi.isDecimal) {
+                if (currentItemUi.isEditDecimal) {
 
                 }
 
@@ -120,15 +114,50 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
                 )
             }
 
-            is CalculatorButtonEventUi.Decimal -> {
+            is CalculatorButtonEventUi.Especial -> {
                 // Depende de la moneda, actualmente solo se considera la moneda chilena
 //                if (currentCurrency) {
                 _currentItemUi = currentItemUi.copy(
-                    isDecimal = true
+                    isEditDecimal = true
                 )
 //                }
             }
         }
+    }
+
+    private fun calculateEvent(value: Int) {
+        // TODO: Que pasa si hay mas de una edicion a la vez? -> PROBLEMA PARA EL FUTURO
+
+        if (currentItemUi.isEditValue) {
+            _currentItemUi = currentItemUi.copy(value = currentItemUi.value * 10 + value)
+            return
+        }
+
+        if (currentItemUi.isEditMultiply) {
+            if (currentItemUi.isEditDecimal) {
+                val quantityIntPart = currentItemUi.quantity.toInt()
+                val quantityDecimalPart: Float = currentItemUi.quantity - quantityIntPart
+                val quantityDecimalPartToInt: Int = quantityDecimalPart.toString().substringAfter(".").toInt()
+                val decimalResult: Int = (quantityDecimalPartToInt * 10) + value
+                _currentItemUi = currentItemUi.copy(quantity = "$quantityIntPart.$decimalResult".toFloat())
+                return
+            }
+
+            if (currentItemUi.quantity == 1f) {
+                _currentItemUi = currentItemUi.copy(quantity = value.toFloat())
+                return
+            }
+
+            _currentItemUi = currentItemUi.copy(quantity = (currentItemUi.quantity * 10) + value)
+            return
+        }
+
+        if (currentItemUi.isEditSubtract) {
+            TODO("Que pasa si el subtract ahora es mayor que value?")
+            _currentItemUi = currentItemUi.copy(subtract = currentItemUi.subtract * 10 + value)
+            return
+        }
+
     }
 
     fun addTransaction() {
