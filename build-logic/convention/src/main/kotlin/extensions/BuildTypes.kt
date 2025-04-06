@@ -1,31 +1,42 @@
 package extensions
 
 import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.dsl.CommonExtension
 import com.android.build.api.dsl.LibraryExtension
 import org.gradle.api.Project
 
+
 fun Project.configureBuildTypes(
-    appExtension: ApplicationExtension
+    extension: CommonExtension<*, *, *, *>
 ) {
-    appExtension.apply {
+    extension.apply {
         buildTypes {
-            release {
+            getByName("release") {
                 isMinifyEnabled = false
                 isJniDebuggable = false
             }
 
-            debug {
+            getByName("debug") {
                 isMinifyEnabled = false
                 isJniDebuggable = true
-                applicationIdSuffix = ".debug"
-                resValue("string", "app_name", "finanzas_debug")
+
+                if (extension is ApplicationExtension) {
+                    extension.buildTypes.getByName("debug").apply {
+                        applicationIdSuffix = ".debug"
+                        resValue("string", "app_name", "finanzas_debug")
+                    }
+                }
+            }
+
+            maybeCreate("demo").apply {
+                initWith(getByName("debug"))
+                if (extension is ApplicationExtension) {
+                    extension.buildTypes.getByName("demo").apply {
+                        applicationIdSuffix = ".demo"
+                        resValue("string", "app_name", "finanzas_demo")
+                    }
+                }
             }
         }
     }
-}
-
-fun Project.configureBuildTypes(
-    libraryExtension: LibraryExtension
-) {
-    return
 }

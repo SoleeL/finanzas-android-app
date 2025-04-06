@@ -1,4 +1,4 @@
-package com.soleel.finanzas.data.preferences
+package com.soleel.finanzas.data.preferences.utils
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*

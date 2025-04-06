@@ -5,7 +5,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.soleel.finanzas.data.preferences.AppPreferences
+import com.soleel.finanzas.data.preferences.app.IAppPreferences
 import com.soleel.finanzas.feature.configuration.Backup
 import com.soleel.finanzas.feature.configuration.Calendar
 import com.soleel.finanzas.feature.configuration.ConfigurationGraph
@@ -23,13 +23,12 @@ import com.soleel.finanzas.feature.login.loginNavigationGraph
 import com.soleel.finanzas.feature.menu.menuNavigationGraph
 import kotlinx.serialization.Serializable
 
-
 @Serializable
 object AddGraph // Flujo invocado por la calculadora para ingresar una transaccion
 
 @Composable
 fun FinanzasNavigationGraph(
-    appPreferences: AppPreferences
+    appPreferences: IAppPreferences
 ) {
     val navHostController: NavHostController = rememberNavController()
 

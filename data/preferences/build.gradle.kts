@@ -5,9 +5,13 @@ plugins {
 
 android {
     namespace = "com.soleel.finanzas.data.preferences"
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
     implementation(projects.core.model)
+
     implementation(libs.datastore.preferences)
 }
