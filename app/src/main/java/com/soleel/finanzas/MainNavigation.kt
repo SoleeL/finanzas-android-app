@@ -1,12 +1,10 @@
 package com.soleel.finanzas
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.soleel.finanzas.core.ui.utils.SmartphonePreview
-import com.soleel.finanzas.data.preferences.app.IAppPreferences
 import com.soleel.finanzas.data.preferences.app.MockAppPreferences
 import com.soleel.finanzas.feature.configuration.Backup
 import com.soleel.finanzas.feature.configuration.Calendar
@@ -36,25 +34,9 @@ object AddGraph // Flujo invocado por la calculadora para ingresar una transacci
 
 @Composable
 fun FinanzasNavigationGraph(
-    appPreferences: IAppPreferences
+    startDestination: Any
 ) {
     val navHostController: NavHostController = rememberNavController()
-
-    // ESTA NAVEGACION OCURRE EN UN FUTURO, NO DEINMEDIATO
-    val isLoggedIn: Boolean = appPreferences.getAuthToken()
-        .collectAsState(initial = null).value != null
-    val isAppConfigured: Boolean = appPreferences.getConfiguration()
-        .collectAsState(initial = null).value != null
-
-    val startDestination: Any = if (!isLoggedIn) {
-        LoginGraph
-    } else {
-        if (!isAppConfigured) {
-            ConfigurationGraph
-        } else {
-            HomeGraph
-        }
-    }
 
     NavHost(
         navController = navHostController,
@@ -72,19 +54,17 @@ fun FinanzasNavigationGraph(
                     )
                 },
                 navigateToSignupScreen = { navHostController.navigate(Signup) },
-                backToLoginScreen = { navHostController.popBackStack() },
-                navigateToConfigureGraph = {
-                    navHostController.navigate(
-                        route = ConfigurationGraph,
-                        builder = {
-                            popUpTo(
-                                route = LoginGraph,
-                                popUpToBuilder = { inclusive = true })
-                        }
-                    )
-                },
-                appPreferences
-            )
+                backToLoginScreen = { navHostController.popBackStack() }
+            ) {
+                navHostController.navigate(
+                    route = ConfigurationGraph,
+                    builder = {
+                        popUpTo(
+                            route = LoginGraph,
+                            popUpToBuilder = { inclusive = true })
+                    }
+                )
+            }
 
             configurationNavigationGraph(
                 backToPrevious = { navHostController.popBackStack() },
@@ -94,23 +74,21 @@ fun FinanzasNavigationGraph(
                 navigateToThemeScreen = { navHostController.navigate(Theme) },
                 navigateToNotificationsScreen = { navHostController.navigate(Notifications) },
                 navigateToPasswordScreen = { navHostController.navigate(Password) },
-                navigateToBackupScreen = { navHostController.navigate(Backup) },
-                navigateToHomeGraph = {
-                    navHostController.navigate(
-                        route = HomeGraph,
-                        builder = {
-                            popUpTo(
-                                route = ConfigurationGraph,
-                                popUpToBuilder = { inclusive = true })
-                        }
-                    )
-                },
-                appPreferences = appPreferences
-            )
+                navigateToBackupScreen = { navHostController.navigate(Backup) }
+            ) {
+                navHostController.navigate(
+                    route = HomeGraph,
+                    builder = {
+                        popUpTo(
+                            route = ConfigurationGraph,
+                            popUpToBuilder = { inclusive = true })
+                    }
+                )
+            }
 
-            homeNavigationGraph(appPreferences)
+            homeNavigationGraph()
 
-            menuNavigationGraph(appPreferences)
+            menuNavigationGraph()
         }
     )
 }

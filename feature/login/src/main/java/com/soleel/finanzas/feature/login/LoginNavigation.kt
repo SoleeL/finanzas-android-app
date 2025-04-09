@@ -3,7 +3,6 @@ package com.soleel.finanzas.feature.login
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.soleel.finanzas.data.preferences.app.IAppPreferences
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -19,8 +18,7 @@ fun NavGraphBuilder.loginNavigationGraph(
     navigateToHomeGraph: () -> Unit,
     navigateToSignupScreen: () -> Unit,
     backToLoginScreen: () -> Unit,
-    navigateToConfigureGraph: () -> Unit,
-    appPreferences: IAppPreferences
+    navigateToConfigureGraph: () -> Unit
 ) {
     navigation<LoginGraph>(startDestination = Login) {
         composable<Login> {

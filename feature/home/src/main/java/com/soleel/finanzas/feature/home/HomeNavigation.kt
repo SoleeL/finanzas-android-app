@@ -25,16 +25,13 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.utils.SmartphonePreview
-import com.soleel.finanzas.data.preferences.app.IAppPreferences
 import com.soleel.finanzas.feature.home.calculator.CalculatorScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
 object HomeGraph
 
-fun NavGraphBuilder.homeNavigationGraph(
-    appPreferences: IAppPreferences
-) {
+fun NavGraphBuilder.homeNavigationGraph() {
     composable<HomeGraph> {
         HomeScreen()
     }

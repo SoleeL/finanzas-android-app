@@ -3,7 +3,6 @@ package com.soleel.finanzas.feature.configuration
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.soleel.finanzas.data.preferences.app.IAppPreferences
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -42,8 +41,7 @@ fun NavGraphBuilder.configurationNavigationGraph(
     navigateToNotificationsScreen: () -> Unit,
     navigateToPasswordScreen: () -> Unit,
     navigateToBackupScreen: () -> Unit,
-    navigateToHomeGraph: () -> Unit,
-    appPreferences: IAppPreferences
+    navigateToHomeGraph: () -> Unit
 ) {
     navigation<ConfigurationGraph>(startDestination = Language) {
         composable<Language> {
