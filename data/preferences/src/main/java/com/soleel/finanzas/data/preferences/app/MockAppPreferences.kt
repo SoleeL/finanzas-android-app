@@ -6,8 +6,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 class MockAppPreferences : IAppPreferences {
 
-    private val authTokenFlow = MutableStateFlow<String?>(null)
-    private val configurationFlow = MutableStateFlow<Configuration?>(null)
+    private val authTokenFlow: MutableStateFlow<String?> = MutableStateFlow<String?>("asd")
+
+    private val configurationFlow: MutableStateFlow<Configuration?> = MutableStateFlow<Configuration?>(
+        value = Configuration(
+            "asd",
+            true
+        )
+    )
 
     override suspend fun saveAuthToken(authToken: String) {
         authTokenFlow.value = authToken

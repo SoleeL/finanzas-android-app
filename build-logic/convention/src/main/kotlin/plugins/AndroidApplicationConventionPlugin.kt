@@ -20,7 +20,6 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             }
 
             extensions.configure<ApplicationExtension> {
-
                 defaultConfig.apply {
                     targetSdk = Config.android.targetSdkVersion
                     applicationId = Config.android.applicationId

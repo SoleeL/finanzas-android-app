@@ -5,9 +5,6 @@ plugins {
 
 android {
     namespace = "com.soleel.finanzas.data.preferences"
-    buildFeatures {
-        buildConfig = true
-    }
 }
 
 dependencies {

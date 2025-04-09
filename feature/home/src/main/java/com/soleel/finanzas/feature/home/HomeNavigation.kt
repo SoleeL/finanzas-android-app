@@ -67,13 +67,14 @@ sealed class HomeTopBarScreens<T>(val name: String, val icon: Int, val route: T)
 @SmartphonePreview
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen()
+     HomeScreen()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
-    val navHostController: NavHostController = rememberNavController()
+fun HomeScreen(
+    navHostController: NavHostController = rememberNavController(),
+) {
     val currentDestination: NavDestination? = navHostController.currentBackStackEntryAsState()
         .value?.destination
 

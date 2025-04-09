@@ -36,10 +36,10 @@ object ImplementationPreferencesModule {
     @Singleton
     @Provides
     fun provideAppPreferences(dataStore: DataStore<Preferences>): IAppPreferences {
-        if ("demo" == BuildConfig.BUILD_TYPE) {
+        if (BuildConfig.DEMO) {
             return MockAppPreferences()
-        } else {
-            return ImplementationAppPreferences(dataStore)
         }
+
+        return ImplementationAppPreferences(dataStore)
     }
 }

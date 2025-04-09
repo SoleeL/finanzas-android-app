@@ -10,10 +10,16 @@ fun Project.configureBuildTypes(
     extension: CommonExtension<*, *, *, *>
 ) {
     extension.apply {
+
+        buildFeatures {
+            buildConfig = true
+        }
+
         buildTypes {
             getByName("release") {
                 isMinifyEnabled = false
                 isJniDebuggable = false
+                buildConfigField("Boolean", "DEMO", "false")
             }
 
             getByName("debug") {
@@ -26,16 +32,21 @@ fun Project.configureBuildTypes(
                         resValue("string", "app_name", "finanzas_debug")
                     }
                 }
+
+                buildConfigField("Boolean", "DEMO", "false")
             }
 
             maybeCreate("demo").apply {
                 initWith(getByName("debug"))
+
                 if (extension is ApplicationExtension) {
                     extension.buildTypes.getByName("demo").apply {
                         applicationIdSuffix = ".demo"
                         resValue("string", "app_name", "finanzas_demo")
                     }
                 }
+
+                buildConfigField("Boolean", "DEMO", "true")
             }
         }
     }
