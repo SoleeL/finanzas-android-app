@@ -18,13 +18,26 @@ class MainActivity : ComponentActivity() {
         // https://developer.android.com/develop/ui/views/launch/splash-screen/migrate
         // https://abhishekgururani.medium.com/googles-recommended-way-to-implement-spash-screen-in-your-android-app-6e56be8196a0
 
-        installSplashScreen() AQUI ME QUEDE
+        this.installSplashScreen().apply(
+            block = {
+                setKeepOnScreenCondition(
+                    condition = {
+                        mainViewModel.mainUiState.value is MainUiState.Loading
+                    }
+                )
+            }
+        )
 
         super.onCreate(savedInstanceState)
 
-        setContent (
+        setContent(
             content = {
-                val startDestination: Any by mainViewModel.startDestination.collectAsState()
+                val mainUiState = mainViewModel.mainUiState.collectAsState().value
+                val startDestination: Any = when (mainUiState) {
+                    is MainUiState.Success -> mainUiState.startDestination
+                    is MainUiState.Error -> Error
+                    else -> Error
+                }
 
                 FinanzasTheme(
                     content = {

@@ -10,6 +10,7 @@ android {
 
 dependencies {
     implementation(projects.core.ui)
+    implementation(projects.core.common)
     implementation(projects.core.model)
 
     implementation(projects.data.preferences)
