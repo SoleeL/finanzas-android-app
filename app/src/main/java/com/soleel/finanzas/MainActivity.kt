@@ -17,7 +17,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         // https://developer.android.com/develop/ui/views/launch/splash-screen/migrate
         // https://abhishekgururani.medium.com/googles-recommended-way-to-implement-spash-screen-in-your-android-app-6e56be8196a0
-        setTheme(R.style.Theme_Finanzas) // Este es tu tema real
 
         this.installSplashScreen().apply(
             block = {
