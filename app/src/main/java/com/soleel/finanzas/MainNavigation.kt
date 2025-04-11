@@ -1,17 +1,22 @@
 package com.soleel.finanzas
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -30,9 +35,7 @@ import com.soleel.finanzas.feature.configuration.Theme
 import com.soleel.finanzas.feature.configuration.configurationNavigationGraph
 import com.soleel.finanzas.feature.home.HomeGraph
 import com.soleel.finanzas.feature.home.homeNavigationGraph
-import com.soleel.finanzas.feature.login.Login
 import com.soleel.finanzas.feature.login.LoginGraph
-import com.soleel.finanzas.feature.login.LoginScreen
 import com.soleel.finanzas.feature.login.Signup
 import com.soleel.finanzas.feature.login.loginNavigationGraph
 import com.soleel.finanzas.feature.menu.menuNavigationGraph
@@ -48,6 +51,9 @@ fun FinanzasNavigationGraphPreview() {
 object AddGraph // Flujo invocado por la calculadora para ingresar una transaccion
 
 @Serializable
+object Loading
+
+@Serializable
 object Error
 
 @Composable
@@ -60,6 +66,14 @@ fun FinanzasNavigationGraph(
         navController = navHostController,
         startDestination = startDestination,
         builder = {
+            composable<Loading> {
+                SplashScreen()
+            }
+
+            composable<Error> {
+                ErrorScreen()
+            }
+
             loginNavigationGraph(
                 navigateToHomeGraph = {
                     navHostController.navigate(
@@ -107,12 +121,25 @@ fun FinanzasNavigationGraph(
             homeNavigationGraph()
 
             menuNavigationGraph()
-
-            composable<Error> {
-                ErrorScreen()
-            }
         }
     )
+}
+
+@Composable
+fun SplashScreen() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+            contentDescription = null,
+            tint = Color.Unspecified,
+            modifier = Modifier.size(100.dp)
+        )
+    }
 }
 
 @Composable

@@ -17,6 +17,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         // https://developer.android.com/develop/ui/views/launch/splash-screen/migrate
         // https://abhishekgururani.medium.com/googles-recommended-way-to-implement-spash-screen-in-your-android-app-6e56be8196a0
+        setTheme(R.style.Theme_Finanzas) // Este es tu tema real
 
         this.installSplashScreen().apply(
             block = {
@@ -34,9 +35,9 @@ class MainActivity : ComponentActivity() {
             content = {
                 val mainUiState = mainViewModel.mainUiState.collectAsState().value
                 val startDestination: Any = when (mainUiState) {
+                    is MainUiState.Loading -> Loading
                     is MainUiState.Success -> mainUiState.startDestination
                     is MainUiState.Error -> Error
-                    else -> Error
                 }
 
                 FinanzasTheme(
