@@ -22,7 +22,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.soleel.finanzas.core.ui.utils.SmartphonePreview
+import com.soleel.finanzas.core.ui.utils.LongDevicePreview
 import com.soleel.finanzas.data.preferences.app.MockAppPreferences
 import com.soleel.finanzas.feature.configuration.Backup
 import com.soleel.finanzas.feature.configuration.Calendar
@@ -41,7 +41,7 @@ import com.soleel.finanzas.feature.login.loginNavigationGraph
 import com.soleel.finanzas.feature.menu.menuNavigationGraph
 import kotlinx.serialization.Serializable
 
-@SmartphonePreview
+@LongDevicePreview
 @Composable
 fun FinanzasNavigationGraphPreview() {
    FinanzasNavigationGraph(MockAppPreferences())
