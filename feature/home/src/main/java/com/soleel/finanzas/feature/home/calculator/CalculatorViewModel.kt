@@ -42,9 +42,9 @@ data class CalculatorUiModel(
 
     val isNextOperationInitialDecimal: Boolean = false,
 
-    val historyOperations: LinkedHashSet<CalculatorOperatorButtonUiEvent> = LinkedHashSet<CalculatorOperatorButtonUiEvent>(),
+    val historyOperations: List<CalculatorOperatorButtonUiEvent> = emptyList(),
 
-    val result: Float = 0f // TODO: Debe haber un result para condicionales y otro para mostrar/ QUIZAS NO, Y SOLO BASTA CON TENER UNO QUE HAGA EL CALCULO COMPLETO
+    val result: Float = 0f
 )
 
 data class CalculatorButtonUiState(
@@ -72,6 +72,7 @@ sealed class CalculatorOperatorButtonUiEvent {
 
 @HiltViewModel
 class CalculatorViewModel @Inject constructor() : ViewModel() {
+    // TODO: Cambiar esto por una PILA. El primer item es el que se esta editando y si se quiere borror es este el que se debe borrar
     private var _calculatorUiModels: List<CalculatorUiModel> by mutableStateOf(emptyList())
     val calculatorUiModels: List<CalculatorUiModel> get() = _calculatorUiModels
 
@@ -292,7 +293,8 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
                     previousResult = previousResult / currentCalculatorUiModel.division
                 }
 
-                val newSubtract: Float = (previousResult * (currentCalculatorUiModel.subtract / 100)).toInt().toFloat()
+                val newSubtract: Float =
+                    (previousResult * (currentCalculatorUiModel.subtract / 100)).toInt().toFloat()
                 currentCalculatorUiModel.copy(subtract = newSubtract)
             }
 
@@ -305,30 +307,49 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
         calculateResult()
     }
 
+//    private fun addEventToHistoryOperations(event: CalculatorOperatorButtonUiEvent) {
+//        if (currentCalculatorUiModel.multiply == 0f) {
+//            currentCalculatorUiModel.historyOperations.remove(
+//                CalculatorOperatorButtonUiEvent.Multiply
+//            )
+//        }
+//
+//        if (currentCalculatorUiModel.division == 0f) {
+//            currentCalculatorUiModel.historyOperations.remove(
+//                CalculatorOperatorButtonUiEvent.Division
+//            )
+//        }
+//
+//        if (currentCalculatorUiModel.subtract == 0f) {
+//            currentCalculatorUiModel.historyOperations.remove(
+//                CalculatorOperatorButtonUiEvent.Subtract
+//            )
+//        }
+//
+//        currentCalculatorUiModel.historyOperations.remove(event)
+//        currentCalculatorUiModel.historyOperations.add(event)
+//
+//        _currentCalculatorUiModel = currentCalculatorUiModel.copy(
+//            historyOperations = currentCalculatorUiModel.historyOperations,
+//            isNextOperationInitialDecimal = false
+//        )
+//    }
+
     private fun addEventToHistoryOperations(event: CalculatorOperatorButtonUiEvent) {
-        if (currentCalculatorUiModel.multiply == 0f) {
-            currentCalculatorUiModel.historyOperations.remove(
-                CalculatorOperatorButtonUiEvent.Multiply
+        val updatedHistory = currentCalculatorUiModel.historyOperations
+            .filterNot( // Elimina eventos innecesarios si sus valores son 0
+                predicate = {
+                    (it == CalculatorOperatorButtonUiEvent.Multiply && currentCalculatorUiModel.multiply == 0f) ||
+                            (it == CalculatorOperatorButtonUiEvent.Division && currentCalculatorUiModel.division == 0f) ||
+                            (it == CalculatorOperatorButtonUiEvent.Subtract && currentCalculatorUiModel.subtract == 0f)
+                }
             )
-        }
-
-        if (currentCalculatorUiModel.division == 0f) {
-            currentCalculatorUiModel.historyOperations.remove(
-                CalculatorOperatorButtonUiEvent.Division
-            )
-        }
-
-        if (currentCalculatorUiModel.subtract == 0f) {
-            currentCalculatorUiModel.historyOperations.remove(
-                CalculatorOperatorButtonUiEvent.Subtract
-            )
-        }
-
-        currentCalculatorUiModel.historyOperations.remove(event)
-        currentCalculatorUiModel.historyOperations.add(event)
+            .filterNot( // Elimina duplicado y agrega al final
+                predicate = { it == event }
+            ) + event
 
         _currentCalculatorUiModel = currentCalculatorUiModel.copy(
-            historyOperations = currentCalculatorUiModel.historyOperations,
+            historyOperations = updatedHistory,
             isNextOperationInitialDecimal = false
         )
     }
@@ -355,9 +376,13 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
                     currentCalculatorUiModel.copy(isNextOperationInitialDecimal = false)
                 } else {
                     if (currentCalculatorUiModel.multiply == 0f) {
-                        currentCalculatorUiModel
-                            .historyOperations
-                            .remove(CalculatorOperatorButtonUiEvent.Multiply)
+                        currentCalculatorUiModel.historyOperations
+                            .filterNot( // Elimina eventos innecesarios si sus valores son 0
+                                predicate = {
+                                    (it == CalculatorOperatorButtonUiEvent.Multiply &&
+                                            currentCalculatorUiModel.multiply == 0f)
+                                }
+                            )
                         currentCalculatorUiModel.copy(
                             historyOperations = currentCalculatorUiModel.historyOperations
                         )
@@ -393,9 +418,13 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
                     currentCalculatorUiModel.copy(isNextOperationInitialDecimal = false)
                 } else {
                     if (currentCalculatorUiModel.division == 0f) {
-                        currentCalculatorUiModel
-                            .historyOperations
-                            .remove(CalculatorOperatorButtonUiEvent.Division)
+                        currentCalculatorUiModel.historyOperations
+                            .filterNot( // Elimina eventos innecesarios si sus valores son 0
+                                predicate = {
+                                    (it == CalculatorOperatorButtonUiEvent.Division &&
+                                            currentCalculatorUiModel.division == 0f)
+                                }
+                            )
                         currentCalculatorUiModel.copy(
                             historyOperations = currentCalculatorUiModel.historyOperations
                         )
@@ -428,9 +457,13 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
 
             CalculatorOperatorButtonUiEvent.Subtract -> {
                 if (currentCalculatorUiModel.subtract == 0f) {
-                    currentCalculatorUiModel
-                        .historyOperations
-                        .remove(CalculatorOperatorButtonUiEvent.Subtract)
+                    currentCalculatorUiModel.historyOperations
+                        .filterNot( // Elimina eventos innecesarios si sus valores son 0
+                            predicate = {
+                                (it == CalculatorOperatorButtonUiEvent.Subtract &&
+                                        currentCalculatorUiModel.subtract == 0f)
+                            }
+                        )
                     currentCalculatorUiModel.copy(
                         historyOperations = currentCalculatorUiModel.historyOperations
                     )
@@ -467,51 +500,52 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
                         transform = { calculatorButton ->
                             when (calculatorButton.operator) {
                                 CalculatorOperatorButtonUiEvent.Number -> {
-                                    val newIsEnabled: Boolean = when (currentCalculatorUiModel.historyOperations.lastOrNull()) {
-                                        CalculatorOperatorButtonUiEvent.Multiply -> {
-                                            if (currentCalculatorUiModel.isNextOperationInitialDecimal) {
-                                                true
-                                            } else if (currentCalculatorUiModel.multiply % 1 != 0f) {
-                                                currentCalculatorUiModel.multiply
-                                                    .toString().substringAfter(".")
-                                                    .toInt()
-                                                    .toString()
-                                                    .length < 2
-                                            } else {
-                                                currentCalculatorUiModel.multiply
-                                                    .toInt()
-                                                    .toString()
-                                                    .length < 2
+                                    val newIsEnabled: Boolean =
+                                        when (currentCalculatorUiModel.historyOperations.lastOrNull()) {
+                                            CalculatorOperatorButtonUiEvent.Multiply -> {
+                                                if (currentCalculatorUiModel.isNextOperationInitialDecimal) {
+                                                    true
+                                                } else if (currentCalculatorUiModel.multiply % 1 != 0f) {
+                                                    currentCalculatorUiModel.multiply
+                                                        .toString().substringAfter(".")
+                                                        .toInt()
+                                                        .toString()
+                                                        .length < 2
+                                                } else {
+                                                    currentCalculatorUiModel.multiply
+                                                        .toInt()
+                                                        .toString()
+                                                        .length < 2
+                                                }
                                             }
-                                        }
 
-                                        CalculatorOperatorButtonUiEvent.Division -> {
-                                            if (currentCalculatorUiModel.isNextOperationInitialDecimal) {
-                                                true
-                                            } else if (currentCalculatorUiModel.division % 1 != 0f) {
-                                                currentCalculatorUiModel.division
-                                                    .toString().substringAfter(".")
-                                                    .toInt()
-                                                    .toString()
-                                                    .length < 2
-                                            } else {
-                                                currentCalculatorUiModel.division
-                                                    .toInt()
-                                                    .toString()
-                                                    .length < 2
+                                            CalculatorOperatorButtonUiEvent.Division -> {
+                                                if (currentCalculatorUiModel.isNextOperationInitialDecimal) {
+                                                    true
+                                                } else if (currentCalculatorUiModel.division % 1 != 0f) {
+                                                    currentCalculatorUiModel.division
+                                                        .toString().substringAfter(".")
+                                                        .toInt()
+                                                        .toString()
+                                                        .length < 2
+                                                } else {
+                                                    currentCalculatorUiModel.division
+                                                        .toInt()
+                                                        .toString()
+                                                        .length < 2
+                                                }
                                             }
+
+                                            CalculatorOperatorButtonUiEvent.Subtract -> currentCalculatorUiModel.subtract
+                                                .toInt()
+                                                .toString()
+                                                .length < 7
+
+                                            else -> currentCalculatorUiModel.value
+                                                .toInt()
+                                                .toString()
+                                                .length < 7
                                         }
-
-                                        CalculatorOperatorButtonUiEvent.Subtract -> currentCalculatorUiModel.subtract
-                                            .toInt()
-                                            .toString()
-                                            .length < 7
-
-                                        else -> currentCalculatorUiModel.value
-                                            .toInt()
-                                            .toString()
-                                            .length < 7
-                                    }
 
                                     calculatorButton.copy(
                                         isEnabled = newIsEnabled
@@ -582,28 +616,32 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
                                 }
 
                                 CalculatorOperatorButtonUiEvent.Add -> {
-                                    var newIsEnabled: Boolean = currentCalculatorUiModel.result > 0f ||
+                                    var newIsEnabled: Boolean =
+                                        currentCalculatorUiModel.result > 0f ||
                                                 currentCalculatorUiModel.historyOperations.isNotEmpty()
 
                                     if (currentCalculatorUiModel
                                             .historyOperations
                                             .lastOrNull() == CalculatorOperatorButtonUiEvent.Multiply
-                                        ) {
-                                        newIsEnabled = newIsEnabled && currentCalculatorUiModel.value * currentCalculatorUiModel.multiply > 0f
+                                    ) {
+                                        newIsEnabled =
+                                            newIsEnabled && currentCalculatorUiModel.value * currentCalculatorUiModel.multiply > 0f
                                     }
 
                                     if (currentCalculatorUiModel
                                             .historyOperations
                                             .lastOrNull() == CalculatorOperatorButtonUiEvent.Division
                                     ) {
-                                        newIsEnabled = newIsEnabled && currentCalculatorUiModel.value / currentCalculatorUiModel.division != Float.POSITIVE_INFINITY
+                                        newIsEnabled =
+                                            newIsEnabled && currentCalculatorUiModel.value / currentCalculatorUiModel.division != Float.POSITIVE_INFINITY
                                     }
 
                                     if (currentCalculatorUiModel
                                             .historyOperations
                                             .lastOrNull() == CalculatorOperatorButtonUiEvent.Subtract
                                     ) {
-                                        newIsEnabled = newIsEnabled && currentCalculatorUiModel.result >= 0f
+                                        newIsEnabled =
+                                            newIsEnabled && currentCalculatorUiModel.result >= 0f
                                     }
 
                                     calculatorButton.copy(isEnabled = newIsEnabled)
