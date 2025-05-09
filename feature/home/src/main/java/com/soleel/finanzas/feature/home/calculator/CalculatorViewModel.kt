@@ -50,7 +50,8 @@ data class CalculatorUiModel(
 data class CalculatorButtonUiState(
     val value: String,
     var isEnabled: Boolean,
-    val operator: CalculatorOperatorButtonUiEvent
+    val operator: CalculatorOperatorButtonUiEvent,
+    val weight: Float = 1f
 )
 
 sealed class CalculatorOperatorButtonUiEvent {
@@ -70,6 +71,11 @@ sealed class CalculatorOperatorButtonUiEvent {
     data object Delete : CalculatorOperatorButtonUiEvent()
 }
 
+sealed class ItemInCartUiEvent {
+    data class Select(val calculatorUiModel: CalculatorUiModel) : ItemInCartUiEvent()
+    data class Remove(val calculatorUiModel: CalculatorUiModel) : ItemInCartUiEvent()
+}
+
 @HiltViewModel
 class CalculatorViewModel @Inject constructor() : ViewModel() {
     // TODO: Cambiar esto por una PILA. El primer item es el que se esta editando y si se quiere borror es este el que se debe borrar
@@ -82,8 +88,13 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
     private var _calculatorButtonsUi: List<List<CalculatorButtonUiState>> by mutableStateOf(
         listOf(
             listOf(
-                CalculatorButtonUiState("G", false, CalculatorOperatorButtonUiEvent.Save),
-                CalculatorButtonUiState("B", false, CalculatorOperatorButtonUiEvent.Reset),
+//                CalculatorButtonUiState("G", false, CalculatorOperatorButtonUiEvent.Save),
+                CalculatorButtonUiState(
+                    "Limpiar",
+                    false,
+                    CalculatorOperatorButtonUiEvent.Reset,
+                    2f
+                ),
                 CalculatorButtonUiState("C", false, CalculatorOperatorButtonUiEvent.Clear),
                 CalculatorButtonUiState("%", false, CalculatorOperatorButtonUiEvent.Percent)
             ),
@@ -251,19 +262,19 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
         if (currentCalculatorUiModel.multiply != 0f && // TODO: ARREGLAR
             currentCalculatorUiModel.historyOperations.contains(CalculatorOperatorButtonUiEvent.Multiply)
         ) {
-            newResult = newResult * currentCalculatorUiModel.multiply
+            newResult *= currentCalculatorUiModel.multiply
         }
 
         if (currentCalculatorUiModel.division != 0f &&
             currentCalculatorUiModel.historyOperations.contains(CalculatorOperatorButtonUiEvent.Division)
         ) {
-            newResult = newResult / currentCalculatorUiModel.division
+            newResult /= currentCalculatorUiModel.division
         }
 
         if (currentCalculatorUiModel.subtract != 0f &&
             currentCalculatorUiModel.historyOperations.contains(CalculatorOperatorButtonUiEvent.Subtract)
         ) {
-            newResult = newResult - currentCalculatorUiModel.subtract
+            newResult -= currentCalculatorUiModel.subtract
         }
 
         _currentCalculatorUiModel = currentCalculatorUiModel.copy(result = newResult)
@@ -286,11 +297,11 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
                 var previousResult: Float = currentCalculatorUiModel.value
 
                 if (currentCalculatorUiModel.multiply > 0f) {
-                    previousResult = previousResult * currentCalculatorUiModel.multiply
+                    previousResult *= currentCalculatorUiModel.multiply
                 }
 
                 if (currentCalculatorUiModel.division > 0f) {
-                    previousResult = previousResult / currentCalculatorUiModel.division
+                    previousResult /= currentCalculatorUiModel.division
                 }
 
                 val newSubtract: Float =
@@ -306,34 +317,6 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
 
         calculateResult()
     }
-
-//    private fun addEventToHistoryOperations(event: CalculatorOperatorButtonUiEvent) {
-//        if (currentCalculatorUiModel.multiply == 0f) {
-//            currentCalculatorUiModel.historyOperations.remove(
-//                CalculatorOperatorButtonUiEvent.Multiply
-//            )
-//        }
-//
-//        if (currentCalculatorUiModel.division == 0f) {
-//            currentCalculatorUiModel.historyOperations.remove(
-//                CalculatorOperatorButtonUiEvent.Division
-//            )
-//        }
-//
-//        if (currentCalculatorUiModel.subtract == 0f) {
-//            currentCalculatorUiModel.historyOperations.remove(
-//                CalculatorOperatorButtonUiEvent.Subtract
-//            )
-//        }
-//
-//        currentCalculatorUiModel.historyOperations.remove(event)
-//        currentCalculatorUiModel.historyOperations.add(event)
-//
-//        _currentCalculatorUiModel = currentCalculatorUiModel.copy(
-//            historyOperations = currentCalculatorUiModel.historyOperations,
-//            isNextOperationInitialDecimal = false
-//        )
-//    }
 
     private fun addEventToHistoryOperations(event: CalculatorOperatorButtonUiEvent) {
         val updatedHistory = currentCalculatorUiModel.historyOperations
@@ -616,32 +599,31 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
                                 }
 
                                 CalculatorOperatorButtonUiEvent.Add -> {
-                                    var newIsEnabled: Boolean =
-                                        currentCalculatorUiModel.result > 0f ||
+                                    var newIsEnabled: Boolean = currentCalculatorUiModel.result > 0f ||
                                                 currentCalculatorUiModel.historyOperations.isNotEmpty()
 
                                     if (currentCalculatorUiModel
                                             .historyOperations
                                             .lastOrNull() == CalculatorOperatorButtonUiEvent.Multiply
                                     ) {
-                                        newIsEnabled =
-                                            newIsEnabled && currentCalculatorUiModel.value * currentCalculatorUiModel.multiply > 0f
+                                        newIsEnabled = newIsEnabled &&
+                                                currentCalculatorUiModel.value * currentCalculatorUiModel.multiply > 0f
                                     }
 
                                     if (currentCalculatorUiModel
                                             .historyOperations
                                             .lastOrNull() == CalculatorOperatorButtonUiEvent.Division
                                     ) {
-                                        newIsEnabled =
-                                            newIsEnabled && currentCalculatorUiModel.value / currentCalculatorUiModel.division != Float.POSITIVE_INFINITY
+                                        newIsEnabled = newIsEnabled &&
+                                                currentCalculatorUiModel.value / currentCalculatorUiModel.division != Float.POSITIVE_INFINITY
                                     }
 
                                     if (currentCalculatorUiModel
                                             .historyOperations
                                             .lastOrNull() == CalculatorOperatorButtonUiEvent.Subtract
                                     ) {
-                                        newIsEnabled =
-                                            newIsEnabled && currentCalculatorUiModel.result >= 0f
+                                        newIsEnabled = newIsEnabled &&
+                                                currentCalculatorUiModel.subtract != 0f
                                     }
 
                                     calculatorButton.copy(isEnabled = newIsEnabled)
@@ -683,5 +665,22 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
             )
 
         _calculatorButtonsUi = calculatorButtonsUiUpdated
+    }
+
+    fun onItemInCartEvent(event: ItemInCartUiEvent) {
+        when (event) {
+            is ItemInCartUiEvent.Select -> selectItemInCart(event.calculatorUiModel)
+            is ItemInCartUiEvent.Remove -> removeItemInCart(event.calculatorUiModel)
+        }
+        updateButtonsState()
+    }
+
+    private fun selectItemInCart(calculatorUiModel: CalculatorUiModel) {
+        _currentCalculatorUiModel = calculatorUiModel.copy()
+        removeItemInCart(calculatorUiModel)
+    }
+
+    private fun removeItemInCart(calculatorUiModel: CalculatorUiModel) {
+        _calculatorUiModels = calculatorUiModels - calculatorUiModel
     }
 }

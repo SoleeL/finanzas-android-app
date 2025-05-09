@@ -1,21 +1,27 @@
 package com.soleel.finanzas.feature.home.calculator
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.Button
@@ -33,6 +39,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,10 +53,8 @@ import com.soleel.finanzas.core.ui.utils.LongDevicePreview
 import com.soleel.finanzas.core.ui.utils.ShortDevicePreview
 import com.soleel.finanzas.core.ui.utils.WithFakeSystemBars
 import com.soleel.finanzas.core.ui.utils.WithFakeTopAppBar
-import kotlin.Int
-import kotlin.String
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @LongDevicePreview
 @Composable
 fun CalculatorScreenLongPreview() {
@@ -64,7 +69,6 @@ fun CalculatorScreenLongPreview() {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @ShortDevicePreview
 @Composable
 fun CalculatorScreenShortPreview() {
@@ -104,6 +108,8 @@ fun CalculatorScreen(
         )
     }
 
+    val coroutineScope = rememberCoroutineScope()
+
     BottomSheetScaffold(
         sheetContent = {
             calculatorViewModel.calculatorButtonsUi.forEach(
@@ -114,7 +120,7 @@ fun CalculatorScreen(
                             row.forEach(
                                 action = { calculatorButton ->
                                     CalculatorButton(
-                                        modifier = Modifier.weight(1f),
+                                        modifier = Modifier.weight(calculatorButton.weight),
                                         value = calculatorButton.value,
                                         isEnabled = calculatorButton.isEnabled,
                                         isNumber = calculatorButton.operator == CalculatorOperatorButtonUiEvent.Number,
@@ -192,21 +198,34 @@ fun CalculatorScreen(
                 content = {
                     ItemInCalculator(
                         itemInCalculator = currentItemUi,
-                        onNameChanged = { it -> calculatorViewModel.onNameChanged(name = it) }
+                        onNameChanged = { calculatorViewModel.onNameChanged(name = it) }
                     )
 
                     LazyColumn(
-//                        contentPadding = PaddingValues(bottom = 72.dp),
                         content = {
-                            itemsInCartUi.forEach(
-                                action = { itemInCart: CalculatorUiModel ->
-                                    item(
-                                        content = {
-                                            ItemInCart(itemInCart)
+                            itemsIndexed(
+                                items = itemsInCartUi,
+                            ) { index, itemInCart ->
+
+                                ItemInCart(
+                                    itemInCart = itemInCart,
+                                    index = index,
+                                    onSelect = {
+                                        calculatorViewModel.onItemInCartEvent(
+                                            ItemInCartUiEvent.Select(itemInCart)
+                                        )
+
+                                        coroutineScope.launch {
+                                            bottomSheetScaffoldState.bottomSheetState.expand()
                                         }
-                                    )
-                                }
-                            )
+                                    },
+                                    onRemove = {
+                                        calculatorViewModel.onItemInCartEvent(
+                                            ItemInCartUiEvent.Remove(itemInCart)
+                                        )
+                                    }
+                                )
+                            }
                         }
                     )
                 }
@@ -225,26 +244,30 @@ fun ItemInCalculator(
     })
 
     Column(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.primaryContainer)
+            .padding(horizontal = 4.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.Top,
         content = {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End,
                 content = {
                     Column(
-                        modifier = Modifier
-                            .background(
-                                color = if (!itemInCalculator.historyOperations.isEmpty()) {
-                                    Color.Transparent
-                                } else {
-                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-                                },
-                                shape = RoundedCornerShape(12.dp)
-                            )
-                            .padding(start = 4.dp, end = 4.dp, top = 2.dp, bottom = 2.dp),
+                        modifier = if (itemInCalculator.historyOperations.isNotEmpty()) {
+                            Modifier
+                                .background(color = Color.Transparent)
+                                .padding(end = 4.dp)
+                        } else {
+                            Modifier
+                                .background(
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    shape = RoundedCornerShape(12.dp)
+                                )
+                                .padding(horizontal = 6.dp)
+                        },
                         content = {
                             val valueAmount: Int = itemInCalculator.value.toInt()
                             val valueAmountCLP: String = currencyVisualTransformation
@@ -254,7 +277,11 @@ fun ItemInCalculator(
                             Text(
                                 text = valueAmountCLP,
                                 style = MaterialTheme.typography.headlineSmall,
-                                color = MaterialTheme.colorScheme.secondary
+                                color = if (itemInCalculator.historyOperations.isNotEmpty()) {
+                                    MaterialTheme.colorScheme.primary
+                                } else {
+                                    MaterialTheme.colorScheme.onPrimary
+                                }
                             )
                         }
                     )
@@ -263,16 +290,18 @@ fun ItemInCalculator(
                         )
                     ) {
                         Column(
-                            modifier = Modifier
-                                .background(
-                                    color = if (itemInCalculator.historyOperations.lastOrNull() != CalculatorOperatorButtonUiEvent.Multiply) {
-                                        Color.Transparent
-                                    } else {
-                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-                                    },
-                                    shape = RoundedCornerShape(12.dp)
-                                )
-                                .padding(horizontal = 4.dp, vertical = 2.dp),
+                            modifier = if (itemInCalculator.historyOperations.lastOrNull() != CalculatorOperatorButtonUiEvent.Multiply) {
+                                Modifier
+                                    .background(color = Color.Transparent)
+                                    .padding(start = 2.dp, end = 4.dp)
+                            } else {
+                                Modifier
+                                    .background(
+                                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                        shape = RoundedCornerShape(12.dp)
+                                    )
+                                    .padding(horizontal = 6.dp)
+                            },
                             content = {
                                 val multiply: String = if (
                                     itemInCalculator
@@ -289,9 +318,13 @@ fun ItemInCalculator(
                                     itemInCalculator.multiply.toInt().toString()
                                 }
                                 Text(
-                                    text = " x $multiply", // TODO: Cambiar esto por una transformacion visual
+                                    text = "x $multiply", // TODO: Cambiar esto por una transformacion visual
                                     style = MaterialTheme.typography.headlineSmall,
-                                    color = MaterialTheme.colorScheme.secondary
+                                    color = if (itemInCalculator.historyOperations.lastOrNull() != CalculatorOperatorButtonUiEvent.Multiply) {
+                                        MaterialTheme.colorScheme.primary
+                                    } else {
+                                        MaterialTheme.colorScheme.onPrimary
+                                    }
                                 )
                             }
                         )
@@ -301,21 +334,18 @@ fun ItemInCalculator(
                         )
                     ) {
                         Column(
-                            modifier = Modifier
-                                .background(
-                                    color = if (itemInCalculator.historyOperations.lastOrNull() != CalculatorOperatorButtonUiEvent.Division) {
-                                        Color.Transparent
-                                    } else {
-                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-                                    },
-                                    shape = RoundedCornerShape(12.dp)
-                                )
-                                .padding(
-                                    start = 4.dp,
-                                    end = 4.dp,
-                                    top = 2.dp,
-                                    bottom = 2.dp
-                                ),
+                            modifier = if (itemInCalculator.historyOperations.lastOrNull() != CalculatorOperatorButtonUiEvent.Division) {
+                                Modifier
+                                    .background(color = Color.Transparent)
+                                    .padding(start = 2.dp, end = 4.dp)
+                            } else {
+                                Modifier
+                                    .background(
+                                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                        shape = RoundedCornerShape(12.dp)
+                                    )
+                                    .padding(horizontal = 6.dp)
+                            },
                             content = {
                                 val division: String = if (
                                     itemInCalculator
@@ -332,9 +362,13 @@ fun ItemInCalculator(
                                     itemInCalculator.division.toInt().toString()
                                 }
                                 Text(
-                                    text = " / $division",
+                                    text = "/ $division",
                                     style = MaterialTheme.typography.headlineSmall,
-                                    color = MaterialTheme.colorScheme.secondary
+                                    color = if (itemInCalculator.historyOperations.lastOrNull() != CalculatorOperatorButtonUiEvent.Division) {
+                                        MaterialTheme.colorScheme.primary
+                                    } else {
+                                        MaterialTheme.colorScheme.onPrimary
+                                    }
                                 )
                             }
                         )
@@ -344,21 +378,18 @@ fun ItemInCalculator(
                         )
                     ) {
                         Column(
-                            modifier = Modifier
-                                .background( // TODO: Si se ingresa un valor no valido, el background cambia a rojo
-                                    color = if (itemInCalculator.historyOperations.lastOrNull() != CalculatorOperatorButtonUiEvent.Subtract) {
-                                        Color.Transparent
-                                    } else {
-                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-                                    },
-                                    shape = RoundedCornerShape(12.dp)
-                                )
-                                .padding(
-                                    start = 4.dp,
-                                    end = 4.dp,
-                                    top = 2.dp,
-                                    bottom = 2.dp
-                                ),
+                            modifier = if (itemInCalculator.historyOperations.lastOrNull() != CalculatorOperatorButtonUiEvent.Subtract) {
+                                Modifier
+                                    .background(color = Color.Transparent)
+                                    .padding(start = 2.dp)
+                            } else {
+                                Modifier
+                                    .background(
+                                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                        shape = RoundedCornerShape(12.dp)
+                                    )
+                                    .padding(horizontal = 6.dp)
+                            },
                             content = {
                                 val subtractAmountCLP: String =
                                     if (itemInCalculator.subtract == 0f) {
@@ -373,15 +404,17 @@ fun ItemInCalculator(
                                     }
 
                                 Text(
-                                    text = " - $subtractAmountCLP",
+                                    text = "- $subtractAmountCLP",
                                     style = MaterialTheme.typography.headlineSmall,
-                                    color = MaterialTheme.colorScheme.secondary
+                                    color = if (itemInCalculator.historyOperations.lastOrNull() != CalculatorOperatorButtonUiEvent.Subtract) {
+                                        MaterialTheme.colorScheme.primary
+                                    } else {
+                                        MaterialTheme.colorScheme.onPrimary
+                                    }
                                 )
                             }
                         )
                     }
-
-
                 }
             )
 
@@ -389,8 +422,8 @@ fun ItemInCalculator(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
+                    .fillMaxWidth(),
+//                    .padding(horizontal = 8.dp),
                 content = {
                     val resultAmount: Int = itemInCalculator.result.toInt()
                     val resultAmountCLP: String = currencyVisualTransformation
@@ -422,8 +455,8 @@ fun ItemInCalculator(
                 onValueChange = { onNameChanged(it) },
                 singleLine = true,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 2.dp),
+                    .fillMaxWidth(),
+//                    .padding(horizontal = 8.dp, vertical = 2.dp),
                 enabled = itemInCalculator.name.isNotEmpty() || itemInCalculator.result > 0,
                 textStyle = LocalTextStyle.current.copy(color = Color.Black),
                 interactionSource = interactionSource,
@@ -467,7 +500,7 @@ fun ItemInCalculator(
     )
 }
 
-//@ShortDevicePreview
+@ShortDevicePreview
 @Composable
 fun ItemsInCartPreview() {
     val currentItemInCalculator: CalculatorUiModel = CalculatorUiModel(
@@ -486,7 +519,7 @@ fun ItemsInCartPreview() {
             multiply = 5f,
             division = 2f,
             subtract = 0f,
-            result = 0f
+            result = 2500f
         ),
         CalculatorUiModel(
             name = "Comida para perro",
@@ -494,12 +527,19 @@ fun ItemsInCartPreview() {
             multiply = 0f,
             division = 0f,
             subtract = 0f,
-            result = 0f
+            result = 1000f
+        ),
+        CalculatorUiModel(
+            name = "Comida para gato",
+            value = 1000f,
+            multiply = 0f,
+            division = 0f,
+            subtract = 500f,
+            result = 500f
         ),
     )
 
     Column(
-//        modifier = Modifier.padding(paddingValues),
         content = {
             ItemInCalculator(
                 itemInCalculator = currentItemInCalculator,
@@ -507,17 +547,18 @@ fun ItemsInCartPreview() {
             )
 
             LazyColumn(
-//                contentPadding = PaddingValues(bottom = 72.dp),
                 content = {
-                    itemsInCartUi.forEach(
-                        action = { itemInCart: CalculatorUiModel ->
-                            item(
-                                content = {
-                                    ItemInCart(itemInCart)
-                                }
-                            )
-                        }
-                    )
+                    itemsIndexed(
+                        items = itemsInCartUi
+                    ) { index, itemInCart ->
+
+                        ItemInCart(
+                            itemInCart = itemInCart,
+                            index = index,
+                            onSelect = {},
+                            onRemove = {}
+                        )
+                    }
                 }
             )
         }
@@ -525,7 +566,12 @@ fun ItemsInCartPreview() {
 }
 
 @Composable
-fun ItemInCart(itemInCart: CalculatorUiModel) {
+fun ItemInCart(
+    itemInCart: CalculatorUiModel,
+    index: Int,
+    onSelect: () -> Unit,
+    onRemove: () -> Unit
+) {
     val currencyVisualTransformation by remember(calculation = {
         mutableStateOf(CLPCurrencyVisualTransformation())
     })
@@ -557,102 +603,107 @@ fun ItemInCart(itemInCart: CalculatorUiModel) {
         )
         .text.toString()
 
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.End,
-        content = {
-            Text(
-                text = valueAmountCLP,
-                modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.secondary
-            )
-
-            if (itemInCart.multiply != 0f) {
-                Text(
-                    text = " x $multiplyFormated",
-                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-            }
-
-            if (itemInCart.division != 0f) {
-                Text(
-                    text = " / $divisionFormated",
-                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-            }
-
-            if (itemInCart.subtract != 0f) {
-                Text(
-                    text = " - $subtractAmountCLP",
-                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-            }
-        }
-    )
-
-    Row(
+            .height(IntrinsicSize.Min)
+            .padding(vertical = 4.dp)
+            .background(if (index % 2 == 0) Color.Transparent else MaterialTheme.colorScheme.surface),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp),
         content = {
-            Text(
-                text = "=",
-                style = MaterialTheme.typography.headlineLarge
-            )
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 4.dp, vertical = 8.dp)
+                    .clickable(onClick = onSelect),
+                content = {
+                    Text(
+                        text = itemInCart.name,
+                        style = MaterialTheme.typography.headlineSmall,
+                    )
 
-            Text(
-                text = if (itemInCart.result < 0f) "- $resultAmountCLP" else resultAmountCLP,
-                style = MaterialTheme.typography.headlineLarge
+                    Row(
+                        modifier = Modifier
+                            .padding(start = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        content = {
+                            Text(
+                                text = valueAmountCLP,
+                                modifier = Modifier.padding(end = 4.dp),
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.secondary
+                            )
+
+                            if (itemInCart.multiply != 0f) {
+                                Text(
+                                    text = "x $multiplyFormated",
+                                    modifier = Modifier.padding(start = 2.dp, end = 4.dp),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.secondary
+                                )
+                            }
+
+                            if (itemInCart.division != 0f) {
+                                Text(
+                                    text = "/ $divisionFormated",
+                                    modifier = Modifier.padding(start = 2.dp, end = 4.dp),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.secondary
+                                )
+                            }
+
+                            if (itemInCart.subtract != 0f) {
+                                Text(
+                                    text = "- $subtractAmountCLP",
+                                    modifier = Modifier.padding(start = 2.dp),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.secondary
+                                )
+                            }
+                        }
+                    )
+
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(start = 12.dp),
+                        content = {
+                            Text(
+                                text = if (itemInCart.result < 0f) "- $resultAmountCLP" else resultAmountCLP,
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                        }
+                    )
+                }
+            )
+            Column(
+                modifier = Modifier
+                    .background(
+                        color = MaterialTheme.colorScheme.tertiaryContainer,
+                        shape = RoundedCornerShape(
+                            topStartPercent = 20,
+                            topEndPercent = 0,
+                            bottomEndPercent = 0,
+                            bottomStartPercent = 20
+                        )
+                    )
+                    .fillMaxHeight()
+                    .width(60.dp)
+                    .clickable(onClick = onRemove),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                content = {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.tertiary
+                    )
+                }
             )
         }
     )
-
-    // TODO: No logro que al presionar 'Back' y tras bajarse el teclado el foco en el
-    //  TextField se libere, el cursor sigue marcando el foco.
-    // TODO: Cambiar color condicionado a theme
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 2.dp)
-    ) {
-        Icon(
-            imageVector = Icons.Default.Create,
-            contentDescription = null,
-            modifier = Modifier.padding(end = 8.dp),
-            tint = if (itemInCart.name.isNotEmpty() || itemInCart.result > 0f) {
-                LocalContentColor.current
-            } else {
-                Color.LightGray
-            }
-        )
-
-        Text(
-            text = if (itemInCart.name.isNotEmpty()) itemInCart.name
-            else stringResource(R.string.calculator_item_name_label),
-            modifier = Modifier.weight(1f),
-            style = LocalTextStyle.current.copy(
-                color = if (itemInCart.name.isNotEmpty() || itemInCart.result > 0) {
-                    LocalContentColor.current
-                } else {
-                    Color.LightGray
-                }
-            )
-        )
-    }
 }
 
 
