@@ -44,7 +44,9 @@ data class CalculatorUiModel(
 
     val historyOperations: List<CalculatorOperatorButtonUiEvent> = emptyList(),
 
-    val result: Float = 0f
+    val result: Float = 0f,
+
+//    val enableDelete: Boolean = false
 )
 
 data class CalculatorButtonUiState(
@@ -57,7 +59,6 @@ data class CalculatorButtonUiState(
 sealed class CalculatorOperatorButtonUiEvent {
     data object Number : CalculatorOperatorButtonUiEvent()
 
-    data object Save : CalculatorOperatorButtonUiEvent()
     data object Reset : CalculatorOperatorButtonUiEvent()
     data object Clear : CalculatorOperatorButtonUiEvent()
     data object Percent : CalculatorOperatorButtonUiEvent()
@@ -69,6 +70,8 @@ sealed class CalculatorOperatorButtonUiEvent {
 
     data object Decimal : CalculatorOperatorButtonUiEvent()
     data object Delete : CalculatorOperatorButtonUiEvent()
+
+//    data object Save : CalculatorOperatorButtonUiEvent()
 }
 
 sealed class ItemInCartUiEvent {
@@ -78,7 +81,6 @@ sealed class ItemInCartUiEvent {
 
 @HiltViewModel
 class CalculatorViewModel @Inject constructor() : ViewModel() {
-    // TODO: Cambiar esto por una PILA. El primer item es el que se esta editando y si se quiere borror es este el que se debe borrar
     private var _calculatorUiModels: List<CalculatorUiModel> by mutableStateOf(emptyList())
     val calculatorUiModels: List<CalculatorUiModel> get() = _calculatorUiModels
 
@@ -88,7 +90,6 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
     private var _calculatorButtonsUi: List<List<CalculatorButtonUiState>> by mutableStateOf(
         listOf(
             listOf(
-//                CalculatorButtonUiState("G", false, CalculatorOperatorButtonUiEvent.Save),
                 CalculatorButtonUiState(
                     "Limpiar",
                     false,
@@ -135,7 +136,6 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
         when (event.operator) {
             is CalculatorOperatorButtonUiEvent.Number -> numberEvent(event.value.toInt())
 
-            is CalculatorOperatorButtonUiEvent.Save -> saveTransaction()
             is CalculatorOperatorButtonUiEvent.Reset -> resetTransaction()
             is CalculatorOperatorButtonUiEvent.Clear -> clearCalculatorItem()
             is CalculatorOperatorButtonUiEvent.Percent -> convertToPercent()
@@ -241,10 +241,6 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    private fun saveTransaction() {
-        TODO("Navegar a vista de seleccion de cuenta")
-    }
-
     private fun resetTransaction() {
         if (_calculatorUiModels.isNotEmpty()) {
             _calculatorUiModels = emptyList()
@@ -339,11 +335,12 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
 
     private fun addCalculatorItem() {
         if (currentCalculatorUiModel.name.isBlank()) {
-            _currentCalculatorUiModel =
-                currentCalculatorUiModel.copy(name = "item ${calculatorUiModels.size + 1}")
+            _currentCalculatorUiModel = currentCalculatorUiModel.copy(
+                name = "item ${calculatorUiModels.size + 1}"
+            )
         }
 
-        _calculatorUiModels = calculatorUiModels + currentCalculatorUiModel
+        _calculatorUiModels = listOf(currentCalculatorUiModel) + calculatorUiModels
         _currentCalculatorUiModel = CalculatorUiModel()
     }
 
@@ -359,15 +356,14 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
                     currentCalculatorUiModel.copy(isNextOperationInitialDecimal = false)
                 } else {
                     if (currentCalculatorUiModel.multiply == 0f) {
-                        currentCalculatorUiModel.historyOperations
+                        val filteredOperations: List<CalculatorOperatorButtonUiEvent> = currentCalculatorUiModel.historyOperations
                             .filterNot( // Elimina eventos innecesarios si sus valores son 0
                                 predicate = {
-                                    (it == CalculatorOperatorButtonUiEvent.Multiply &&
-                                            currentCalculatorUiModel.multiply == 0f)
+                                    (it == CalculatorOperatorButtonUiEvent.Multiply)
                                 }
                             )
                         currentCalculatorUiModel.copy(
-                            historyOperations = currentCalculatorUiModel.historyOperations
+                            historyOperations = filteredOperations
                         )
                     } else {
                         val newMultiply: Float = if (currentCalculatorUiModel.multiply % 1 != 0f) {
@@ -401,7 +397,7 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
                     currentCalculatorUiModel.copy(isNextOperationInitialDecimal = false)
                 } else {
                     if (currentCalculatorUiModel.division == 0f) {
-                        currentCalculatorUiModel.historyOperations
+                        val filteredOperations: List<CalculatorOperatorButtonUiEvent> = currentCalculatorUiModel.historyOperations
                             .filterNot( // Elimina eventos innecesarios si sus valores son 0
                                 predicate = {
                                     (it == CalculatorOperatorButtonUiEvent.Division &&
@@ -409,7 +405,7 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
                                 }
                             )
                         currentCalculatorUiModel.copy(
-                            historyOperations = currentCalculatorUiModel.historyOperations
+                            historyOperations = filteredOperations
                         )
                     } else {
                         val newDivision: Float = if (currentCalculatorUiModel.division % 1 != 0f) {
@@ -440,7 +436,7 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
 
             CalculatorOperatorButtonUiEvent.Subtract -> {
                 if (currentCalculatorUiModel.subtract == 0f) {
-                    currentCalculatorUiModel.historyOperations
+                    val filteredOperations: List<CalculatorOperatorButtonUiEvent> = currentCalculatorUiModel.historyOperations
                         .filterNot( // Elimina eventos innecesarios si sus valores son 0
                             predicate = {
                                 (it == CalculatorOperatorButtonUiEvent.Subtract &&
@@ -448,7 +444,7 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
                             }
                         )
                     currentCalculatorUiModel.copy(
-                        historyOperations = currentCalculatorUiModel.historyOperations
+                        historyOperations = filteredOperations
                     )
                 } else {
                     val newSubtract: Float = if (currentCalculatorUiModel.subtract > 9f) {
@@ -535,10 +531,6 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
                                     )
                                 }
 
-                                CalculatorOperatorButtonUiEvent.Save -> {
-                                    calculatorButton.copy(isEnabled = calculatorUiModels.isNotEmpty())
-                                }
-
                                 CalculatorOperatorButtonUiEvent.Reset -> {
                                     calculatorButton.copy(isEnabled = calculatorUiModels.isNotEmpty())
                                 }
@@ -599,7 +591,8 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
                                 }
 
                                 CalculatorOperatorButtonUiEvent.Add -> {
-                                    var newIsEnabled: Boolean = currentCalculatorUiModel.result > 0f ||
+                                    var newIsEnabled: Boolean =
+                                        currentCalculatorUiModel.result > 0f ||
                                                 currentCalculatorUiModel.historyOperations.isNotEmpty()
 
                                     if (currentCalculatorUiModel
@@ -676,11 +669,15 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun selectItemInCart(calculatorUiModel: CalculatorUiModel) {
-        _currentCalculatorUiModel = calculatorUiModel.copy()
         removeItemInCart(calculatorUiModel)
+        _currentCalculatorUiModel = calculatorUiModel.copy()
     }
 
     private fun removeItemInCart(calculatorUiModel: CalculatorUiModel) {
         _calculatorUiModels = calculatorUiModels - calculatorUiModel
+    }
+
+    fun saveCart() {
+        TODO("Navegar a vista de seleccion de cuenta")
     }
 }

@@ -1,9 +1,9 @@
 package com.soleel.finanzas.feature.home.calculator
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -22,6 +23,9 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.Button
@@ -35,7 +39,9 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +49,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
@@ -98,8 +105,8 @@ fun CalculatorScreen(
     val bottomSheetScaffoldState: BottomSheetScaffoldState = remember {
         BottomSheetScaffoldState(
             bottomSheetState = SheetState(
-                initialValue = SheetValue.Expanded, // 👈 FORZAR EXPANDIDO INICIAL
                 skipPartiallyExpanded = false, // 👈 EVITAR QUE SE OCULTE COMPLETO
+                initialValue = SheetValue.Expanded, // 👈 FORZAR EXPANDIDO INICIAL
                 confirmValueChange = { sheetValue ->
                     sheetValue != SheetValue.Hidden // 👈 EVITAR QUE PUEDA USAR EL ESTADO OCULTO
                 }
@@ -109,6 +116,10 @@ fun CalculatorScreen(
     }
 
     val coroutineScope = rememberCoroutineScope()
+
+    val openResetDialog: MutableState<Boolean> = remember { mutableStateOf(false) }
+    val openReplaceDialog: MutableState<Boolean> = remember { mutableStateOf(false) }
+    val selectedItemInCart: MutableState<CalculatorUiModel?> = remember { mutableStateOf<CalculatorUiModel?>(null) }
 
     BottomSheetScaffold(
         sheetContent = {
@@ -125,9 +136,13 @@ fun CalculatorScreen(
                                         isEnabled = calculatorButton.isEnabled,
                                         isNumber = calculatorButton.operator == CalculatorOperatorButtonUiEvent.Number,
                                         onClick = {
-                                            calculatorViewModel.onButtonCalculatorEvent(
-                                                calculatorButton
-                                            )
+                                            if (!openResetDialog.value && calculatorButton.operator is CalculatorOperatorButtonUiEvent.Reset) {
+                                                openResetDialog.value = true
+                                            } else {
+                                                calculatorViewModel.onButtonCalculatorEvent(
+                                                    calculatorButton
+                                                )
+                                            }
                                         }
                                     )
                                 }
@@ -141,15 +156,13 @@ fun CalculatorScreen(
                 content = {
                     Button(
                         onClick = {
-                            calculatorViewModel.onButtonCalculatorEvent(
-                                calculatorViewModel.calculatorButtonsUi[0][0]
-                            )
+                            calculatorViewModel.saveCart()
                         },
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxWidth()
                             .padding(4.dp),
-                        enabled = calculatorViewModel.calculatorButtonsUi[0][0].isEnabled,
+                        enabled = itemsInCartUi.isNotEmpty(),
                         shape = RoundedCornerShape(20),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.DarkGray,
@@ -191,6 +204,7 @@ fun CalculatorScreen(
                 }
             )
         },
+        modifier = Modifier.fillMaxSize(),
         scaffoldState = bottomSheetScaffoldState,
         content = { paddingValues ->
             Column(
@@ -201,37 +215,98 @@ fun CalculatorScreen(
                         onNameChanged = { calculatorViewModel.onNameChanged(name = it) }
                     )
 
-                    LazyColumn(
-                        content = {
-                            itemsIndexed(
-                                items = itemsInCartUi,
-                            ) { index, itemInCart ->
-
-                                ItemInCart(
-                                    itemInCart = itemInCart,
-                                    index = index,
-                                    onSelect = {
-                                        calculatorViewModel.onItemInCartEvent(
-                                            ItemInCartUiEvent.Select(itemInCart)
-                                        )
-
-                                        coroutineScope.launch {
-                                            bottomSheetScaffoldState.bottomSheetState.expand()
-                                        }
-                                    },
-                                    onRemove = {
-                                        calculatorViewModel.onItemInCartEvent(
-                                            ItemInCartUiEvent.Remove(itemInCart)
-                                        )
-                                    }
-                                )
-                            }
+                    if (itemsInCartUi.isEmpty()) {
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.ShoppingCart,
+                                contentDescription = null,
+                                modifier = Modifier.size(48.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Text(
+                                text = "Sin items en el carrito",
+                                style = MaterialTheme.typography.headlineSmall,
+                                modifier = Modifier.padding(top = 8.dp)
+                            )
                         }
-                    )
+                    } else {
+                        LazyColumn(
+                            content = {
+                                itemsIndexed(
+                                    items = itemsInCartUi,
+                                ) { index, itemInCart ->
+
+                                    ItemInCart(
+                                        itemInCart = itemInCart,
+                                        index = index,
+                                        onSelect = {
+                                            if (!openReplaceDialog.value && currentItemUi.value != 0f) {
+                                                selectedItemInCart.value = itemInCart
+                                                openReplaceDialog.value = true
+                                            } else {
+                                                calculatorViewModel.onItemInCartEvent(
+                                                    ItemInCartUiEvent.Select(itemInCart)
+                                                )
+
+                                                coroutineScope.launch {
+                                                    bottomSheetScaffoldState.bottomSheetState.expand()
+                                                }
+                                            }
+                                        },
+                                        onRemove = {
+                                            calculatorViewModel.onItemInCartEvent(
+                                                ItemInCartUiEvent.Remove(itemInCart)
+                                            )
+                                        }
+                                    )
+                                }
+                            }
+                        )
+                    }
                 }
             )
         }
     )
+
+    if (openResetDialog.value) {
+        AlertDialogCalculator(
+            onDismissRequest = { openResetDialog.value = false },
+            onConfirmation = {
+                openResetDialog.value = false
+                calculatorViewModel.onButtonCalculatorEvent(
+                    calculatorViewModel.calculatorButtonsUi[0][0]
+                )
+            },
+            dialogTitle = "Reiniciar todo?",
+            dialogText = "Hay items en el carrito listos para guardar.",
+            icon = Icons.Default.Info
+        )
+    }
+
+    if (openReplaceDialog.value) {
+        AlertDialogCalculator(
+            onDismissRequest = { openReplaceDialog.value = false },
+            onConfirmation = {
+                openReplaceDialog.value = false
+
+                // README: Aqui selectedItemInCart.value nunca va a ser null
+                calculatorViewModel.onItemInCartEvent(
+                    ItemInCartUiEvent.Select(selectedItemInCart.value!!)
+                )
+
+                coroutineScope.launch {
+                    bottomSheetScaffoldState.bottomSheetState.expand()
+                }
+            },
+            dialogTitle = "Descartar calculadora?",
+            dialogText = "Hay un item en la calculadora pendiente de agregarse al carrito.",
+            icon = Icons.Default.Info
+        )
+    }
 }
 
 @Composable
@@ -444,8 +519,8 @@ fun ItemInCalculator(
                 }
             )
 
-            val interactionSource = remember { MutableInteractionSource() }
-            val isFocused by interactionSource.collectIsFocusedAsState()
+            val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+//            val isFocused by interactionSource.collectIsFocusedAsState()
 
             // TODO: No logro que al presionar 'Back' y tras bajarse el teclado el foco en el
             //  TextField se libere, el cursor sigue marcando el foco.
@@ -565,6 +640,7 @@ fun ItemsInCartPreview() {
     )
 }
 
+@SuppressLint("RememberReturnType")
 @Composable
 fun ItemInCart(
     itemInCart: CalculatorUiModel,
@@ -602,6 +678,12 @@ fun ItemInCart(
             AnnotatedString(text = itemInCart.result.toInt().toString())
         )
         .text.toString()
+
+    // TODO:
+    //  1.- Implementar que al presionar el icono de delete, este cambie a uno de confirmacion.
+    //  2.- Implementar que al estar el estado de confirmacion y presionar en cualquier otro
+    //      elemento de la pantalla, este se des-confirme.
+//    var enableDelete: Boolean by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
@@ -692,11 +774,21 @@ fun ItemInCart(
                     .fillMaxHeight()
                     .width(60.dp)
                     .clickable(onClick = onRemove),
+//                    .clickable(
+//                        onClick = {
+//                            if (enableDelete) {
+//                                onRemove()
+//                            } else {
+//                                enableDelete = true
+//                            }
+//                        }
+//                    ),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 content = {
                     Icon(
                         imageVector = Icons.Default.Delete,
+//                        imageVector = if (enableDelete) Icons.Default.Check else Icons.Default.Delete,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.tertiary
                     )
@@ -735,6 +827,48 @@ fun CalculatorButton(
                 text = value,
                 style = MaterialTheme.typography.headlineSmall,
             )
+        }
+    )
+}
+
+@Composable
+fun AlertDialogCalculator(
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+    dialogTitle: String,
+    dialogText: String,
+    icon: ImageVector,
+) {
+    AlertDialog(
+        icon = {
+            Icon(icon, contentDescription = "Example Icon")
+        },
+        title = {
+            Text(text = dialogTitle)
+        },
+        text = {
+            Text(text = dialogText)
+        },
+        onDismissRequest = {
+            onDismissRequest()
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmation()
+                }
+            ) {
+                Text("Confirmar")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDismissRequest()
+                }
+            ) {
+                Text("Cancelar")
+            }
         }
     )
 }
