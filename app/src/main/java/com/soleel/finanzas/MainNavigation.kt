@@ -1,5 +1,7 @@
 package com.soleel.finanzas
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -65,6 +67,10 @@ fun FinanzasNavigationGraph(
     NavHost(
         navController = navHostController,
         startDestination = startDestination,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None },
+        popEnterTransition = { EnterTransition.None },
+        popExitTransition = { ExitTransition.None },
         builder = {
             composable<Loading> {
                 SplashScreen()

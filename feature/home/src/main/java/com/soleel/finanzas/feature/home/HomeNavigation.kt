@@ -1,5 +1,7 @@
 package com.soleel.finanzas.feature.home
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -149,6 +151,10 @@ fun HomeScreen(
                 navController = navHostController,
                 startDestination = HomeTopBarScreens.Calculator,
                 modifier = Modifier.padding(paddingValues),
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None },
+                popEnterTransition = { EnterTransition.None },
+                popExitTransition = { ExitTransition.None },
                 builder = {
                     composable<HomeTopBarScreens.Calculator> {
                         CalculatorScreen()
