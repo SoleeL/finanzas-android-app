@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.soleel.finanzas.feature.home"
+    namespace = "com.soleel.finanzas.feature.createspent"
 }
 
 dependencies {

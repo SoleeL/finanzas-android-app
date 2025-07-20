@@ -25,17 +25,21 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.soleel.finanzas.core.model.Item
 import com.soleel.finanzas.core.ui.R
-import com.soleel.finanzas.core.ui.utils.LongDevicePreview
 import com.soleel.finanzas.feature.home.calculator.CalculatorScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
 object HomeGraph
 
-fun NavGraphBuilder.homeNavigationGraph() {
+fun NavGraphBuilder.homeNavigationGraph(
+    navigateToCreateSpentGraph: (items: List<Item>) -> Unit
+) {
     composable<HomeGraph> {
-        HomeScreen()
+        HomeScreen(
+            navigateToCreateSpentGraph = navigateToCreateSpentGraph
+        )
     }
 }
 
@@ -73,6 +77,7 @@ sealed class HomeTopBarScreens<T>(val name: String, val icon: Int, val route: T)
 @Composable
 fun HomeScreen(
     navHostController: NavHostController = rememberNavController(),
+    navigateToCreateSpentGraph: (items: List<Item>) -> Unit
 ) {
     val currentDestination: NavDestination? = navHostController.currentBackStackEntryAsState()
         .value?.destination
@@ -157,7 +162,9 @@ fun HomeScreen(
                 popExitTransition = { ExitTransition.None },
                 builder = {
                     composable<HomeTopBarScreens.Calculator> {
-                        CalculatorScreen()
+                        CalculatorScreen(
+                            navigateToCreateSpentGraph = navigateToCreateSpentGraph
+                        )
                     }
 
                     composable<HomeTopBarScreens.Transactions> {

@@ -18,6 +18,7 @@ dependencies {
     implementation(projects.feature.login)
     implementation(projects.feature.configuration)
     implementation(projects.feature.home)
+    implementation(projects.feature.createspent)
     implementation(projects.feature.menu)
 
 //    implementation(projects.feature.add)

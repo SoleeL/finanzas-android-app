@@ -36,7 +36,7 @@ include(":domain:transactions")
 include(":domain:validation")
 include(":domain:visualtransformation")
 
-//include(":feature:add")
+
 //include(":feature:accounts")
 //include(":feature:createaccount")
 //include(":feature:createtransaction")
@@ -48,7 +48,5 @@ include(":domain:visualtransformation")
 include(":feature:login")
 include(":feature:configuration")
 include(":feature:home")
-
-//include(":feature:calculator")
-//
 include(":feature:menu")
+include(":feature:createspent")

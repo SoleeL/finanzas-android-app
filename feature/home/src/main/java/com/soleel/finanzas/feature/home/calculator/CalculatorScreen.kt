@@ -55,6 +55,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.soleel.finanzas.core.model.Item
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.utils.LongDevicePreview
 import com.soleel.finanzas.core.ui.utils.ShortDevicePreview
@@ -69,7 +70,7 @@ fun CalculatorScreenLongPreview() {
         content = {
             WithFakeTopAppBar(
                 content = {
-                    CalculatorScreen()
+                    CalculatorScreen(navigateToCreateSpentGraph = { })
                 }
             )
         }
@@ -83,7 +84,7 @@ fun CalculatorScreenShortPreview() {
         content = {
             WithFakeTopAppBar(
                 content = {
-                    CalculatorScreen()
+                    CalculatorScreen(navigateToCreateSpentGraph = { })
                 }
             )
         }
@@ -93,7 +94,8 @@ fun CalculatorScreenShortPreview() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalculatorScreen(
-    calculatorViewModel: CalculatorViewModel = hiltViewModel()
+    calculatorViewModel: CalculatorViewModel = hiltViewModel(),
+    navigateToCreateSpentGraph: (items: List<Item>) -> Unit
 ) {
     val currentItemUi: CalculatorUiModel = calculatorViewModel.currentCalculatorUiModel
     val itemsInCartUi: List<CalculatorUiModel> = calculatorViewModel.calculatorUiModels
@@ -155,9 +157,7 @@ fun CalculatorScreen(
                 modifier = Modifier.fillMaxWidth(),
                 content = {
                     Button(
-                        onClick = {
-                            calculatorViewModel.saveCart()
-                        },
+                        onClick = { calculatorViewModel.saveCart(navigateToCreateSpentGraph = navigateToCreateSpentGraph) },
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxWidth()

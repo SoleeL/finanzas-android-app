@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.soleel.finanzas.core.model.Item
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.collections.List
@@ -44,9 +45,7 @@ data class CalculatorUiModel(
 
     val historyOperations: List<CalculatorOperatorButtonUiEvent> = emptyList(),
 
-    val result: Float = 0f,
-
-//    val enableDelete: Boolean = false
+    val result: Float = 0f
 )
 
 data class CalculatorButtonUiState(
@@ -677,7 +676,19 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
         _calculatorUiModels = calculatorUiModels - calculatorUiModel
     }
 
-    fun saveCart() {
-        TODO("Navegar a vista de seleccion de cuenta")
+    fun saveCart(navigateToCreateSpentGraph: (items: List<Item>) -> Unit) {
+        val items: List<Item> = calculatorUiModels.map { it.toItem() }
+        navigateToCreateSpentGraph(items)
     }
+
+    private fun CalculatorUiModel.toItem(): Item {
+        return Item(
+            name = name,
+            value = value,
+            multiply = multiply,
+            division = division,
+            subtract = subtract
+        )
+    }
+
 }

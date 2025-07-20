@@ -93,6 +93,7 @@ compose = ["compose-ui","compose-ui-text", "compose-ui-graphics", "compose-ui-to
 android-application = { id = "com.android.application", version.ref = "android-application" }
 android-kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "android-kotlin" }
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "android-kotlin" }
+jetbrains-kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize",  version.ref = "kotlin-parcelize-version"  }
 org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org-jetbrains-kotlin-jvm" }
 com-android-library = { id = "com.android.library", version.ref = "android-application" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
