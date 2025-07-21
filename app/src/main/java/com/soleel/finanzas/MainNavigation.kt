@@ -25,7 +25,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.soleel.finanzas.core.model.Item
-import com.soleel.finanzas.feature.createspent.createSpentNavigationGraph
 import com.soleel.finanzas.feature.configuration.Backup
 import com.soleel.finanzas.feature.configuration.Calendar
 import com.soleel.finanzas.feature.configuration.ConfigurationGraph
@@ -35,13 +34,8 @@ import com.soleel.finanzas.feature.configuration.Password
 import com.soleel.finanzas.feature.configuration.Payments
 import com.soleel.finanzas.feature.configuration.Theme
 import com.soleel.finanzas.feature.configuration.configurationNavigationGraph
-import com.soleel.finanzas.feature.createspent.AccountSelection
-import com.soleel.finanzas.feature.createspent.AccountTypeSelection
 import com.soleel.finanzas.feature.createspent.CreateSpentGraph
-import com.soleel.finanzas.feature.createspent.InstalmentSelection
-import com.soleel.finanzas.feature.createspent.SpentConfirmation
-import com.soleel.finanzas.feature.createspent.SpentDateSelection
-import com.soleel.finanzas.feature.createspent.SpentNameInput
+import com.soleel.finanzas.feature.createspent.createSpentNavigationGraph
 import com.soleel.finanzas.feature.home.HomeGraph
 import com.soleel.finanzas.feature.home.homeNavigationGraph
 import com.soleel.finanzas.feature.login.LoginGraph
@@ -130,15 +124,8 @@ fun FinanzasNavigationGraph(
             )
 
             createSpentNavigationGraph(
-                itemsToNavType = mapOf(typeOf<List<Item>>() to createListNavType<Item>()),
                 backToPrevious = { navHostController.popBackStack() },
-                navigateToSpentDateSelectionScreen = { navHostController.navigate(SpentDateSelection) },
-                navigateToSpentNameInputScreen = { navHostController.navigate(SpentNameInput) },
-                navigateToAccountTypeSelectionScreen = { navHostController.navigate(AccountTypeSelection) },
-                navigateToAccountSelectionScreen = { navHostController.navigate(AccountSelection) },
-                navigateToInstalmentSelectionScreen = { navHostController.navigate(InstalmentSelection) },
-                navigateToSpentConfirmationScreen = { navHostController.navigate(SpentConfirmation) },
-                navigateToConfirmed = { navHostController.navigate(Currency) }
+                itemsToNavType = mapOf(typeOf<List<Item>>() to createListNavType<Item>())
             )
 
             menuNavigationGraph()

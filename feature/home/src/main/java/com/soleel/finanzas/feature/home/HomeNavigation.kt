@@ -67,12 +67,6 @@ sealed class HomeTopBarScreens<T>(val name: String, val icon: Int, val route: T)
     )
 }
 
-//@LongDevicePreview
-//@Composable
-//fun HomeScreenPreview() {
-//     HomeScreen()
-//}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
