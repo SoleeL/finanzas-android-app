@@ -74,7 +74,7 @@ private fun ExpenseSummaryHeader(createExpenseViewModel: CreateExpenseViewModel)
     val type: ExpenseTypeEnum = createExpenseViewModel.createExpenseUiModel.expenseType!!
     val accountType: AccountTypeEnum = createExpenseViewModel.createExpenseUiModel.accountType!!
     val account: Account = createExpenseViewModel.createExpenseUiModel.account!!
-    val instalments: Int = createExpenseViewModel.createExpenseUiModel.instalments
+    val instalments: Int = createExpenseViewModel.createExpenseUiModel.instalments!!
 
 
 //    val name: String = createExpenseViewModel.createExpenseUiModel.name

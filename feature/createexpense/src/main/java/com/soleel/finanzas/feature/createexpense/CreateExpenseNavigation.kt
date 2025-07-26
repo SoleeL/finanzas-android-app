@@ -119,10 +119,10 @@ fun CreateExpenseScreen(
                 navController = navHostController,
                 startDestination = ExpenseTypeSelection,
                 modifier = Modifier.padding(paddingValues),
-                enterTransition = { EnterTransition.None },
-                exitTransition = { ExitTransition.None },
-                popEnterTransition = { EnterTransition.None },
-                popExitTransition = { ExitTransition.None },
+//                enterTransition = { EnterTransition.None },
+//                exitTransition = { ExitTransition.None },
+//                popEnterTransition = { EnterTransition.None },
+//                popExitTransition = { ExitTransition.None },
                 builder = {
                     composable<ExpenseTypeSelection> {
                         ExpenseTypeSelectionScreen(

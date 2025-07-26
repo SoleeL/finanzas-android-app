@@ -9,13 +9,13 @@ enum class ExpenseTypeEnum(
     val icon: Int,
 ) {
 
-    SERVICES(id = 23, value = "Servicios", icon = R.drawable.ic_service),
-    MARKET(id = 22, value = "Despensa", icon = R.drawable.ic_market),
-    ACQUISITION(id = 24, value = "Adquisicion", icon = R.drawable.ic_acquisition),
-    LEASURE(id = 25, value = "Ocio", icon = R.drawable.ic_leasure),
-    GIFT(id = 26, value = "Regalo", icon = R.drawable.ic_gift),
-    TRANSFER(id = 21, value = "Transferencia", icon = R.drawable.ic_transfer),
-    OTHER(id = 27, value = "Otro", icon = R.drawable.ic_other);
+    SERVICES(id = 1, value = "Servicios", icon = R.drawable.ic_service),
+    MARKET(id = 2, value = "Despensa", icon = R.drawable.ic_market),
+    ACQUISITION(id = 3, value = "Adquisicion", icon = R.drawable.ic_acquisition),
+    LEASURE(id = 4, value = "Ocio", icon = R.drawable.ic_leasure),
+    GIFT(id = 5, value = "Regalo", icon = R.drawable.ic_gift),
+    TRANSFER(id = 6, value = "Transferencia", icon = R.drawable.ic_transfer),
+    OTHER(id = 7, value = "Otro", icon = R.drawable.ic_other);
 
     companion object {
         fun fromId(id: Int): ExpenseTypeEnum {

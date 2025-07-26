@@ -50,23 +50,23 @@ class ValidatorTransactionAmount : InValidation<Triple<Int, Account, Int>, Resul
             )
         }
 
-        if (TransactionTypeEnum.INCOME.id == input.second.type.id
-            && MAX_AMOUNT_LIMIT < input.first + input.second.totalAmount
-        ) {
-            return ResultValidation(
-                successful = false,
-                errorMessage = R.string.amount_more_account_can_not_be_gt_error_message
-            )
-        }
-
-        if (TransactionTypeEnum.EXPENDITURE.id == input.third
-            && 0 > input.second.totalAmount - input.first
-        ) {
-            return ResultValidation(
-                successful = false,
-                errorMessage = R.string.amount_can_not_be_gt_account_error_message
-            )
-        }
+//        if (TransactionTypeEnum.INCOME.id == input.second.type.id
+//            && MAX_AMOUNT_LIMIT < input.first + input.second.totalAmount
+//        ) {
+//            return ResultValidation(
+//                successful = false,
+//                errorMessage = R.string.amount_more_account_can_not_be_gt_error_message
+//            )
+//        }
+//
+//        if (TransactionTypeEnum.EXPENDITURE.id == input.third
+//            && 0 > input.second.totalAmount - input.first
+//        ) {
+//            return ResultValidation(
+//                successful = false,
+//                errorMessage = R.string.amount_can_not_be_gt_account_error_message
+//            )
+//        }
 
         return ResultValidation(
             successful = true,
