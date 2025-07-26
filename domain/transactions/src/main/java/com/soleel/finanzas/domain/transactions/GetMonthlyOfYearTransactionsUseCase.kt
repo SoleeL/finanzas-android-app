@@ -1,6 +1,5 @@
 package com.soleel.finanzas.domain.transactions
 
-import com.soleel.finanzas.core.model.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.model.Transaction
 import com.soleel.finanzas.core.model.TransactionSummary
 import com.soleel.finanzas.core.model.TransactionsSummary

@@ -70,7 +70,7 @@ fun CalculatorScreenLongPreview() {
         content = {
             WithFakeTopAppBar(
                 content = {
-                    CalculatorScreen(navigateToCreateSpentGraph = { })
+                    CalculatorScreen(navigateToCreateExpenseGraph = { })
                 }
             )
         }
@@ -84,7 +84,7 @@ fun CalculatorScreenShortPreview() {
         content = {
             WithFakeTopAppBar(
                 content = {
-                    CalculatorScreen(navigateToCreateSpentGraph = { })
+                    CalculatorScreen(navigateToCreateExpenseGraph = { })
                 }
             )
         }
@@ -95,7 +95,7 @@ fun CalculatorScreenShortPreview() {
 @Composable
 fun CalculatorScreen(
     calculatorViewModel: CalculatorViewModel = hiltViewModel(),
-    navigateToCreateSpentGraph: (items: List<Item>) -> Unit
+    navigateToCreateExpenseGraph: (items: List<Item>) -> Unit
 ) {
     val currentItemUi: CalculatorUiModel = calculatorViewModel.currentCalculatorUiModel
     val itemsInCartUi: List<CalculatorUiModel> = calculatorViewModel.calculatorUiModels
@@ -157,7 +157,7 @@ fun CalculatorScreen(
                 modifier = Modifier.fillMaxWidth(),
                 content = {
                     Button(
-                        onClick = { calculatorViewModel.saveCart(navigateToCreateSpentGraph = navigateToCreateSpentGraph) },
+                        onClick = { calculatorViewModel.saveCart(navigateToCreateExpenseGraph = navigateToCreateExpenseGraph) },
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxWidth()

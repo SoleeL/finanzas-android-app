@@ -34,8 +34,8 @@ import com.soleel.finanzas.feature.configuration.Password
 import com.soleel.finanzas.feature.configuration.Payments
 import com.soleel.finanzas.feature.configuration.Theme
 import com.soleel.finanzas.feature.configuration.configurationNavigationGraph
-import com.soleel.finanzas.feature.createspent.CreateSpentGraph
-import com.soleel.finanzas.feature.createspent.createSpentNavigationGraph
+import com.soleel.finanzas.feature.createexpense.CreateExpenseGraph
+import com.soleel.finanzas.feature.createexpense.createExpenseNavigationGraph
 import com.soleel.finanzas.feature.home.HomeGraph
 import com.soleel.finanzas.feature.home.homeNavigationGraph
 import com.soleel.finanzas.feature.login.LoginGraph
@@ -120,10 +120,12 @@ fun FinanzasNavigationGraph(
             )
 
             homeNavigationGraph(
-                navigateToCreateSpentGraph = { items: List<Item> -> navHostController.navigate(CreateSpentGraph(items = items)) }
+                navigateToCreateExpenseGraph = { items: List<Item> ->
+                    navHostController.navigate(CreateExpenseGraph(items = items))
+                }
             )
 
-            createSpentNavigationGraph(
+            createExpenseNavigationGraph(
                 backToPrevious = { navHostController.popBackStack() },
                 itemsToNavType = mapOf(typeOf<List<Item>>() to createListNavType<Item>())
             )

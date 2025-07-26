@@ -1,6 +1,5 @@
 package com.soleel.finanzas.domain.validation.validator
 
-import com.soleel.finanzas.core.model.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.model.Account
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.domain.validation.generic.InValidation

@@ -676,9 +676,9 @@ class CalculatorViewModel @Inject constructor() : ViewModel() {
         _calculatorUiModels = calculatorUiModels - calculatorUiModel
     }
 
-    fun saveCart(navigateToCreateSpentGraph: (items: List<Item>) -> Unit) {
+    fun saveCart(navigateToCreateExpenseGraph: (items: List<Item>) -> Unit) {
         val items: List<Item> = calculatorUiModels.map { it.toItem() }
-        navigateToCreateSpentGraph(items)
+        navigateToCreateExpenseGraph(items)
     }
 
     private fun CalculatorUiModel.toItem(): Item {

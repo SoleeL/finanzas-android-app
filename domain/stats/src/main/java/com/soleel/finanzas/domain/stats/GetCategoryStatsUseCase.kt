@@ -2,7 +2,6 @@ package com.soleel.finanzas.domain.stats
 
 import com.soleel.finanzas.core.model.Stat
 import com.soleel.finanzas.core.model.Transaction
-import com.soleel.finanzas.core.model.enums.TransactionTypeEnum
 import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

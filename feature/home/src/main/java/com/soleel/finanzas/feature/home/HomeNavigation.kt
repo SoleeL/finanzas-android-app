@@ -34,11 +34,11 @@ import kotlinx.serialization.Serializable
 object HomeGraph
 
 fun NavGraphBuilder.homeNavigationGraph(
-    navigateToCreateSpentGraph: (items: List<Item>) -> Unit
+    navigateToCreateExpenseGraph: (items: List<Item>) -> Unit
 ) {
     composable<HomeGraph> {
         HomeScreen(
-            navigateToCreateSpentGraph = navigateToCreateSpentGraph
+            navigateToCreateExpenseGraph = navigateToCreateExpenseGraph
         )
     }
 }
@@ -71,7 +71,7 @@ sealed class HomeTopBarScreens<T>(val name: String, val icon: Int, val route: T)
 @Composable
 fun HomeScreen(
     navHostController: NavHostController = rememberNavController(),
-    navigateToCreateSpentGraph: (items: List<Item>) -> Unit
+    navigateToCreateExpenseGraph: (items: List<Item>) -> Unit
 ) {
     val currentDestination: NavDestination? = navHostController.currentBackStackEntryAsState()
         .value?.destination
@@ -157,7 +157,7 @@ fun HomeScreen(
                 builder = {
                     composable<HomeTopBarScreens.Calculator> {
                         CalculatorScreen(
-                            navigateToCreateSpentGraph = navigateToCreateSpentGraph
+                            navigateToCreateExpenseGraph = navigateToCreateExpenseGraph
                         )
                     }
 
