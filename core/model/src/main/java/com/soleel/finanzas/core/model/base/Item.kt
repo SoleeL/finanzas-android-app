@@ -1,4 +1,4 @@
-package com.soleel.finanzas.core.model
+package com.soleel.finanzas.core.model.base
 
 import android.os.Parcelable
 import kotlinx.serialization.Serializable

@@ -27,9 +27,10 @@ include(":core:model")
 include(":core:ui")
 
 include(":data:account")
-include(":data:transaction")
+include(":data:expense")
 include(":data:preferences")
 
+include(":domain:account")
 include(":domain:formatdate")
 include(":domain:stats")
 include(":domain:transactions")
@@ -50,3 +51,4 @@ include(":feature:configuration")
 include(":feature:home")
 include(":feature:menu")
 include(":feature:createexpense")
+

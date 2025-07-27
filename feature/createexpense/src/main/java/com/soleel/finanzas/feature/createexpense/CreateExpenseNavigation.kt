@@ -4,16 +4,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavDestination
@@ -26,7 +28,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.soleel.finanzas.core.model.Item
+import com.soleel.finanzas.core.model.base.Item
+import com.soleel.finanzas.core.ui.utils.LongDevicePreview
+import com.soleel.finanzas.core.ui.utils.WithFakeSystemBars
 import kotlinx.serialization.Serializable
 import kotlin.reflect.KType
 
@@ -54,8 +58,8 @@ fun NavGraphBuilder.createExpenseNavigationGraph(
 @Serializable
 object ExpenseTypeSelection
 
-@Serializable
-object AccountTypeSelection
+//@Serializable
+//object AccountTypeSelection
 
 @Serializable
 object AccountSelection
@@ -106,9 +110,18 @@ fun CreateExpenseScreen(
                     )
                 },
                 actions = {
-                    Button(onClick = backToPrevious) {
-                        Text(text = "Cancel")
-                    }
+                    Surface(
+                        modifier = Modifier.padding(16.dp, 2.dp),
+                        onClick = {
+                            backToPrevious()
+                        },
+                        content = {
+                            Text(
+                                text = "Cancelar",
+                                style = MaterialTheme.typography.titleMedium,
+                            )
+                        }
+                    )
                 }
             )
         },
@@ -124,13 +137,6 @@ fun CreateExpenseScreen(
                 builder = {
                     composable<ExpenseTypeSelection> {
                         ExpenseTypeSelectionScreen(
-                            createExpenseViewModel = createExpenseViewModel,
-                            onContinue = { navHostController.navigate(AccountTypeSelection) }
-                        )
-                    }
-
-                    composable<AccountTypeSelection> {
-                        AccountTypeSelectionScreen(
                             createExpenseViewModel = createExpenseViewModel,
                             onContinue = { navHostController.navigate(AccountSelection) }
                         )
@@ -164,6 +170,32 @@ fun CreateExpenseScreen(
                         )
                     }
                 }
+            )
+        }
+    )
+}
+
+@LongDevicePreview
+@Composable
+private fun CreateExpenseScreenLongPreview() {
+    val mockItems: List<Item> = listOf(
+        Item(name = "Jabón", value = 2500f, multiply = 3f, division = 1f, subtract = 0f),
+        Item(name = "Detergente", value = 6500f, multiply = 1f, division = 1f, subtract = 0f),
+        Item(name = "Detergente", value = 6500f, multiply = 1f, division = 1f, subtract = 0f),
+    )
+
+    val fakeSavedStateHandle = SavedStateHandle(
+        mapOf("items" to mockItems)
+    )
+
+    WithFakeSystemBars(
+        content = {
+            CreateExpenseScreen(
+                navHostController = rememberNavController(),
+                createExpenseViewModel = CreateExpenseViewModel(
+                    savedStateHandle = fakeSavedStateHandle
+                ),
+                backToPrevious = { }
             )
         }
     )

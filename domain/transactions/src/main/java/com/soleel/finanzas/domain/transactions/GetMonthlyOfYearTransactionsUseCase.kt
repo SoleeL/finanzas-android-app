@@ -1,6 +1,6 @@
 package com.soleel.finanzas.domain.transactions
 
-import com.soleel.finanzas.core.model.Transaction
+import com.soleel.finanzas.core.model.base.Expense
 import com.soleel.finanzas.core.model.TransactionSummary
 import com.soleel.finanzas.core.model.TransactionsSummary
 import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
@@ -21,7 +21,7 @@ class GetMonthlyOfYearTransactionsUseCase @Inject constructor(
         .mapToSummaryByMonthsOfYear()
 }
 
-private fun Flow<List<Transaction>>.mapToSummaryByMonthsOfYear(): Flow<List<TransactionsSummary>> {
+private fun Flow<List<Expense>>.mapToSummaryByMonthsOfYear(): Flow<List<TransactionsSummary>> {
     return this.map(transform = {transactions ->
         transactions
             .groupBy(keySelector = { it.date.toYearDate()})

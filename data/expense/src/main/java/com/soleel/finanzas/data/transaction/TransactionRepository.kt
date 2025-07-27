@@ -3,7 +3,7 @@ package com.soleel.finanzas.data.transaction
 import com.soleel.finanzas.core.model.enums.SynchronizationEnum
 import com.soleel.finanzas.core.database.daos.TransactionDAO
 import com.soleel.finanzas.core.database.entities.TransactionEntity
-import com.soleel.finanzas.core.model.Transaction
+import com.soleel.finanzas.core.model.base.Expense
 import com.soleel.finanzas.data.transaction.di.DefaultDispatcher
 import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
 import kotlinx.coroutines.CoroutineDispatcher
@@ -20,23 +20,23 @@ class TransactionRepository @Inject constructor(
     @DefaultDispatcher private val dispatcher: CoroutineDispatcher
 ) : ITransactionLocalDataSource {
 
-    override fun getTransaction(transactionId: String): Flow<Transaction?> {
+    override fun getTransaction(transactionId: String): Flow<Expense?> {
         return transactionDAO
             .getTransactionForTransactionId(transactionId)
             .map(transform = {it.toModel()})
     }
 
-    override fun getTransactionWithForceUpdate(transactionId: String, forceUpdate: Boolean): Transaction? {
+    override fun getTransactionWithForceUpdate(transactionId: String, forceUpdate: Boolean): Expense? {
         TODO("Not yet implemented")
     }
 
-    override fun getTransactions(): Flow<List<Transaction>> {
+    override fun getTransactions(): Flow<List<Expense>> {
         return transactionDAO
             .getTransactions()
             .map(transform = {it.toModelList()})
     }
 
-    override fun getTransactionsWithForceUpdate(forceUpdate: Boolean): List<Transaction> {
+    override fun getTransactionsWithForceUpdate(forceUpdate: Boolean): List<Expense> {
         TODO("Not yet implemented")
     }
 

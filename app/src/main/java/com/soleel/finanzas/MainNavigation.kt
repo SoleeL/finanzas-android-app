@@ -24,7 +24,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.soleel.finanzas.core.model.Item
+import com.soleel.finanzas.core.model.base.Item
 import com.soleel.finanzas.feature.configuration.Backup
 import com.soleel.finanzas.feature.configuration.Calendar
 import com.soleel.finanzas.feature.configuration.ConfigurationGraph

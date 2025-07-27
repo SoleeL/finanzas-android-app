@@ -1,6 +1,5 @@
 package com.soleel.finanzas.feature.createexpense
 
-//import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
-import com.soleel.finanzas.core.model.Item
+import com.soleel.finanzas.core.model.base.Item
 import com.soleel.finanzas.core.model.enums.ExpenseTypeEnum
 import com.soleel.finanzas.core.ui.utils.LongDevicePreview
 import com.soleel.finanzas.core.ui.utils.ShortDevicePreview
@@ -102,7 +101,7 @@ fun ExpenseTypeSelectionScreen(
             )
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
-                contentPadding = PaddingValues(8.dp),
+                contentPadding = PaddingValues(8.dp, 16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 content = {

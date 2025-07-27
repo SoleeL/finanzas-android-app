@@ -15,8 +15,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import com.soleel.finanzas.core.model.Account
-import com.soleel.finanzas.core.model.Item
+import com.soleel.finanzas.core.model.base.Account
+import com.soleel.finanzas.core.model.base.Item
 import com.soleel.finanzas.core.model.enums.AccountTypeEnum
 import com.soleel.finanzas.core.model.enums.ExpenseTypeEnum
 import com.soleel.finanzas.core.model.enums.SynchronizationEnum
@@ -48,23 +48,6 @@ private fun ExpenseSummaryLongPreview() {
 //        Item(name = "Detergente", value = 6500f, multiply = 1f, division = 1f, subtract = 0f),
     )
 
-//    createExpenseViewModel.onCreateExpenseUiEvent(
-//        CreateExpenseUiEvent.AccountTypeSelected(AccountTypeEnum.DEBIT)
-//    )
-//
-//    createExpenseViewModel.onCreateExpenseUiEvent(
-//        CreateExpenseUiEvent.AccountSelected(
-//            Account(
-//                id = UUID.randomUUID().toString(),
-//                type = AccountTypeEnum.DEBIT,
-//                name = "Banco falabella",
-//                createdAt = LocalDateTime.now(),
-//                updatedAt = LocalDateTime.now(),
-//                synchronization = SynchronizationEnum.PENDING
-//            )
-//        )
-//    )
-
     WithFakeSystemBars(
         content = {
             WithFakeTopAppBar(
@@ -73,7 +56,6 @@ private fun ExpenseSummaryLongPreview() {
                         amount = mockItems.sumOf(selector = { it.value.toDouble() }).toFloat(),
                         itemCount = mockItems.size,
                         expenseTypeEnum = ExpenseTypeEnum.MARKET,
-                        accountTypeEnum = AccountTypeEnum.CREDIT,
                         account = Account(
                             id = UUID.randomUUID().toString(),
                             type = AccountTypeEnum.DEBIT,
@@ -96,7 +78,7 @@ fun ExpenseSummaryHeader(
     amount: Float,
     itemCount: Int,
     expenseTypeEnum: ExpenseTypeEnum? = null,
-    accountTypeEnum: AccountTypeEnum? = null,
+//    accountTypeEnum: AccountTypeEnum? = null,
     account: Account? = null,
     instalments: Int? = null,
     date: LocalDateTime? = null,
@@ -196,30 +178,7 @@ fun ExpenseSummaryHeader(
                 )
             }
 
-            if (accountTypeEnum != null && account == null) {
-                Spacer(modifier = Modifier.height(8.dp))
-
-                val accountTypeBuildString: AnnotatedString = buildAnnotatedString(
-                    builder = {
-                        append("que pague con ")
-                        withStyle(
-                            style = SpanStyle(fontWeight = FontWeight.Bold),
-                            block = {
-                                append(accountTypeEnum.value)
-                            }
-                        )
-                    }
-                )
-
-                Text(
-                    text = accountTypeBuildString,
-                    style = MaterialTheme.typography.headlineLarge,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
-
-            if (accountTypeEnum != null && account != null) {
+            if (account != null) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 val accountWithTypeBuildString: AnnotatedString = buildAnnotatedString(
@@ -235,7 +194,7 @@ fun ExpenseSummaryHeader(
                         withStyle(
                             style = SpanStyle(fontWeight = FontWeight.Bold),
                             block = {
-                                append(accountTypeEnum.value)
+                                append(account.type.value)
                             }
                         )
                         append(")")

@@ -1,7 +1,7 @@
 package com.soleel.finanzas.data.transaction
 
 import com.soleel.finanzas.core.database.entities.TransactionEntity
-import com.soleel.finanzas.core.model.Transaction
+import com.soleel.finanzas.core.model.base.Expense
 import com.soleel.finanzas.core.model.enums.ExpenseTypeEnum
 import com.soleel.finanzas.core.model.enums.SynchronizationEnum
 import java.time.Instant
@@ -9,8 +9,8 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 
 
-fun TransactionEntity.toModel(): Transaction {
-    return Transaction(
+fun TransactionEntity.toModel(): Expense {
+    return Expense(
         id = this.id,
         expenseType = ExpenseTypeEnum.fromId(id = this.type),
         name = this.name,
@@ -24,6 +24,6 @@ fun TransactionEntity.toModel(): Transaction {
     )
 }
 
-fun List<TransactionEntity>.toModelList() :List<Transaction> {
+fun List<TransactionEntity>.toModelList() :List<Expense> {
     return this.map(transform = { it.toModel() })
 }

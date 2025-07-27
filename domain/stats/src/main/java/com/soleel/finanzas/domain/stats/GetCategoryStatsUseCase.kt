@@ -1,12 +1,5 @@
 package com.soleel.finanzas.domain.stats
 
-import com.soleel.finanzas.core.model.Stat
-import com.soleel.finanzas.core.model.Transaction
-import com.soleel.finanzas.core.model.enums.ExpenseTypeEnum
-import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 //
 //class GetCategoryStatsUseCase @Inject constructor(
 //    private val transactionRepository: ITransactionLocalDataSource

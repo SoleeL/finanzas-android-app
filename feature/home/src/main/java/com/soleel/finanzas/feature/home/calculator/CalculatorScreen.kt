@@ -55,7 +55,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.soleel.finanzas.core.model.Item
+import com.soleel.finanzas.core.model.base.Item
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.core.ui.utils.LongDevicePreview
 import com.soleel.finanzas.core.ui.utils.ShortDevicePreview

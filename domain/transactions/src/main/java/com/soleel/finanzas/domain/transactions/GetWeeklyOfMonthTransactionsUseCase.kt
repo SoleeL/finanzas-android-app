@@ -1,6 +1,6 @@
 package com.soleel.finanzas.domain.transactions
 
-import com.soleel.finanzas.core.model.Transaction
+import com.soleel.finanzas.core.model.base.Expense
 import com.soleel.finanzas.core.model.TransactionSummary
 import com.soleel.finanzas.core.model.TransactionsSummary
 import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
@@ -21,7 +21,7 @@ class GetWeeklyOfMonthTransactionsUseCase @Inject constructor(
         .mapToSummaryByWeeksOfMonth()
 }
 
-private fun Flow<List<Transaction>>.mapToSummaryByWeeksOfMonth(): Flow<List<TransactionsSummary>> {
+private fun Flow<List<Expense>>.mapToSummaryByWeeksOfMonth(): Flow<List<TransactionsSummary>> {
     return this.map(transform = { transactions ->
         transactions
             .groupBy(keySelector = { it.date.toMonthDate() })

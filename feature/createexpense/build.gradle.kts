@@ -9,8 +9,10 @@ android {
 }
 
 dependencies {
+    api(projects.core.common)
     api(projects.core.ui)
     api(projects.data.account)
-    api(projects.domain.visualtransformation)
+    api(projects.domain.account)
     api(projects.domain.formatdate)
+    api(projects.domain.visualtransformation)
 }

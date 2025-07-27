@@ -1,4 +1,4 @@
-package com.soleel.finanzas.core.model
+package com.soleel.finanzas.core.model.base
 
 import com.soleel.finanzas.core.model.enums.AccountTypeEnum
 import com.soleel.finanzas.core.model.enums.SynchronizationEnum

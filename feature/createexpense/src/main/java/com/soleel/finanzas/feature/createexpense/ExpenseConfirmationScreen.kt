@@ -8,8 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.SavedStateHandle
-import com.soleel.finanzas.core.model.Account
-import com.soleel.finanzas.core.model.Item
+import com.soleel.finanzas.core.model.base.Account
+import com.soleel.finanzas.core.model.base.Item
 import com.soleel.finanzas.core.model.enums.AccountTypeEnum
 import com.soleel.finanzas.core.model.enums.ExpenseTypeEnum
 import com.soleel.finanzas.core.model.enums.SynchronizationEnum

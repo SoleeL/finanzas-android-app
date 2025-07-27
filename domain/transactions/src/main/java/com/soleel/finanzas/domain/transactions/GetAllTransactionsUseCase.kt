@@ -2,8 +2,8 @@ package com.soleel.finanzas.domain.transactions
 
 import com.soleel.finanzas.core.model.enums.AccountTypeEnum
 import com.soleel.finanzas.core.model.enums.SynchronizationEnum
-import com.soleel.finanzas.core.model.Account
-import com.soleel.finanzas.core.model.Transaction
+import com.soleel.finanzas.core.model.base.Account
+import com.soleel.finanzas.core.model.base.Expense
 import com.soleel.finanzas.core.model.TransactionWithAccount
 import com.soleel.finanzas.core.model.TransactionsGroup
 import com.soleel.finanzas.data.account.interfaces.IAccountLocalDataSource
@@ -25,7 +25,7 @@ class GetAllTransactionsUseCase @Inject constructor(
         .mapToGroupByDay()
 }
 
-private fun Flow<List<Transaction>>.mapToWithAccount(
+private fun Flow<List<Expense>>.mapToWithAccount(
     accounts: Flow<List<Account>>
 ): Flow<List<TransactionWithAccount>> {
     return combine(
@@ -48,7 +48,7 @@ private fun Flow<List<Transaction>>.mapToWithAccount(
                     )
 
                     TransactionWithAccount(
-                        transaction = transaction,
+                        expense = transaction,
                         account = account ?: accountNotFind
                     )
                 }
@@ -60,7 +60,7 @@ private fun Flow<List<Transaction>>.mapToWithAccount(
 private fun Flow<List<TransactionWithAccount>>.mapToGroupByDay(): Flow<List<TransactionsGroup>> {
     return this.map(transform = { transactionsWithAccount ->
         transactionsWithAccount
-            .groupBy(keySelector = { it.transaction.date.toDayDate() })
+            .groupBy(keySelector = { it.expense.date.toDayDate() })
             .map(transform = { (localDate, dailyTransactionsWithAccount) ->
                 TransactionsGroup(
                     localDate = localDate,

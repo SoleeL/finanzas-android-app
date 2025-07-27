@@ -25,7 +25,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.soleel.finanzas.core.model.Item
+import com.soleel.finanzas.core.model.base.Item
 import com.soleel.finanzas.core.ui.R
 import com.soleel.finanzas.feature.home.calculator.CalculatorScreen
 import kotlinx.serialization.Serializable

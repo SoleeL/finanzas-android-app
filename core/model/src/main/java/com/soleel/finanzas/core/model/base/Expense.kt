@@ -1,11 +1,11 @@
-package com.soleel.finanzas.core.model
+package com.soleel.finanzas.core.model.base
 
 import com.soleel.finanzas.core.model.enums.ExpenseTypeEnum
 import com.soleel.finanzas.core.model.enums.SynchronizationEnum
 import java.time.LocalDateTime
 
 
-data class Transaction(
+data class Expense(
     val id: String,
     val expenseType: ExpenseTypeEnum,
     var name: String,

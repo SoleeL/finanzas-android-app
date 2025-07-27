@@ -2,7 +2,7 @@ package com.soleel.finanzas.data.account
 
 import com.soleel.finanzas.core.model.enums.AccountTypeEnum
 import com.soleel.finanzas.core.model.enums.SynchronizationEnum
-import com.soleel.finanzas.core.model.Account
+import com.soleel.finanzas.core.model.base.Account
 import com.soleel.finanzas.data.account.interfaces.IAccountLocalDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf

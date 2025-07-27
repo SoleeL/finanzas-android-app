@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.soleel.finanzas.data.trasaction"
+    namespace = "com.soleel.finanzas.data.expense"
 }
 
 dependencies {

@@ -4,7 +4,7 @@ import com.soleel.finanzas.core.model.enums.AccountTypeEnum
 import com.soleel.finanzas.core.model.enums.SynchronizationEnum
 import com.soleel.finanzas.core.database.entities.AccountEntity
 import com.soleel.finanzas.core.database.extras.AccountWithTransactionInfoEntity
-import com.soleel.finanzas.core.model.Account
+import com.soleel.finanzas.core.model.base.Account
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -31,9 +31,6 @@ fun AccountWithTransactionInfoEntity.toModel(): Account {
         id = this.accountEntity.id,
         type = AccountTypeEnum.fromId(id = this.accountEntity.type),
         name = this.accountEntity.name,
-        totalIncome = this.totalIncome,
-        totalExpense = this.totalExpense,
-        totalAmount = this.totalIncome - this.totalExpense,
         transactionsNumber = this.transactionsNumber,
         createdAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(this.accountEntity.createdAt), ZoneId.systemDefault()),
         updatedAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(this.accountEntity.updatedAt), ZoneId.systemDefault()),

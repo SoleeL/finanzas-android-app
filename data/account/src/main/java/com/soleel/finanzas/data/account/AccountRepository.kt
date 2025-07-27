@@ -3,7 +3,7 @@ package com.soleel.finanzas.data.account
 import com.soleel.finanzas.core.model.enums.AccountTypeEnum
 import com.soleel.finanzas.core.model.enums.SynchronizationEnum
 import com.soleel.finanzas.core.database.daos.AccountDAO
-import com.soleel.finanzas.core.model.Account
+import com.soleel.finanzas.core.model.base.Account
 import com.soleel.finanzas.data.account.di.DefaultDispatcher
 import com.soleel.finanzas.data.account.interfaces.IAccountLocalDataSource
 import kotlinx.coroutines.CoroutineDispatcher
@@ -45,7 +45,7 @@ class AccountRepository @Inject constructor(
 
     override fun getAccountsWithTransactionInfo(): Flow<List<Account>> {
         TODO("Not yet implemented")
-//        return AccountDAO.getAccountsWithTransactionalInfo().map(transform =  { it.toWithTotalAmountModelList() })
+        return AccountDAO.getAccountsWithTransactionalInfo().map(transform =  { it.toWithTotalAmountModelList() })
     }
 
     override suspend fun refreshAccounts() {
