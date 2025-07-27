@@ -9,7 +9,7 @@ enum class ExpenseTypeEnum(
     val icon: Int,
 ) {
 
-    SERVICES(id = 1, value = "Servicios", icon = R.drawable.ic_service),
+    SERVICE(id = 1, value = "Servicio", icon = R.drawable.ic_service),
     MARKET(id = 2, value = "Despensa", icon = R.drawable.ic_market),
     ACQUISITION(id = 3, value = "Adquisicion", icon = R.drawable.ic_acquisition),
     LEASURE(id = 4, value = "Ocio", icon = R.drawable.ic_leasure),
@@ -27,7 +27,7 @@ enum class ExpenseTypeEnum(
         private fun getExpenditureTransactionCategories(accountType: AccountTypeEnum): List<ExpenseTypeEnum> {
             return when (accountType) {
                 AccountTypeEnum.CREDIT -> listOf(
-                    SERVICES,
+                    SERVICE,
                     MARKET,
                     ACQUISITION,
                     LEASURE,
@@ -36,7 +36,7 @@ enum class ExpenseTypeEnum(
                 )
 
                 AccountTypeEnum.DEBIT -> listOf(
-                    SERVICES,
+                    SERVICE,
                     MARKET,
                     ACQUISITION,
                     LEASURE,
@@ -46,7 +46,7 @@ enum class ExpenseTypeEnum(
                 )
 
                 AccountTypeEnum.CASH -> listOf(
-                    SERVICES,
+                    SERVICE,
                     MARKET,
                     ACQUISITION,
                     LEASURE,

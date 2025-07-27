@@ -1,7 +1,5 @@
 package com.soleel.finanzas.feature.createexpense
 
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -69,7 +67,7 @@ object InstalmentSelection
 object ExpenseDateSelection
 
 @Serializable
-object ExpenseNameAndConfirmation
+object ExpenseConfirmation
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -134,7 +132,6 @@ fun CreateExpenseScreen(
                     composable<AccountTypeSelection> {
                         AccountTypeSelectionScreen(
                             createExpenseViewModel = createExpenseViewModel,
-                            onBackPress = { navHostController.popBackStack() },
                             onContinue = { navHostController.navigate(AccountSelection) }
                         )
                     }
@@ -142,7 +139,6 @@ fun CreateExpenseScreen(
                     composable<AccountSelection> {
                         AccountSelectionScreen(
                             createExpenseViewModel = createExpenseViewModel,
-                            onBackPress = { navHostController.popBackStack() },
                             onContinue = { navHostController.navigate(InstalmentSelection) }
                         )
                     }
@@ -150,7 +146,6 @@ fun CreateExpenseScreen(
                     composable<InstalmentSelection> {
                         InstalmentSelectionScreen(
                             createExpenseViewModel = createExpenseViewModel,
-                            onBackPress = { navHostController.popBackStack() },
                             onContinue = { navHostController.navigate(ExpenseDateSelection) }
                         )
                     }
@@ -158,15 +153,13 @@ fun CreateExpenseScreen(
                     composable<ExpenseDateSelection> {
                         ExpenseDateSelectionScreen(
                             createExpenseViewModel = createExpenseViewModel,
-                            onBackPress = { navHostController.popBackStack() },
-                            onContinue = { navHostController.navigate(ExpenseNameAndConfirmation) }
+                            onContinue = { navHostController.navigate(ExpenseConfirmation) }
                         )
                     }
 
-                    composable<ExpenseNameAndConfirmation> {
+                    composable<ExpenseConfirmation> {
                         ExpenseConfirmationScreen(
                             createExpenseViewModel = createExpenseViewModel,
-                            onBackPress = { navHostController.popBackStack() },
                             onContinue = backToPrevious
                         )
                     }

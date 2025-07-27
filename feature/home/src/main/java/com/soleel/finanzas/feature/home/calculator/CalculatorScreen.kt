@@ -61,6 +61,7 @@ import com.soleel.finanzas.core.ui.utils.LongDevicePreview
 import com.soleel.finanzas.core.ui.utils.ShortDevicePreview
 import com.soleel.finanzas.core.ui.utils.WithFakeSystemBars
 import com.soleel.finanzas.core.ui.utils.WithFakeTopAppBar
+import com.soleel.finanzas.domain.transformation.visualtransformation.CLPCurrencyVisualTransformation
 import kotlinx.coroutines.launch
 
 @LongDevicePreview
@@ -101,7 +102,7 @@ fun CalculatorScreen(
     val itemsInCartUi: List<CalculatorUiModel> = calculatorViewModel.calculatorUiModels
 
     val currencyVisualTransformation by remember(calculation = {
-        mutableStateOf(CLPCurrencyVisualTransformation())
+        mutableStateOf(com.soleel.finanzas.domain.transformation.visualtransformation.CLPCurrencyVisualTransformation())
     })
 
     val bottomSheetScaffoldState: BottomSheetScaffoldState = remember {
@@ -649,7 +650,7 @@ fun ItemInCart(
     onRemove: () -> Unit
 ) {
     val currencyVisualTransformation by remember(calculation = {
-        mutableStateOf(CLPCurrencyVisualTransformation())
+        mutableStateOf(com.soleel.finanzas.domain.transformation.visualtransformation.CLPCurrencyVisualTransformation())
     })
 
     // TODO: Cambiar esto por una transformacion visual

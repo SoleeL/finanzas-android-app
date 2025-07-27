@@ -14,8 +14,8 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 data class CreateExpenseUiModel(
-    val amount: Float = 0f,
-    val size: Float = 0f,
+    val amount: Float,
+    val size: Int,
 
     val expenseType: ExpenseTypeEnum? = null,
     val accountType: AccountTypeEnum? = null,
@@ -39,15 +39,21 @@ open class CreateExpenseViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val items: List<Item> = savedStateHandle.get<List<Item>>("items") ?: emptyList()
+    private val items: List<Item> = savedStateHandle.get<List<Item>>("items") ?: emptyList()
 
-    private var _createExpenseUiModel: CreateExpenseUiModel by mutableStateOf(CreateExpenseUiModel())
+    private fun getTotal() : Float {
+        return items.sumOf(selector = { it.value.toDouble() }).toFloat()
+    }
+
+    private var _createExpenseUiModel: CreateExpenseUiModel by mutableStateOf(CreateExpenseUiModel(
+        amount = getTotal(),
+        size = items.size
+    ))
     val createExpenseUiModel: CreateExpenseUiModel get() = _createExpenseUiModel
-
 
     private val _expensesButtonsUi: List<List<ExpenseTypeEnum>> by mutableStateOf(
         listOf(
-            listOf(ExpenseTypeEnum.SERVICES, ExpenseTypeEnum.MARKET, ExpenseTypeEnum.ACQUISITION),
+            listOf(ExpenseTypeEnum.SERVICE, ExpenseTypeEnum.MARKET, ExpenseTypeEnum.ACQUISITION),
             listOf(ExpenseTypeEnum.LEASURE, ExpenseTypeEnum.GIFT, ExpenseTypeEnum.TRANSFER),
             listOf(ExpenseTypeEnum.OTHER)
         )

@@ -1,5 +1,6 @@
 package com.soleel.finanzas.feature.createexpense
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,89 +20,183 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.SavedStateHandle
 import com.soleel.finanzas.core.model.Account
+import com.soleel.finanzas.core.model.Item
 import com.soleel.finanzas.core.model.enums.AccountTypeEnum
 import com.soleel.finanzas.core.model.enums.ExpenseTypeEnum
+import com.soleel.finanzas.core.model.enums.SynchronizationEnum
+import com.soleel.finanzas.core.ui.utils.LongDevicePreview
+import com.soleel.finanzas.core.ui.utils.ShortDevicePreview
+import com.soleel.finanzas.core.ui.utils.WithFakeSystemBars
+import com.soleel.finanzas.core.ui.utils.WithFakeTopAppBar
 import java.time.LocalDateTime
+import java.util.UUID
 
+
+@LongDevicePreview
+@Composable
+private fun CalculatorScreenLongPreview() {
+    val mockItems: List<Item> = listOf(
+        Item(name = "Jabón", value = 2500f, multiply = 3f, division = 1f, subtract = 0f),
+        Item(name = "Detergente", value = 6500f, multiply = 1f, division = 1f, subtract = 0f),
+        Item(name = "Detergente", value = 6500f, multiply = 1f, division = 1f, subtract = 0f),
+        Item(name = "Detergente", value = 6500f, multiply = 1f, division = 1f, subtract = 0f),
+        Item(name = "Detergente", value = 6500f, multiply = 1f, division = 1f, subtract = 0f),
+        Item(name = "Detergente", value = 6500f, multiply = 1f, division = 1f, subtract = 0f),
+        Item(name = "Detergente", value = 6500f, multiply = 1f, division = 1f, subtract = 0f),
+        Item(name = "Detergente", value = 6500f, multiply = 1f, division = 1f, subtract = 0f),
+        Item(name = "Detergente", value = 6500f, multiply = 1f, division = 1f, subtract = 0f),
+        Item(name = "Detergente", value = 6500f, multiply = 1f, division = 1f, subtract = 0f),
+        Item(name = "Detergente", value = 6500f, multiply = 1f, division = 1f, subtract = 0f),
+        Item(name = "Detergente", value = 6500f, multiply = 1f, division = 1f, subtract = 0f),
+        Item(name = "Detergente", value = 6500f, multiply = 1f, division = 1f, subtract = 0f),
+        Item(name = "Detergente", value = 6500f, multiply = 1f, division = 1f, subtract = 0f),
+    )
+
+    val fakeSavedStateHandle = SavedStateHandle(
+        mapOf("items" to mockItems)
+    )
+
+    val createExpenseViewModel: CreateExpenseViewModel = CreateExpenseViewModel(
+        savedStateHandle = fakeSavedStateHandle
+    )
+
+    createExpenseViewModel.onCreateExpenseUiEvent(
+        CreateExpenseUiEvent.ExpenseTypeSelected(ExpenseTypeEnum.OTHER)
+    )
+
+    createExpenseViewModel.onCreateExpenseUiEvent(
+        CreateExpenseUiEvent.AccountTypeSelected(AccountTypeEnum.DEBIT)
+    )
+
+    createExpenseViewModel.onCreateExpenseUiEvent(
+        CreateExpenseUiEvent.AccountSelected(
+            Account(
+                id = UUID.randomUUID().toString(),
+                type = AccountTypeEnum.DEBIT,
+                name = "Banco falabella",
+                createdAt = LocalDateTime.now(),
+                updatedAt = LocalDateTime.now(),
+                synchronization = SynchronizationEnum.PENDING
+            )
+        )
+    )
+
+    createExpenseViewModel.onCreateExpenseUiEvent(
+        CreateExpenseUiEvent.ExpenseDateSelected(
+            LocalDateTime.now()
+        )
+    )
+
+    WithFakeSystemBars(
+        content = {
+            WithFakeTopAppBar(
+                content = {
+                    ExpenseConfirmationScreen(
+                        createExpenseViewModel = createExpenseViewModel,
+                        onContinue = {}
+                    )
+                }
+            )
+        }
+    )
+}
+
+@ShortDevicePreview
+@Composable
+private fun CalculatorScreenShortPreview() {
+    val mockItems: List<Item> = listOf(
+        Item(name = "Jabón", value = 2500f, multiply = 3f, division = 1f, subtract = 0f),
+        Item(name = "Jabón", value = 2500f, multiply = 3f, division = 1f, subtract = 0f),
+        Item(name = "Detergente", value = 6500f, multiply = 1f, division = 1f, subtract = 0f),
+        Item(name = "Jabón", value = 2500f, multiply = 3f, division = 1f, subtract = 0f),
+        Item(name = "Jabón", value = 2500f, multiply = 3f, division = 1f, subtract = 0f),
+        Item(name = "Detergente", value = 6500f, multiply = 1f, division = 1f, subtract = 0f),
+        Item(name = "Jabón", value = 2500f, multiply = 3f, division = 1f, subtract = 0f),
+        Item(name = "Jabón", value = 2500f, multiply = 3f, division = 1f, subtract = 0f),
+        Item(name = "Detergente", value = 6500f, multiply = 1f, division = 1f, subtract = 0f),
+        Item(name = "Detergente", value = 6500f, multiply = 1f, division = 1f, subtract = 0f),
+        Item(name = "Detergente", value = 6500f, multiply = 1f, division = 1f, subtract = 0f),
+    )
+
+    val fakeSavedStateHandle = SavedStateHandle(
+        mapOf("items" to mockItems)
+    )
+
+    val createExpenseViewModel: CreateExpenseViewModel = CreateExpenseViewModel(
+        savedStateHandle = fakeSavedStateHandle
+    )
+
+    createExpenseViewModel.onCreateExpenseUiEvent(
+        CreateExpenseUiEvent.ExpenseTypeSelected(ExpenseTypeEnum.MARKET)
+    )
+
+    createExpenseViewModel.onCreateExpenseUiEvent(
+        CreateExpenseUiEvent.AccountTypeSelected(AccountTypeEnum.CREDIT)
+    )
+
+    createExpenseViewModel.onCreateExpenseUiEvent(
+        CreateExpenseUiEvent.AccountSelected(
+            Account(
+                id = UUID.randomUUID().toString(),
+                type = AccountTypeEnum.DEBIT,
+                name = "CMR falabella",
+                createdAt = LocalDateTime.now(),
+                updatedAt = LocalDateTime.now(),
+                synchronization = SynchronizationEnum.PENDING
+            )
+        )
+    )
+
+    createExpenseViewModel.onCreateExpenseUiEvent(
+        CreateExpenseUiEvent.InstalmentsSelected(3)
+    )
+
+    WithFakeSystemBars(
+        content = {
+            WithFakeTopAppBar(
+                content = {
+                    ExpenseConfirmationScreen(
+                        createExpenseViewModel = createExpenseViewModel,
+                        onContinue = {}
+                    )
+                }
+            )
+        }
+    )
+}
 
 @Composable
 fun ExpenseConfirmationScreen(
     createExpenseViewModel: CreateExpenseViewModel,
-    onBackPress: () -> Unit,
     onContinue: () -> Unit
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .wrapContentSize(Alignment.Center),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Expense Confirmation Screen",
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            textAlign = TextAlign.Center,
-            fontSize = 16.sp
-        )
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween,
+        content = {
+            ExpenseSummaryHeader(
+                amount = createExpenseViewModel.createExpenseUiModel.amount,
+                itemCount = createExpenseViewModel.createExpenseUiModel.size,
+                expenseTypeEnum = createExpenseViewModel.createExpenseUiModel.expenseType,
+                accountTypeEnum = createExpenseViewModel.createExpenseUiModel.accountType,
+                account = createExpenseViewModel.createExpenseUiModel.account,
+                instalments = createExpenseViewModel.createExpenseUiModel.instalments,
+                date = createExpenseViewModel.createExpenseUiModel.expenseDate
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(onClick = onBackPress) {
-            Text(text = "Back to Instalment Selection")
+            Button(
+                onClick = {
+                    createExpenseViewModel.onCreateExpenseUiEvent(
+                        CreateExpenseUiEvent.ExpenseName("Compra")
+                    )
+                    onContinue()
+                },
+                content = {
+                    Text("Continuar")
+                }
+            )
         }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Button(onClick = onContinue) {
-            Text(text = "Continue to Confirmated")
-        }
-    }
-}
-
-@Composable
-private fun ExpenseSummaryHeader(createExpenseViewModel: CreateExpenseViewModel) {
-
-    // Ejemplos:
-
-    // <sentencia previa> que pague con CMR Falabella (crédito) sin cuotas el 2025/03/12.
-    // <sentencia previa> que pague con CMR Falabella (crédito) en 3 cuotas el 2025/03/12.
-    // <sentencia previa> que pague con Cuenta Rut (débito) el 2025/03/12.
-    // <sentencia previa> que pague con Billetera (efectivo) el 2025/03/12.
-
-    val amount: Float = createExpenseViewModel.createExpenseUiModel.amount
-    val itemCount: Int = createExpenseViewModel.items.size
-    val expenseType: ExpenseTypeEnum = createExpenseViewModel.createExpenseUiModel.expenseType!!
-    val accountType: AccountTypeEnum = createExpenseViewModel.createExpenseUiModel.accountType!!
-    val account: Account = createExpenseViewModel.createExpenseUiModel.account!!
-    val instalments: Int = createExpenseViewModel.createExpenseUiModel.instalments!!
-    val date: LocalDateTime = createExpenseViewModel.createExpenseUiModel.expenseDate!!
-
-//    val name: String = createExpenseViewModel.createExpenseUiModel.name
-
-
-    val summary = buildString {
-        append("Gasté $${amount}")
-//        if (name.isNotBlank()) append("en $name ")
-//        if (!type?.name.isNullOrBlank()) append("($type) ")
-//        append("el ${date.format(DateTimeFormatter.ofPattern("dd MMM"))} ")
-        append("en $itemCount artículo${if (itemCount != 1) "s" else ""} ")
-//        if (!account?.name.isNullOrBlank()) append("usando mi ${account?.name} ")
-//        if (!accountType?.name.isNullOrBlank()) append("(${accountType?.name})")
-//        if (instalments > 1) append(", en $instalments cuotas")
-    }
-
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        color = Color.LightGray,
-        tonalElevation = 2.dp
-    ) {
-        Text(
-            text = summary,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(12.dp)
-        )
-    }
+    )
 }

@@ -11,4 +11,6 @@ android {
 dependencies {
     api(projects.core.ui)
     api(projects.data.account)
+    api(projects.domain.visualtransformation)
+    api(projects.domain.formatdate)
 }
