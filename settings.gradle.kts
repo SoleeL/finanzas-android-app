@@ -52,3 +52,4 @@ include(":feature:home")
 include(":feature:menu")
 include(":feature:createexpense")
 
+include(":core:formatter")

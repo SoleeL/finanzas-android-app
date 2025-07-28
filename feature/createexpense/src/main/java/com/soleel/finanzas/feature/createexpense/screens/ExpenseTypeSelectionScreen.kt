@@ -54,7 +54,7 @@ private fun CalculatorScreenLongPreview() {
                     ExpenseTypeSelectionScreen(
                         createExpenseViewModel = CreateExpenseViewModel(
                             savedStateHandle = fakeSavedStateHandle,
-                            getAccountsWithExpensesInfoCurrentMonthUseCase = GetAccountsWithExpensesInfoCurrentMonthUseCaseMock(),
+                            getAccountsUseCase = GetAccountsWithExpensesInfoCurrentMonthUseCaseMock(),
                             retryableFlowTrigger = RetryableFlowTrigger()
                         ),
                         onContinue = {}
@@ -84,7 +84,7 @@ private fun CalculatorScreenShortPreview() {
                     ExpenseTypeSelectionScreen(
                         createExpenseViewModel = CreateExpenseViewModel(
                             savedStateHandle = fakeSavedStateHandle,
-                            getAccountsWithExpensesInfoCurrentMonthUseCase = GetAccountsWithExpensesInfoCurrentMonthUseCaseMock(),
+                            getAccountsUseCase = GetAccountsWithExpensesInfoCurrentMonthUseCaseMock(),
                             retryableFlowTrigger = RetryableFlowTrigger()
                         ),
                         onContinue = {}

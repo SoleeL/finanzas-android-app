@@ -41,8 +41,8 @@ class GetAccountsWithExpensesInfoCurrentMonthUseCase @Inject constructor(
     // README: 1 minisegundo despues... y es el siguiente mes en la request
     private val localDateNow: LocalDate = LocalDate.now()
 
-    override operator fun invoke(): Flow<List<AccountWithExpensesInfo>> =
-        accountRepository.getAccounts().mapToWithExpensesInfoCurrentMonth(
+    override operator fun invoke(): Flow<List<AccountWithExpensesInfo>> = accountRepository
+        .getAccounts().mapToWithExpensesInfoCurrentMonth(
             expenseRepository.getExpensesBetweenDates(
                 startLocalDateTime = localDateNow.withDayOfMonth(1).atStartOfDay(),
                 endLocalDateTime = localDateNow.withDayOfMonth(localDateNow.lengthOfMonth()).atTime(LocalTime.MAX)
@@ -72,13 +72,73 @@ class GetAccountsWithExpensesInfoCurrentMonthUseCaseMock : IGetAccountsWithExpen
                 AccountWithExpensesInfo(
                     account = Account(
                         id = UUID.randomUUID().toString(),
-                        type = AccountTypeEnum.DEBIT,
-                        name = "CMR falabella",
+                        type = AccountTypeEnum.CREDIT,
+                        name = "CMR Falabella",
                         createdAt = LocalDateTime.now(),
                         updatedAt = LocalDateTime.now(),
                         synchronization = SynchronizationEnum.PENDING
                     ),
-                    amountExpenses = 10,
+                    amountExpenses = 17,
+                    lastExpenseDate = LocalDateTime.now()
+                ),
+                AccountWithExpensesInfo(
+                    account = Account(
+                        id = UUID.randomUUID().toString(),
+                        type = AccountTypeEnum.DEBIT,
+                        name = "Banco Falabella",
+                        createdAt = LocalDateTime.now(),
+                        updatedAt = LocalDateTime.now(),
+                        synchronization = SynchronizationEnum.PENDING
+                    ),
+                    amountExpenses = 8,
+                    lastExpenseDate = LocalDateTime.now()
+                ),
+                AccountWithExpensesInfo(
+                    account = Account(
+                        id = UUID.randomUUID().toString(),
+                        type = AccountTypeEnum.DEBIT,
+                        name = "Cuenta RUT",
+                        createdAt = LocalDateTime.now(),
+                        updatedAt = LocalDateTime.now(),
+                        synchronization = SynchronizationEnum.PENDING
+                    ),
+                    amountExpenses = 5,
+                    lastExpenseDate = LocalDateTime.now()
+                ),
+                AccountWithExpensesInfo(
+                    account = Account(
+                        id = UUID.randomUUID().toString(),
+                        type = AccountTypeEnum.DEBIT,
+                        name = "Cuenta corriente - Banco de Chile",
+                        createdAt = LocalDateTime.now(),
+                        updatedAt = LocalDateTime.now(),
+                        synchronization = SynchronizationEnum.PENDING
+                    ),
+                    amountExpenses = 1,
+                    lastExpenseDate = LocalDateTime.now()
+                ),
+                AccountWithExpensesInfo(
+                    account = Account(
+                        id = UUID.randomUUID().toString(),
+                        type = AccountTypeEnum.CREDIT,
+                        name = "Cuenta corriente - Banco de Chile",
+                        createdAt = LocalDateTime.now(),
+                        updatedAt = LocalDateTime.now(),
+                        synchronization = SynchronizationEnum.PENDING
+                    ),
+                    amountExpenses = 1,
+                    lastExpenseDate = LocalDateTime.now()
+                ),
+                AccountWithExpensesInfo(
+                    account = Account(
+                        id = UUID.randomUUID().toString(),
+                        type = AccountTypeEnum.CREDIT,
+                        name = "Cuenta FAN - Banco de Chile",
+                        createdAt = LocalDateTime.now(),
+                        updatedAt = LocalDateTime.now(),
+                        synchronization = SynchronizationEnum.PENDING
+                    ),
+                    amountExpenses = 1,
                     lastExpenseDate = LocalDateTime.now()
                 )
             )

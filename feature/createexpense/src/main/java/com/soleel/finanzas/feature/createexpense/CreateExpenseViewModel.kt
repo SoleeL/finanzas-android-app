@@ -16,12 +16,10 @@ import com.soleel.finanzas.core.model.base.Item
 import com.soleel.finanzas.core.model.enums.ExpenseTypeEnum
 import com.soleel.finanzas.domain.account.IGetAccountsWithExpensesInfoCurrentMonthUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -45,18 +43,20 @@ sealed class CreateExpenseUiEvent {
     data class ExpenseName(val name: String) : CreateExpenseUiEvent()
 }
 
-sealed interface AccountsWithExpensesInfoCurrentMonthUiState {
-    data class Success(val accountsWithExpensesInfoCurrentMonthUiState: List<AccountWithExpensesInfo>) :
-        AccountsWithExpensesInfoCurrentMonthUiState
+sealed interface AccountsUiState {
+    data class Success(val accountsWithInfo: List<AccountWithExpensesInfo>) : AccountsUiState
+    data object Error : AccountsUiState
+    data object Loading : AccountsUiState
+}
 
-    data object Error : AccountsWithExpensesInfoCurrentMonthUiState
-    data object Loading : AccountsWithExpensesInfoCurrentMonthUiState
+sealed class AccountsUiEvent {
+    data object Retry : AccountsUiEvent()
 }
 
 @HiltViewModel
 open class CreateExpenseViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val getAccountsWithExpensesInfoCurrentMonthUseCase: IGetAccountsWithExpensesInfoCurrentMonthUseCase,
+    private val getAccountsUseCase: IGetAccountsWithExpensesInfoCurrentMonthUseCase,
     private val retryableFlowTrigger: RetryableFlowTrigger,
 ) : ViewModel() {
 
@@ -67,37 +67,39 @@ open class CreateExpenseViewModel @Inject constructor(
     }
 
     // Privado y con nombre sin el UiState y con Flow
-    private val _accountsWithExpensesInfoCurrentMonthFlow: Flow<AccountsWithExpensesInfoCurrentMonthUiState> =
-        retryableFlowTrigger.retryableFlow(flowProvider = { getAccountsWithExpensesInfoCurrentMonthFlow() })
+    private val _accountsUiStateFlow: Flow<AccountsUiState> =
+        retryableFlowTrigger.retryableFlow(flowProvider = { getAccountsFlow() })
 
-    private fun getAccountsWithExpensesInfoCurrentMonthFlow(): Flow<AccountsWithExpensesInfoCurrentMonthUiState> {
-        return getAccountsWithExpensesInfoCurrentMonthUseCase()
+    private fun getAccountsFlow(): Flow<AccountsUiState> {
+        return getAccountsUseCase()
             .asResult()
-            .map(transform = { this.getAccountsWithExpensesInfoCurrentMonthData(it) })
+            .map(transform = { this.getAccountsData(it) })
     }
 
-    private fun getAccountsWithExpensesInfoCurrentMonthData(
-        accountsWithExpensesInfoCurrentMonthUiStateResult: Result<List<AccountWithExpensesInfo>>,
-    ): AccountsWithExpensesInfoCurrentMonthUiState {
-        return when (accountsWithExpensesInfoCurrentMonthUiStateResult) {
-            is Result.Loading -> AccountsWithExpensesInfoCurrentMonthUiState.Loading
-            is Result.Success -> AccountsWithExpensesInfoCurrentMonthUiState.Success(
-                accountsWithExpensesInfoCurrentMonthUiState = accountsWithExpensesInfoCurrentMonthUiStateResult.data
-            )
-
-            else -> AccountsWithExpensesInfoCurrentMonthUiState.Error
+    private fun getAccountsData(accountsUiStateResult: Result<List<AccountWithExpensesInfo>>): AccountsUiState {
+        return when (accountsUiStateResult) {
+            is Result.Loading -> AccountsUiState.Loading
+            is Result.Success -> AccountsUiState.Success(accountsWithInfo = accountsUiStateResult.data)
+            else -> AccountsUiState.Error
         }
     }
 
     // Publico y con UiState y con Flow
-    val accountsWithExpensesInfoCurrentMonthStateFlow: StateFlow<AccountsWithExpensesInfoCurrentMonthUiState> =
-        _accountsWithExpensesInfoCurrentMonthFlow
-            .onStart(action = { delay(500) })
+    val accountsUiStateFlow: StateFlow<AccountsUiState> =
+        _accountsUiStateFlow
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
-                initialValue = AccountsWithExpensesInfoCurrentMonthUiState.Loading
+                initialValue = AccountsUiState.Loading
             )
+
+    fun onAccountsUiEvent(event: AccountsUiEvent) {
+        when (event) {
+            is AccountsUiEvent.Retry -> {
+                retryableFlowTrigger.retry()
+            }
+        }
+    }
 
     private var _createExpenseUiModel: CreateExpenseUiModel by mutableStateOf(
         CreateExpenseUiModel(

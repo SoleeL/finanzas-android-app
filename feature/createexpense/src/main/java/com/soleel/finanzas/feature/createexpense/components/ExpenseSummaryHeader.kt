@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.soleel.finanzas.core.formatter.FullReadableDailyDateFormat
 import com.soleel.finanzas.core.model.base.Account
 import com.soleel.finanzas.core.model.base.Item
 import com.soleel.finanzas.core.model.enums.AccountTypeEnum
@@ -23,7 +24,6 @@ import com.soleel.finanzas.core.model.enums.SynchronizationEnum
 import com.soleel.finanzas.core.ui.utils.LongDevicePreview
 import com.soleel.finanzas.core.ui.utils.WithFakeSystemBars
 import com.soleel.finanzas.core.ui.utils.WithFakeTopAppBar
-import com.soleel.finanzas.domain.formatdate.AllTransactionsGroupDateUseCase
 import com.soleel.finanzas.domain.transformation.visualtransformation.CLPCurrencyVisualTransformation
 import java.time.LocalDateTime
 import java.util.UUID
@@ -247,7 +247,7 @@ fun ExpenseSummaryHeader(
                         withStyle(
                             style = SpanStyle(fontWeight = FontWeight.Bold),
                             block = {
-                                append(AllTransactionsGroupDateUseCase(date.toLocalDate()))
+                                append(FullReadableDailyDateFormat(date.toLocalDate()))
                             }
                         )
                     }

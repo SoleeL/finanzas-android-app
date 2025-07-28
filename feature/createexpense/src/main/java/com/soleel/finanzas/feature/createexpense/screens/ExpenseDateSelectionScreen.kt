@@ -52,7 +52,7 @@ private fun CalculatorScreenLongPreview() {
 
     val createExpenseViewModel: CreateExpenseViewModel = CreateExpenseViewModel(
         savedStateHandle = fakeSavedStateHandle,
-        getAccountsWithExpensesInfoCurrentMonthUseCase = GetAccountsWithExpensesInfoCurrentMonthUseCaseMock(),
+        getAccountsUseCase = GetAccountsWithExpensesInfoCurrentMonthUseCaseMock(),
         retryableFlowTrigger = RetryableFlowTrigger()
     )
 
@@ -110,7 +110,7 @@ private fun CalculatorScreenShortPreview() {
 
     val createExpenseViewModel: CreateExpenseViewModel = CreateExpenseViewModel(
         savedStateHandle = fakeSavedStateHandle,
-        getAccountsWithExpensesInfoCurrentMonthUseCase = GetAccountsWithExpensesInfoCurrentMonthUseCaseMock(),
+        getAccountsUseCase = GetAccountsWithExpensesInfoCurrentMonthUseCaseMock(),
         retryableFlowTrigger = RetryableFlowTrigger()
     )
 

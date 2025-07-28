@@ -201,7 +201,7 @@ private fun CreateExpenseScreenLongPreview() {
                 navHostController = rememberNavController(),
                 createExpenseViewModel = CreateExpenseViewModel(
                     savedStateHandle = fakeSavedStateHandle,
-                    getAccountsWithExpensesInfoCurrentMonthUseCase = GetAccountsWithExpensesInfoCurrentMonthUseCaseMock(),
+                    getAccountsUseCase = GetAccountsWithExpensesInfoCurrentMonthUseCaseMock(),
                     retryableFlowTrigger = RetryableFlowTrigger()
                 ),
                 backToPrevious = { }
