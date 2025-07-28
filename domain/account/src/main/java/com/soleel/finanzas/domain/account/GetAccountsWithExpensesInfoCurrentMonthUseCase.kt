@@ -1,0 +1,73 @@
+package com.soleel.finanzas.domain.account
+
+import com.soleel.finanzas.core.model.AccountWithExpensesInfo
+import com.soleel.finanzas.core.model.base.Account
+import com.soleel.finanzas.core.model.base.Expense
+import com.soleel.finanzas.core.model.enums.AccountTypeEnum
+import com.soleel.finanzas.core.model.enums.SynchronizationEnum
+import com.soleel.finanzas.data.account.interfaces.IAccountLocalDataSource
+import com.soleel.finanzas.data.expense.interfaces.IExpenseLocalDataSource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOf
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.util.UUID
+import javax.inject.Inject
+
+fun interface IGetAccountsWithExpensesInfoCurrentMonthUseCase {
+    operator fun invoke(): Flow<List<AccountWithExpensesInfo>>
+}
+
+class GetAccountsWithExpensesInfoCurrentMonthUseCase @Inject constructor(
+    private val accountRepository: IAccountLocalDataSource,
+    private val expenseRepository: IExpenseLocalDataSource,
+) : IGetAccountsWithExpensesInfoCurrentMonthUseCase {
+    // README: 1 minisegundo despues... y es el siguiente mes en la request
+    private val localDateNow: LocalDate = LocalDate.now()
+
+    override operator fun invoke(): Flow<List<AccountWithExpensesInfo>> =
+        accountRepository.getAccounts().mapToWithExpensesMonthInfo(
+            expenseRepository.getExpensesBetweenDates(
+                startLocalDateTime = localDateNow.withDayOfMonth(1).atStartOfDay(),
+                endLocalDateTime = localDateNow.withDayOfMonth(localDateNow.lengthOfMonth()).atTime(LocalTime.MAX)
+            )
+        )
+}
+
+private fun Flow<List<Account>>.mapToWithExpensesMonthInfo(
+    expenses: Flow<List<Expense>>,
+): Flow<List<AccountWithExpensesInfo>> {
+    return combine(this, expenses) { accounts, expensesList ->
+        accounts.map { account ->
+            val accountExpenses = expensesList.filter { it.accountId == account.id }
+            AccountWithExpensesInfo(
+                account = account,
+                amountExpenses = accountExpenses.sumOf { it.amount },
+                lastExpenseDate = accountExpenses.maxByOrNull { it.date }?.date
+            )
+        }
+    }
+}
+
+class GetAccountsWithExpensesInfoCurrentMonthUseCaseMock : IGetAccountsWithExpensesInfoCurrentMonthUseCase {
+    override fun invoke(): Flow<List<AccountWithExpensesInfo>> {
+        return flowOf(
+            listOf(
+                AccountWithExpensesInfo(
+                    account = Account(
+                        id = UUID.randomUUID().toString(),
+                        type = AccountTypeEnum.DEBIT,
+                        name = "CMR falabella",
+                        createdAt = LocalDateTime.now(),
+                        updatedAt = LocalDateTime.now(),
+                        synchronization = SynchronizationEnum.PENDING
+                    ),
+                    amountExpenses = 10,
+                    lastExpenseDate = LocalDateTime.now()
+                )
+            )
+        )
+    }
+}

@@ -7,7 +7,7 @@ import com.soleel.finanzas.core.model.base.Expense
 import com.soleel.finanzas.core.model.TransactionWithAccount
 import com.soleel.finanzas.core.model.TransactionsGroup
 import com.soleel.finanzas.data.account.interfaces.IAccountLocalDataSource
-import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
+import com.soleel.finanzas.data.expense.interfaces.IExpenseLocalDataSource
 import com.soleel.finanzas.domain.transactions.utils.toDayDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -16,11 +16,11 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 class GetAllTransactionsUseCase @Inject constructor(
-    private val transactionRepository: ITransactionLocalDataSource,
+    private val transactionRepository: IExpenseLocalDataSource,
     private val accountRepository: IAccountLocalDataSource,
 ) {
     // Listado de transacciones agrupadas por dia/fecha
-    operator fun invoke(): Flow<List<TransactionsGroup>> = transactionRepository.getTransactions()
+    operator fun invoke(): Flow<List<TransactionsGroup>> = transactionRepository.getExpenses()
         .mapToWithAccount(accounts = accountRepository.getAccounts())
         .mapToGroupByDay()
 }

@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 
 
 @Entity(
-    tableName = "transaction_table",
+    tableName = "expense_table",
     indices = [
         Index(name = "index_account_id", value = ["account_id"])
     ],
@@ -21,7 +21,7 @@ import androidx.room.PrimaryKey
         )
     ]
 )
-data class TransactionEntity(
+data class ExpenseEntity(
     @PrimaryKey @ColumnInfo(name = "id") val id: String,
     @ColumnInfo(name = "type") var type: Int,
     @ColumnInfo(name = "category") var category: Int,

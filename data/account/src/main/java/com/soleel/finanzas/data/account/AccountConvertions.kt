@@ -3,7 +3,7 @@ package com.soleel.finanzas.data.account
 import com.soleel.finanzas.core.model.enums.AccountTypeEnum
 import com.soleel.finanzas.core.model.enums.SynchronizationEnum
 import com.soleel.finanzas.core.database.entities.AccountEntity
-import com.soleel.finanzas.core.database.extras.AccountWithTransactionInfoEntity
+import com.soleel.finanzas.core.database.extras.AccountWithExpenseInfoEntity
 import com.soleel.finanzas.core.model.base.Account
 import java.time.Instant
 import java.time.LocalDateTime
@@ -26,12 +26,12 @@ fun List<AccountEntity>.toModelList(): List<Account> {
     return this.map(transform = { it.toModel() })
 }
 
-fun AccountWithTransactionInfoEntity.toModel(): Account {
+fun AccountWithExpenseInfoEntity.toModel(): Account {
     return Account(
         id = this.accountEntity.id,
         type = AccountTypeEnum.fromId(id = this.accountEntity.type),
         name = this.accountEntity.name,
-        transactionsNumber = this.transactionsNumber,
+        transactionsNumber = this.expensesNumber,
         createdAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(this.accountEntity.createdAt), ZoneId.systemDefault()),
         updatedAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(this.accountEntity.updatedAt), ZoneId.systemDefault()),
         isDeleted = this.accountEntity.isDeleted,
@@ -39,7 +39,7 @@ fun AccountWithTransactionInfoEntity.toModel(): Account {
     )
 }
 
-fun List<AccountWithTransactionInfoEntity>.toWithTotalAmountModelList(): List<Account> {
+fun List<AccountWithExpenseInfoEntity>.toWithTotalAmountModelList(): List<Account> {
     return this.map(transform = { it.toModel() })
 }
 

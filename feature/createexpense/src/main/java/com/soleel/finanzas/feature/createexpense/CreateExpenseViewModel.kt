@@ -10,11 +10,12 @@ import com.soleel.finanzas.core.common.result.Result
 import com.soleel.finanzas.core.common.result.asResult
 import com.soleel.finanzas.core.common.retryflow.RetryableFlowTrigger
 import com.soleel.finanzas.core.common.retryflow.retryableFlow
-import com.soleel.finanzas.core.model.AccountWithExpensesMonthInfo
+import com.soleel.finanzas.core.model.AccountWithExpensesInfo
 import com.soleel.finanzas.core.model.base.Account
 import com.soleel.finanzas.core.model.base.Item
 import com.soleel.finanzas.core.model.enums.ExpenseTypeEnum
-import com.soleel.finanzas.domain.account.GetAccountWithExpensesMonthInfoUseCase
+import com.soleel.finanzas.domain.account.GetAccountsWithExpensesInfoCurrentMonthUseCase
+import com.soleel.finanzas.domain.account.IGetAccountsWithExpensesInfoCurrentMonthUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -45,18 +46,18 @@ sealed class CreateExpenseUiEvent {
     data class ExpenseName(val name: String) : CreateExpenseUiEvent()
 }
 
-sealed interface AccountWithExpensesMonthInfoUiState {
-    data class Success(val accountsWithExpensesMonthInfo: List<AccountWithExpensesMonthInfo>) :
-        AccountWithExpensesMonthInfoUiState
+sealed interface AccountsWithExpensesInfoCurrentMonthUiState {
+    data class Success(val accountsWithExpensesInfoCurrentMonthUiState: List<AccountWithExpensesInfo>) :
+        AccountsWithExpensesInfoCurrentMonthUiState
 
-    data object Error : AccountWithExpensesMonthInfoUiState
-    data object Loading : AccountWithExpensesMonthInfoUiState
+    data object Error : AccountsWithExpensesInfoCurrentMonthUiState
+    data object Loading : AccountsWithExpensesInfoCurrentMonthUiState
 }
 
 @HiltViewModel
 open class CreateExpenseViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val getAccountWithExpensesMonthInfoUseCase: GetAccountWithExpensesMonthInfoUseCase,
+    private val getAccountsWithExpensesInfoCurrentMonthUseCase: IGetAccountsWithExpensesInfoCurrentMonthUseCase,
     private val retryableFlowTrigger: RetryableFlowTrigger,
 ) : ViewModel() {
 
@@ -66,12 +67,46 @@ open class CreateExpenseViewModel @Inject constructor(
         return items.sumOf(selector = { it.value.toDouble() }).toFloat()
     }
 
+    // Privado y con nombre sin el UiState y con Flow
+    private val _accountsWithExpensesInfoCurrentMonthFlow: Flow<AccountsWithExpensesInfoCurrentMonthUiState> =
+        retryableFlowTrigger.retryableFlow(flowProvider = { getAccountsWithExpensesInfoCurrentMonthFlow() })
+
+    private fun getAccountsWithExpensesInfoCurrentMonthFlow(): Flow<AccountsWithExpensesInfoCurrentMonthUiState> {
+        return getAccountsWithExpensesInfoCurrentMonthUseCase()
+            .asResult()
+            .map(transform = { this.getAccountsWithExpensesInfoCurrentMonthData(it) })
+    }
+
+    private fun getAccountsWithExpensesInfoCurrentMonthData(
+        accountsWithExpensesInfoCurrentMonthUiStateResult: Result<List<AccountWithExpensesInfo>>,
+    ): AccountsWithExpensesInfoCurrentMonthUiState {
+        return when (accountsWithExpensesInfoCurrentMonthUiStateResult) {
+            is Result.Loading -> AccountsWithExpensesInfoCurrentMonthUiState.Loading
+            is Result.Success -> AccountsWithExpensesInfoCurrentMonthUiState.Success(
+                accountsWithExpensesInfoCurrentMonthUiState = accountsWithExpensesInfoCurrentMonthUiStateResult.data
+            )
+
+            else -> AccountsWithExpensesInfoCurrentMonthUiState.Error
+        }
+    }
+
+    // Publico y con UiState y con Flow
+    val accountsWithExpensesInfoCurrentMonthStateFlow: StateFlow<AccountsWithExpensesInfoCurrentMonthUiState> =
+        _accountsWithExpensesInfoCurrentMonthFlow
+            .onStart(action = { delay(500) })
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
+                initialValue = AccountsWithExpensesInfoCurrentMonthUiState.Loading
+            )
+
     private var _createExpenseUiModel: CreateExpenseUiModel by mutableStateOf(
         CreateExpenseUiModel(
             amount = getTotal(),
             size = items.size
         )
     )
+
     val createExpenseUiModel: CreateExpenseUiModel get() = _createExpenseUiModel
 
     fun onCreateExpenseUiEvent(event: CreateExpenseUiEvent) {
@@ -97,36 +132,4 @@ open class CreateExpenseViewModel @Inject constructor(
             }
         }
     }
-
-    // Privado y con nombre sin el UiState y con Flow
-    private val _accountWithExpensesMonthInfoFlow: Flow<AccountWithExpensesMonthInfoUiState> =
-        retryableFlowTrigger.retryableFlow(flowProvider = { getFlowAccountWithExpensesMonthInfo() })
-
-    private fun getFlowAccountWithExpensesMonthInfo(): Flow<AccountWithExpensesMonthInfoUiState> {
-        return getAccountWithExpensesMonthInfoUseCase()
-            .asResult()
-            .map(transform = { this.getAccountWithExpensesMonthInfoData(it) })
-    }
-
-    private fun getAccountWithExpensesMonthInfoData(
-        accountsWithExpensesInfoResult: Result<List<AccountWithExpensesMonthInfo>>,
-    ): AccountWithExpensesMonthInfoUiState {
-        return when (accountsWithExpensesInfoResult) {
-            is Result.Loading -> AccountWithExpensesMonthInfoUiState.Loading
-            is Result.Success -> AccountWithExpensesMonthInfoUiState.Success(
-                accountsWithExpensesMonthInfo = accountsWithExpensesInfoResult.data
-            )
-            else -> AccountWithExpensesMonthInfoUiState.Error
-        }
-    }
-
-    // Publico y con UiState y con Flow
-    val accountWithExpensesMonthInfoUiUiStateFlow: StateFlow<AccountWithExpensesMonthInfoUiState> =
-        _accountWithExpensesMonthInfoFlow
-            .onStart(action = { delay(500) })
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
-                initialValue = AccountWithExpensesMonthInfoUiState.Loading
-            )
 }

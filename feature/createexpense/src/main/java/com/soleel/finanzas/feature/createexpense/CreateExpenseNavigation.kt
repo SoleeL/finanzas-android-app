@@ -28,9 +28,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.soleel.finanzas.core.common.retryflow.RetryableFlowTrigger
 import com.soleel.finanzas.core.model.base.Item
 import com.soleel.finanzas.core.ui.utils.LongDevicePreview
 import com.soleel.finanzas.core.ui.utils.WithFakeSystemBars
+import com.soleel.finanzas.domain.account.GetAccountsWithExpensesInfoCurrentMonthUseCaseMock
+import com.soleel.finanzas.feature.createexpense.screens.AccountSelectionScreen
+import com.soleel.finanzas.feature.createexpense.screens.ExpenseConfirmationScreen
+import com.soleel.finanzas.feature.createexpense.screens.ExpenseDateSelectionScreen
+import com.soleel.finanzas.feature.createexpense.screens.ExpenseTypeSelectionScreen
+import com.soleel.finanzas.feature.createexpense.screens.InstalmentSelectionScreen
 import kotlinx.serialization.Serializable
 import kotlin.reflect.KType
 
@@ -193,7 +200,9 @@ private fun CreateExpenseScreenLongPreview() {
             CreateExpenseScreen(
                 navHostController = rememberNavController(),
                 createExpenseViewModel = CreateExpenseViewModel(
-                    savedStateHandle = fakeSavedStateHandle
+                    savedStateHandle = fakeSavedStateHandle,
+                    getAccountsWithExpensesInfoCurrentMonthUseCase = GetAccountsWithExpensesInfoCurrentMonthUseCaseMock(),
+                    retryableFlowTrigger = RetryableFlowTrigger()
                 ),
                 backToPrevious = { }
             )

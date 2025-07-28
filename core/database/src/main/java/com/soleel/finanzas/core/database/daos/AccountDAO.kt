@@ -8,7 +8,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.soleel.finanzas.core.database.entities.AccountEntity
-import com.soleel.finanzas.core.database.extras.AccountWithTransactionInfoEntity
+import com.soleel.finanzas.core.database.extras.AccountWithExpenseInfoEntity
 import kotlinx.coroutines.flow.Flow
 
 
@@ -45,11 +45,11 @@ interface AccountDAO {
     @Query("""
         SELECT
             account_table.*,
-            COUNT(*) as transactions_number
+            COUNT(*) as expenses_number
         FROM account_table
-        LEFT JOIN transaction_table ON account_table.id = transaction_table.account_id
+        LEFT JOIN expense_table ON account_table.id = expense_table.account_id
         GROUP BY account_table.id""")
-    fun getAccountsWithTransactionalInfo(): Flow<List<AccountWithTransactionInfoEntity>>
+    fun getAccountsWithExpenseInfo(): Flow<List<AccountWithExpenseInfoEntity>>
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun update(accountEntity: AccountEntity)

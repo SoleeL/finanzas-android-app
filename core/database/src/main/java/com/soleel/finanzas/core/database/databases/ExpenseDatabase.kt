@@ -4,22 +4,22 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.soleel.finanzas.core.database.daos.AccountDAO
 
-import com.soleel.finanzas.core.database.daos.TransactionDAO
+import com.soleel.finanzas.core.database.daos.ExpenseDAO
 import com.soleel.finanzas.core.database.entities.AccountEntity
-import com.soleel.finanzas.core.database.entities.TransactionEntity
+import com.soleel.finanzas.core.database.entities.ExpenseEntity
 
 
 @Database(
     entities = [
         AccountEntity::class,
-        TransactionEntity::class
+        ExpenseEntity::class
     ],
     version = 1,
     exportSchema = false
 )
-abstract class TransactionDatabase : RoomDatabase() {
+abstract class ExpenseDatabase : RoomDatabase() {
 
     abstract fun accountDAO(): AccountDAO
-    abstract fun transactionDAO(): TransactionDAO
+    abstract fun expenseDAO(): ExpenseDAO
 
 }

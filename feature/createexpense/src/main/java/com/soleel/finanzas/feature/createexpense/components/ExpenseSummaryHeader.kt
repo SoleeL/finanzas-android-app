@@ -1,4 +1,4 @@
-package com.soleel.finanzas.feature.createexpense
+package com.soleel.finanzas.feature.createexpense.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

@@ -3,7 +3,7 @@ package com.soleel.finanzas.domain.transactions
 import com.soleel.finanzas.core.model.base.Expense
 import com.soleel.finanzas.core.model.TransactionSummary
 import com.soleel.finanzas.core.model.TransactionsSummary
-import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
+import com.soleel.finanzas.data.expense.interfaces.IExpenseLocalDataSource
 import com.soleel.finanzas.domain.transactions.utils.summaryExpenditure
 import com.soleel.finanzas.domain.transactions.utils.summaryIncome
 import com.soleel.finanzas.domain.transactions.utils.toMonthDate
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class GetMonthlyOfYearTransactionsUseCase @Inject constructor(
-    private val transactionRepository: ITransactionLocalDataSource
+    private val transactionRepository: IExpenseLocalDataSource
 ) {
     operator fun invoke(): Flow<List<TransactionsSummary>> = transactionRepository.getTransactions()
         .mapToSummaryByMonthsOfYear()

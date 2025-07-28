@@ -1,4 +1,4 @@
-package com.soleel.finanzas.feature.createexpense
+package com.soleel.finanzas.feature.createexpense.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,12 +21,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
+import com.soleel.finanzas.core.common.retryflow.RetryableFlowTrigger
 import com.soleel.finanzas.core.model.base.Item
 import com.soleel.finanzas.core.model.enums.ExpenseTypeEnum
 import com.soleel.finanzas.core.ui.utils.LongDevicePreview
 import com.soleel.finanzas.core.ui.utils.ShortDevicePreview
 import com.soleel.finanzas.core.ui.utils.WithFakeSystemBars
 import com.soleel.finanzas.core.ui.utils.WithFakeTopAppBar
+import com.soleel.finanzas.domain.account.GetAccountsWithExpensesInfoCurrentMonthUseCaseMock
+import com.soleel.finanzas.feature.createexpense.CreateExpenseUiEvent
+import com.soleel.finanzas.feature.createexpense.CreateExpenseViewModel
+import com.soleel.finanzas.feature.createexpense.components.ExpenseSummaryHeader
 
 
 @LongDevicePreview
@@ -48,7 +53,9 @@ private fun CalculatorScreenLongPreview() {
                 content = {
                     ExpenseTypeSelectionScreen(
                         createExpenseViewModel = CreateExpenseViewModel(
-                            savedStateHandle = fakeSavedStateHandle
+                            savedStateHandle = fakeSavedStateHandle,
+                            getAccountsWithExpensesInfoCurrentMonthUseCase = GetAccountsWithExpensesInfoCurrentMonthUseCaseMock(),
+                            retryableFlowTrigger = RetryableFlowTrigger()
                         ),
                         onContinue = {}
                     )
@@ -76,7 +83,9 @@ private fun CalculatorScreenShortPreview() {
                 content = {
                     ExpenseTypeSelectionScreen(
                         createExpenseViewModel = CreateExpenseViewModel(
-                            savedStateHandle = fakeSavedStateHandle
+                            savedStateHandle = fakeSavedStateHandle,
+                            getAccountsWithExpensesInfoCurrentMonthUseCase = GetAccountsWithExpensesInfoCurrentMonthUseCaseMock(),
+                            retryableFlowTrigger = RetryableFlowTrigger()
                         ),
                         onContinue = {}
                     )

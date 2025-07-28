@@ -14,7 +14,7 @@ import com.soleel.finanzas.core.common.retryflow.RetryableFlowTrigger
 import com.soleel.finanzas.core.common.retryflow.retryableFlow
 import com.soleel.finanzas.core.model.Account
 import com.soleel.finanzas.data.account.interfaces.IAccountLocalDataSource
-import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
+import com.soleel.finanzas.data.transaction.interfaces.IExpenseLocalDataSource
 import com.soleel.finanzas.domain.validation.validator.ValidatorAccountType
 import com.soleel.finanzas.domain.validation.validator.ValidatorName
 import com.soleel.finanzas.domain.validation.validator.ValidatorTransactionAmount
@@ -89,7 +89,7 @@ sealed class AccountsUiEvent {
 @HiltViewModel
 class CreateTransactionViewModel @Inject constructor(
     private val accountRepository: IAccountLocalDataSource,
-    private val transactionRepository: ITransactionLocalDataSource,
+    private val transactionRepository: IExpenseLocalDataSource,
     private val retryableFlowTrigger: RetryableFlowTrigger,
     val singleEventManager: SingleEventManager
 ) : ViewModel() {

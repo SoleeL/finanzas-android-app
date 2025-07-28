@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import com.soleel.finanzas.core.database.entities.AccountEntity
 
-data class AccountWithTransactionInfoEntity(
+data class AccountWithExpenseInfoEntity(
     @Embedded val accountEntity: AccountEntity,
-    @ColumnInfo(name = "transactions_number") val transactionsNumber: Int = 0
+    @ColumnInfo(name = "expenses_number") val expensesNumber: Int = 0
 )

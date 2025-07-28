@@ -1,4 +1,4 @@
-package com.soleel.finanzas.feature.createexpense
+package com.soleel.finanzas.feature.createexpense.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.SavedStateHandle
+import com.soleel.finanzas.core.common.retryflow.RetryableFlowTrigger
 import com.soleel.finanzas.core.model.base.Account
 import com.soleel.finanzas.core.model.base.Item
 import com.soleel.finanzas.core.model.enums.AccountTypeEnum
@@ -17,6 +18,10 @@ import com.soleel.finanzas.core.ui.utils.LongDevicePreview
 import com.soleel.finanzas.core.ui.utils.ShortDevicePreview
 import com.soleel.finanzas.core.ui.utils.WithFakeSystemBars
 import com.soleel.finanzas.core.ui.utils.WithFakeTopAppBar
+import com.soleel.finanzas.domain.account.GetAccountsWithExpensesInfoCurrentMonthUseCaseMock
+import com.soleel.finanzas.feature.createexpense.CreateExpenseUiEvent
+import com.soleel.finanzas.feature.createexpense.CreateExpenseViewModel
+import com.soleel.finanzas.feature.createexpense.components.ExpenseSummaryHeader
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -46,15 +51,13 @@ private fun CalculatorScreenLongPreview() {
     )
 
     val createExpenseViewModel: CreateExpenseViewModel = CreateExpenseViewModel(
-        savedStateHandle = fakeSavedStateHandle
+        savedStateHandle = fakeSavedStateHandle,
+        getAccountsWithExpensesInfoCurrentMonthUseCase = GetAccountsWithExpensesInfoCurrentMonthUseCaseMock(),
+        retryableFlowTrigger = RetryableFlowTrigger()
     )
 
     createExpenseViewModel.onCreateExpenseUiEvent(
         CreateExpenseUiEvent.ExpenseTypeSelected(ExpenseTypeEnum.OTHER)
-    )
-
-    createExpenseViewModel.onCreateExpenseUiEvent(
-        CreateExpenseUiEvent.AccountTypeSelected(AccountTypeEnum.DEBIT)
     )
 
     createExpenseViewModel.onCreateExpenseUiEvent(
@@ -70,17 +73,11 @@ private fun CalculatorScreenLongPreview() {
         )
     )
 
-    createExpenseViewModel.onCreateExpenseUiEvent(
-        CreateExpenseUiEvent.ExpenseDateSelected(
-            LocalDateTime.now()
-        )
-    )
-
     WithFakeSystemBars(
         content = {
             WithFakeTopAppBar(
                 content = {
-                    ExpenseConfirmationScreen(
+                    InstalmentSelectionScreen(
                         createExpenseViewModel = createExpenseViewModel,
                         onContinue = {}
                     )
@@ -112,7 +109,9 @@ private fun CalculatorScreenShortPreview() {
     )
 
     val createExpenseViewModel: CreateExpenseViewModel = CreateExpenseViewModel(
-        savedStateHandle = fakeSavedStateHandle
+        savedStateHandle = fakeSavedStateHandle,
+        getAccountsWithExpensesInfoCurrentMonthUseCase = GetAccountsWithExpensesInfoCurrentMonthUseCaseMock(),
+        retryableFlowTrigger = RetryableFlowTrigger()
     )
 
     createExpenseViewModel.onCreateExpenseUiEvent(
@@ -120,14 +119,10 @@ private fun CalculatorScreenShortPreview() {
     )
 
     createExpenseViewModel.onCreateExpenseUiEvent(
-        CreateExpenseUiEvent.AccountTypeSelected(AccountTypeEnum.CREDIT)
-    )
-
-    createExpenseViewModel.onCreateExpenseUiEvent(
         CreateExpenseUiEvent.AccountSelected(
             Account(
                 id = UUID.randomUUID().toString(),
-                type = AccountTypeEnum.DEBIT,
+                type = AccountTypeEnum.CREDIT,
                 name = "CMR falabella",
                 createdAt = LocalDateTime.now(),
                 updatedAt = LocalDateTime.now(),
@@ -136,15 +131,11 @@ private fun CalculatorScreenShortPreview() {
         )
     )
 
-    createExpenseViewModel.onCreateExpenseUiEvent(
-        CreateExpenseUiEvent.InstalmentsSelected(3)
-    )
-
     WithFakeSystemBars(
         content = {
             WithFakeTopAppBar(
                 content = {
-                    ExpenseConfirmationScreen(
+                    InstalmentSelectionScreen(
                         createExpenseViewModel = createExpenseViewModel,
                         onContinue = {}
                     )
@@ -155,7 +146,7 @@ private fun CalculatorScreenShortPreview() {
 }
 
 @Composable
-fun ExpenseConfirmationScreen(
+fun InstalmentSelectionScreen(
     createExpenseViewModel: CreateExpenseViewModel,
     onContinue: () -> Unit
 ) {
@@ -167,16 +158,13 @@ fun ExpenseConfirmationScreen(
                 amount = createExpenseViewModel.createExpenseUiModel.amount,
                 itemCount = createExpenseViewModel.createExpenseUiModel.size,
                 expenseTypeEnum = createExpenseViewModel.createExpenseUiModel.expenseType,
-                accountTypeEnum = createExpenseViewModel.createExpenseUiModel.accountType,
-                account = createExpenseViewModel.createExpenseUiModel.account,
-                instalments = createExpenseViewModel.createExpenseUiModel.instalments,
-                date = createExpenseViewModel.createExpenseUiModel.expenseDate
+                account = createExpenseViewModel.createExpenseUiModel.account
             )
 
             Button(
                 onClick = {
                     createExpenseViewModel.onCreateExpenseUiEvent(
-                        CreateExpenseUiEvent.ExpenseName("Compra")
+                        CreateExpenseUiEvent.InstalmentsSelected(4)
                     )
                     onContinue()
                 },
