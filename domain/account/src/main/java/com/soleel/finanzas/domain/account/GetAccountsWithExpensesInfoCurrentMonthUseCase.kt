@@ -7,6 +7,10 @@ import com.soleel.finanzas.core.model.enums.AccountTypeEnum
 import com.soleel.finanzas.core.model.enums.SynchronizationEnum
 import com.soleel.finanzas.data.account.interfaces.IAccountLocalDataSource
 import com.soleel.finanzas.data.expense.interfaces.IExpenseLocalDataSource
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf
@@ -15,6 +19,16 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.UUID
 import javax.inject.Inject
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class GetAccountsWithExpensesInfoCurrentMonthUseCaseModule {
+
+    @Binds
+    abstract fun bindGetAccountsWithExpensesInfoCurrentMonthUseCase(
+        impl: GetAccountsWithExpensesInfoCurrentMonthUseCase
+    ): IGetAccountsWithExpensesInfoCurrentMonthUseCase
+}
 
 fun interface IGetAccountsWithExpensesInfoCurrentMonthUseCase {
     operator fun invoke(): Flow<List<AccountWithExpensesInfo>>
@@ -28,7 +42,7 @@ class GetAccountsWithExpensesInfoCurrentMonthUseCase @Inject constructor(
     private val localDateNow: LocalDate = LocalDate.now()
 
     override operator fun invoke(): Flow<List<AccountWithExpensesInfo>> =
-        accountRepository.getAccounts().mapToWithExpensesMonthInfo(
+        accountRepository.getAccounts().mapToWithExpensesInfoCurrentMonth(
             expenseRepository.getExpensesBetweenDates(
                 startLocalDateTime = localDateNow.withDayOfMonth(1).atStartOfDay(),
                 endLocalDateTime = localDateNow.withDayOfMonth(localDateNow.lengthOfMonth()).atTime(LocalTime.MAX)
@@ -36,7 +50,7 @@ class GetAccountsWithExpensesInfoCurrentMonthUseCase @Inject constructor(
         )
 }
 
-private fun Flow<List<Account>>.mapToWithExpensesMonthInfo(
+private fun Flow<List<Account>>.mapToWithExpensesInfoCurrentMonth(
     expenses: Flow<List<Expense>>,
 ): Flow<List<AccountWithExpensesInfo>> {
     return combine(this, expenses) { accounts, expensesList ->

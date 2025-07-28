@@ -2,7 +2,6 @@ package com.soleel.finanzas.data.expense.di
 
 import com.soleel.finanzas.data.expense.ExpenseRepository
 import com.soleel.finanzas.data.expense.interfaces.IExpenseLocalDataSource
-import com.soleel.finanzas.data.expense.interfaces.ITransactionLocalDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
