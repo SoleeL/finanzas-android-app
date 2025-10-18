@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.soleel.finanzas.core.common.retryflow.RetryableFlowTrigger
-import com.soleel.finanzas.core.formatter.FullReadableDailyDateFormat
 import com.soleel.finanzas.core.formatter.FullReadableDateFormat
 import com.soleel.finanzas.core.model.AccountWithExpensesInfo
 import com.soleel.finanzas.core.model.base.Account

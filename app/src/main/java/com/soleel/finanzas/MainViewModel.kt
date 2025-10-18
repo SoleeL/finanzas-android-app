@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
+
 sealed interface MainUiState {
     data class Success(val startDestination: Any) : MainUiState
     data object Error : MainUiState

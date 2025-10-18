@@ -85,7 +85,7 @@ object ExpenseConfirmation
 fun CreateExpenseScreen(
     navHostController: NavHostController = rememberNavController(),
     createExpenseViewModel: CreateExpenseViewModel = hiltViewModel(),
-    backToPrevious: () -> Unit,
+    backToPrevious: () -> Unit
 ) {
     val currentDestination: NavDestination? = navHostController.currentBackStackEntryAsState()
         .value?.destination

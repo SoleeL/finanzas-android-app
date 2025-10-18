@@ -69,8 +69,6 @@ sealed class CalculatorOperatorButtonUiEvent {
 
     data object Decimal : CalculatorOperatorButtonUiEvent()
     data object Delete : CalculatorOperatorButtonUiEvent()
-
-//    data object Save : CalculatorOperatorButtonUiEvent()
 }
 
 sealed class ItemInCartUiEvent {
