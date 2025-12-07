@@ -32,7 +32,7 @@ gradlePlugin {
 
         register("androidApplicationCompose") {
             id = "finanzas.android.application.compose"
-            implementationClass = "plugins.AndroidApplicationComposeConventionPlugin"
+            implementationClass = "plugins.ComposeApplicationConventionPlugin"
         }
 
         // Library module
@@ -44,43 +44,19 @@ gradlePlugin {
 
         register("androidLibraryCompose") {
             id = "finanzas.android.library.compose"
-            implementationClass = "plugins.AndroidLibraryComposeConventionPlugin"
+            implementationClass = "plugins.ComposeLibraryConventionPlugin"
         }
 
         // Library dependency
 
         register("androidHilt") {
             id = "finanzas.android.hilt"
-            implementationClass = "plugins.AndroidHiltConventionPlugin"
+            implementationClass = "plugins.HiltConventionPlugin"
         }
 
         register("androidRoom") {
             id = "finanzas.android.room"
-            implementationClass = "plugins.AndroidRoomConventionPlugin"
+            implementationClass = "plugins.RoomConventionPlugin"
         }
-
-        // Architecture module
-
-        register("androidFeature") {
-            id = "conventionPluginsApp.android.feature"
-            implementationClass = "plugins.AndroidAppFeatureConventionPlugin"
-        }
-
-
-//        register("androidDomain") {
-//            id = "conventionPluginsApp.android.domain"
-//            implementationClass = "plugins.AndroidAppDomainConventionPlugin"
-//        }
-
-//        register("androidData") {
-//            id = "conventionPluginsApp.android.data"
-//            implementationClass = "plugins.AndroidAppDataConvetionPlugin"
-//        }
-
-//        register("androidCore") {
-//            id = "conventionPluginsApp.android.core"
-//            implementationClass = "plugins.AndroidAppCoreConventionPlugin"
-//        }
-
     }
 }

@@ -2,12 +2,12 @@ package com.soleel.finanzas.domain.transactions
 
 import com.soleel.finanzas.core.model.enums.AccountTypeEnum
 import com.soleel.finanzas.core.model.enums.SynchronizationEnum
-import com.soleel.finanzas.core.model.Account
-import com.soleel.finanzas.core.model.Transaction
+import com.soleel.finanzas.core.model.base.Account
+import com.soleel.finanzas.core.model.base.Expense
 import com.soleel.finanzas.core.model.TransactionWithAccount
 import com.soleel.finanzas.core.model.TransactionsGroup
 import com.soleel.finanzas.data.account.interfaces.IAccountLocalDataSource
-import com.soleel.finanzas.data.transaction.interfaces.ITransactionLocalDataSource
+import com.soleel.finanzas.data.expense.interfaces.IExpenseLocalDataSource
 import com.soleel.finanzas.domain.transactions.utils.toDayDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -16,16 +16,16 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 class GetAllTransactionsUseCase @Inject constructor(
-    private val transactionRepository: ITransactionLocalDataSource,
+    private val transactionRepository: IExpenseLocalDataSource,
     private val accountRepository: IAccountLocalDataSource,
 ) {
     // Listado de transacciones agrupadas por dia/fecha
-    operator fun invoke(): Flow<List<TransactionsGroup>> = transactionRepository.getTransactions()
+    operator fun invoke(): Flow<List<TransactionsGroup>> = transactionRepository.getExpenses()
         .mapToWithAccount(accounts = accountRepository.getAccounts())
         .mapToGroupByDay()
 }
 
-private fun Flow<List<Transaction>>.mapToWithAccount(
+private fun Flow<List<Expense>>.mapToWithAccount(
     accounts: Flow<List<Account>>
 ): Flow<List<TransactionWithAccount>> {
     return combine(
@@ -48,7 +48,7 @@ private fun Flow<List<Transaction>>.mapToWithAccount(
                     )
 
                     TransactionWithAccount(
-                        transaction = transaction,
+                        expense = transaction,
                         account = account ?: accountNotFind
                     )
                 }
@@ -60,7 +60,7 @@ private fun Flow<List<Transaction>>.mapToWithAccount(
 private fun Flow<List<TransactionWithAccount>>.mapToGroupByDay(): Flow<List<TransactionsGroup>> {
     return this.map(transform = { transactionsWithAccount ->
         transactionsWithAccount
-            .groupBy(keySelector = { it.transaction.date.toDayDate() })
+            .groupBy(keySelector = { it.expense.date.toDayDate() })
             .map(transform = { (localDate, dailyTransactionsWithAccount) ->
                 TransactionsGroup(
                     localDate = localDate,

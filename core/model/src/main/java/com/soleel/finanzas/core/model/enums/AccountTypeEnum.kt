@@ -7,11 +7,10 @@ enum class AccountTypeEnum(
     val value: String,
     val icon: Int
 ) {
-    CREDIT(id = 1, value = "Credito", icon = R.drawable.ic_account_credit),
-    DEBIT(id = 2, value = "Debito", icon =  R.drawable.ic_account_debit),
-    SAVING(id = 3, value = "Ahorro", icon = R.drawable.ic_account_saving),
-    INVESTMENT(id = 4, value = "Inversion", icon = R.drawable.ic_account_investment),
-    CASH(id = 5, value = "Efectivo", icon = R.drawable.ic_account_cash);
+
+    CASH(id = 1, value = "Efectivo", icon = R.drawable.ic_account_cash),
+    CREDIT(id = 2, value = "Credito", icon = R.drawable.ic_account_credit),
+    DEBIT(id = 3, value = "Debito", icon =  R.drawable.ic_account_debit);
 
     companion object {
         fun fromId(id: Int): AccountTypeEnum {

@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.soleel.finanzas.core.database.daos.AccountDAO
-import com.soleel.finanzas.core.database.daos.TransactionDAO
-import com.soleel.finanzas.core.database.databases.TransactionDatabase
+import com.soleel.finanzas.core.database.daos.ExpenseDAO
+import com.soleel.finanzas.core.database.databases.ExpenseDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,24 +15,24 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object TransactionDatabaseModule {
+object ExpenseDatabaseModule {
 
     @Singleton
     @Provides
-    fun provideTransactionDatabase(@ApplicationContext context: Context): TransactionDatabase {
+    fun provideExpenseDatabase(@ApplicationContext context: Context): ExpenseDatabase {
         return Room.databaseBuilder(
             context,
-            TransactionDatabase::class.java,
-            "transaction_database.db"
+            ExpenseDatabase::class.java,
+            "expense_database.db"
         )
             .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
             .build()
     }
 
     @Provides
-    fun provideAccountDAO(database: TransactionDatabase): AccountDAO = database.accountDAO()
+    fun provideAccountDAO(database: ExpenseDatabase): AccountDAO = database.accountDAO()
 
     @Provides
-    fun provideTransactionDAO(database: TransactionDatabase): TransactionDAO = database.transactionDAO()
+    fun provideExpenseDAO(database: ExpenseDatabase): ExpenseDAO = database.expenseDAO()
 
 }

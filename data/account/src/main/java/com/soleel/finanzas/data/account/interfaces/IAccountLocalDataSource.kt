@@ -2,7 +2,7 @@ package com.soleel.finanzas.data.account.interfaces
 
 
 import com.soleel.finanzas.core.model.enums.AccountTypeEnum
-import com.soleel.finanzas.core.model.Account
+import com.soleel.finanzas.core.model.base.Account
 import kotlinx.coroutines.flow.Flow
 
 

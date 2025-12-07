@@ -3,7 +3,7 @@ package com.soleel.finanzas.data.account
 import com.soleel.finanzas.core.model.enums.AccountTypeEnum
 import com.soleel.finanzas.core.model.enums.SynchronizationEnum
 import com.soleel.finanzas.core.database.daos.AccountDAO
-import com.soleel.finanzas.core.model.Account
+import com.soleel.finanzas.core.model.base.Account
 import com.soleel.finanzas.data.account.di.DefaultDispatcher
 import com.soleel.finanzas.data.account.interfaces.IAccountLocalDataSource
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,13 +17,13 @@ import javax.inject.Inject
 
 
 class AccountRepository @Inject constructor(
-    private val AccountDAO: AccountDAO,
+    private val accountDAO: AccountDAO,
     // private val AccountNetwork: AccountNetwork,
     @DefaultDispatcher private val dispatcher: CoroutineDispatcher
 ) : IAccountLocalDataSource {
 
     override fun getAccount(accountId: String): Flow<Account?> {
-        return AccountDAO.getAccountById(accountId).map(transform =  { it.toModel() })
+        return accountDAO.getAccountById(accountId).map(transform =  { it.toModel() })
     }
 
     override fun getAccountWithForceUpdate(accountId: String, forceUpdate: Boolean): Account? {
@@ -31,7 +31,7 @@ class AccountRepository @Inject constructor(
     }
 
     override fun getAccounts(): Flow<List<Account>> {
-        return AccountDAO.getAllAccount().map(transform =  { it.toModelList() })
+        return accountDAO.getAllAccount().map(transform =  { it.toModelList() })
     }
 
     override fun getAccountsWithForceUpdate(forceUpdate: Boolean): List<Account> {
@@ -39,11 +39,13 @@ class AccountRepository @Inject constructor(
     }
 
     override fun getAccountWithTransactionInfo(accountId: String): Flow<Account?> {
-        return AccountDAO.getAccountByIdWithTotalsAmount(id = accountId).map(transform = { it.toModel() })
+        TODO("Not yet implemented")
+//        return accountDAO.getAccountByIdWithTotalsAmount(id = accountId).map(transform = { it.toModel() })
     }
 
     override fun getAccountsWithTransactionInfo(): Flow<List<Account>> {
-        return AccountDAO.getAccountsWithTransactionalInfo().map(transform =  { it.toWithTotalAmountModelList() })
+//        TODO("Not yet implemented")
+        return accountDAO.getAccountsWithExpenseInfo().map(transform =  { it.toWithTotalAmountModelList() })
     }
 
     override suspend fun refreshAccounts() {
@@ -79,7 +81,7 @@ class AccountRepository @Inject constructor(
         withContext(
             context = Dispatchers.IO,
             block = {
-                AccountDAO.insert(account.toEntity())
+                accountDAO.insert(account.toEntity())
             }
         )
 

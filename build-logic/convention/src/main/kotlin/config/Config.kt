@@ -31,7 +31,7 @@ object Config {
     }
 
     val android = AndroidConfig(
-        minSdkVersion = 30,
+        minSdkVersion = 28,
         targetSdkVersion = 33,
         compileSdkVersion = 34,
         applicationId = "com.soleel.finanzas",

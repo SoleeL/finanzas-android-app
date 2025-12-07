@@ -16,10 +16,10 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.application")
                 apply("kotlin-android")
+                apply("kotlinx-serialization")
             }
 
             extensions.configure<ApplicationExtension> {
-
                 defaultConfig.apply {
                     targetSdk = Config.android.targetSdkVersion
                     applicationId = Config.android.applicationId

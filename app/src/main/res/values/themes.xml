@@ -2,4 +2,10 @@
 <resources>
 
     <style name="Theme.Finanzas" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.Finanzas.SplashScreen" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
 </resources>

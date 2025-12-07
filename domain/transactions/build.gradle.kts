@@ -9,5 +9,5 @@ android {
 
 dependencies{
     api(projects.data.account)
-    api(projects.data.transaction)
+    api(projects.data.expense)
 }
