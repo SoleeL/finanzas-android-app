@@ -29,11 +29,10 @@ sealed interface MainUiState {
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val appPreferences: IAppPreferences = MockAppPreferences(),
-
     private val retryableFlowTrigger: RetryableFlowTrigger
 ) : ViewModel() {
     private val _mainUiState: Flow<MainUiState> = retryableFlowTrigger
-        .retryableFlow<MainUiState> (flowProvider = { getFlowMain() })
+        .retryableFlow<MainUiState>(flowProvider = { getFlowMain() })
     val mainUiState: StateFlow<MainUiState> = _mainUiState
         .stateIn(
             scope = viewModelScope,
@@ -43,17 +42,19 @@ class MainViewModel @Inject constructor(
 
     private fun getFlowMain(): Flow<MainUiState> {
         // flow(block = { -> Se infiere el tipo a emitir por el catch segun el primer emit
-        return flow<MainUiState>(block = {
-            val authToken = appPreferences.getAuthToken().firstOrNull()
-            val config = appPreferences.getConfiguration().firstOrNull()
+        return flow<MainUiState>(
+            block = {
+                val authToken = appPreferences.getAuthToken().firstOrNull()
+                val config = appPreferences.getConfiguration().firstOrNull()
 
-            val destination = when {
-                authToken == null -> LoginGraph
-                config == null -> ConfigurationGraph
-                else -> HomeGraph
+                val destination = when {
+                    authToken == null -> LoginGraph
+                    config == null -> ConfigurationGraph
+                    else -> HomeGraph
+                }
+
+                emit(MainUiState.Success(destination))
             }
-
-            emit(MainUiState.Success(destination))
-        }).catch(action = { emit(MainUiState.Error) })
+        ).catch(action = { emit(MainUiState.Error) })
     }
 }

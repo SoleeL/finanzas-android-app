@@ -27,7 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.soleel.finanzas.core.model.base.Item
 import com.soleel.finanzas.core.ui.R
-import com.soleel.finanzas.feature.home.calculator.CalculatorScreen
+import com.soleel.finanzas.feature.home.calculator2.CalculatorScreen
 import kotlinx.serialization.Serializable
 
 @Serializable

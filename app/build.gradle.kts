@@ -15,11 +15,11 @@ dependencies {
 
     implementation(projects.data.preferences)
 
+    implementation(projects.feature.launch)
     implementation(projects.feature.login)
     implementation(projects.feature.configuration)
     implementation(projects.feature.home)
     implementation(projects.feature.createexpense)
-    implementation(projects.feature.menu)
 
 //    implementation(projects.feature.add)
 //    implementation(projects.feature.accounts)
