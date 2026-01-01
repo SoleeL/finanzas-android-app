@@ -16,6 +16,10 @@ import com.soleel.finanzas.core.ui.R
 
 @Composable
 fun SuccessScreen() {
+
+
+    // UiState.Success -> 1. Animacion inicio exitoso, 2. Navegar al destino
+
     Box(
         modifier = Modifier
             .fillMaxSize()

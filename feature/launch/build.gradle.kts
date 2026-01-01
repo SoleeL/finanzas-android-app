@@ -9,7 +9,11 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.common)
     implementation(projects.core.ui)
 
     implementation(projects.data.preferences)
+
+    implementation(projects.feature.configuration)
+    implementation(projects.feature.home)
 }

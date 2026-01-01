@@ -41,7 +41,28 @@ fun MainNavigationGraph() {
 //        popExitTransition = { ExitTransition.None },
         builder = {
             composable<LaunchGraph> {
-                launchNavigationGraph()
+                launchNavigationGraph(
+                    navigateToConfigurationGraph = {
+                        navHostController.navigate(
+                            route = HomeGraph,
+                            builder = {
+                                popUpTo(route = LaunchGraph, popUpToBuilder = { inclusive = true })
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        )
+                    },
+                    navigateToHomeGraph = {
+                        navHostController.navigate(
+                            route = HomeGraph,
+                            builder = {
+                                popUpTo(route = LaunchGraph, popUpToBuilder = { inclusive = true })
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        )
+                    }
+                )
             }
 
             loginNavigationGraph(
@@ -77,7 +98,8 @@ fun MainNavigationGraph() {
                 navigateToNotificationsScreen = { navHostController.navigate(Notifications) },
                 navigateToPasswordScreen = { navHostController.navigate(Password) },
                 navigateToBackupScreen = { navHostController.navigate(Backup) },
-                navigateToHomeGraph = { navHostController.navigate(
+                navigateToHomeGraph = {
+                    navHostController.navigate(
                         route = HomeGraph,
                         builder = {
                             popUpTo(
@@ -99,10 +121,10 @@ fun MainNavigationGraph() {
                 itemsToNavType = mapOf(typeOf<List<Item>>() to createListNavType<Item>())
             )
 
-            createAccountNavigationGraph(
-                backToPrevious = { navHostController.popBackStack() },
-                itemsToNavType = mapOf(typeOf<List<Item>>() to createListNavType<Item>())
-            )
+//            createAccountNavigationGraph(
+//                backToPrevious = { navHostController.popBackStack() },
+//                itemsToNavType = mapOf(typeOf<List<Item>>() to createListNavType<Item>())
+//            )
         }
     )
 }

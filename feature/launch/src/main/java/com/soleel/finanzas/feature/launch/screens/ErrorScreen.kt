@@ -19,6 +19,9 @@ import androidx.compose.ui.unit.dp
 fun ErrorScreen(
     onRetry: (() -> Unit)? = null
 ) {
+
+    // UiState.Failure -> 1. Presentar error, 2. Boton de reintento
+
     Box(
         modifier = Modifier
             .fillMaxSize()
