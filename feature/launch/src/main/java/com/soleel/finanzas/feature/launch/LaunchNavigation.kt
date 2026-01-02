@@ -19,8 +19,8 @@ import androidx.navigation.compose.rememberNavController
 import com.soleel.finanzas.core.common.UiState
 import com.soleel.finanzas.feature.configuration.ConfigurationGraph
 import com.soleel.finanzas.feature.home.HomeGraph
-import com.soleel.finanzas.feature.launch.screens.ErrorScreen
-import com.soleel.finanzas.feature.launch.screens.SuccessScreen
+import com.soleel.finanzas.feature.launch.screens.FailureSupplyScreen
+import com.soleel.finanzas.feature.launch.screens.SuccessSupplyScreen
 import com.soleel.finanzas.feature.launch.screens.SupplyingScreen
 import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
@@ -68,10 +68,10 @@ fun LaunchScreen(
     LaunchedEffect(destinationUiState) {
         when (destinationUiState) {
             is UiState.Loading -> {
-
             }
 
             is UiState.Success -> {
+
                 navHostController.navigate(
                     route = SuccessSupply
                 ) {
@@ -97,6 +97,7 @@ fun LaunchScreen(
             }
 
             is UiState.Failure -> {
+
                 val failureUiState = destinationUiState as UiState.Failure
                 navHostController.navigate(
                     route = FailureSupply(
@@ -109,10 +110,6 @@ fun LaunchScreen(
                 }
 
                 // TODO: ESTO DEBE REINTENTAR TODO EL PROCESO NAVEGANDO A Supplying7
-
-                // La pantalla de Error ya está en el NavHost;
-                // simplemente mostramos la UI con los datos del error.
-                // No hacemos nada aquí, pero podrías mostrar un Snackbar si lo deseas.
             }
         }
     }
@@ -137,13 +134,13 @@ fun LaunchScreen(
 
                             composable<SuccessSupply>(
                                 content = {
-                                    SuccessScreen()
+                                    SuccessSupplyScreen()
                                 }
                             )
 
                             composable<FailureSupply>(
                                 content = {
-                                    ErrorScreen(
+                                    FailureSupplyScreen(
                                         onRetry = {
                                             navHostController.navigate(
                                                 route = Supplying
@@ -151,6 +148,8 @@ fun LaunchScreen(
                                                 popUpTo(0) { inclusive = true }
                                                 launchSingleTop = true
                                             }
+
+                                            launchViewModel.retry()
                                         }
                                     )
                                 }
@@ -161,4 +160,5 @@ fun LaunchScreen(
             )
         }
     )
+
 }

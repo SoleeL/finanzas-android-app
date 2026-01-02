@@ -40,30 +40,28 @@ fun MainNavigationGraph() {
 //        popEnterTransition = { EnterTransition.None },
 //        popExitTransition = { ExitTransition.None },
         builder = {
-            composable<LaunchGraph> {
-                launchNavigationGraph(
-                    navigateToConfigurationGraph = {
-                        navHostController.navigate(
-                            route = HomeGraph,
-                            builder = {
-                                popUpTo(route = LaunchGraph, popUpToBuilder = { inclusive = true })
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        )
-                    },
-                    navigateToHomeGraph = {
-                        navHostController.navigate(
-                            route = HomeGraph,
-                            builder = {
-                                popUpTo(route = LaunchGraph, popUpToBuilder = { inclusive = true })
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        )
-                    }
-                )
-            }
+            launchNavigationGraph(
+                navigateToConfigurationGraph = {
+                    navHostController.navigate(
+                        route = HomeGraph,
+                        builder = {
+                            popUpTo(route = LaunchGraph, popUpToBuilder = { inclusive = true })
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    )
+                },
+                navigateToHomeGraph = {
+                    navHostController.navigate(
+                        route = HomeGraph,
+                        builder = {
+                            popUpTo(route = LaunchGraph, popUpToBuilder = { inclusive = true })
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    )
+                }
+            )
 
             loginNavigationGraph(
                 navigateToHomeGraph = {

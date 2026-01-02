@@ -1,5 +1,7 @@
 package com.soleel.finanzas.feature.launch
 
+import android.os.RemoteException
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.soleel.finanzas.core.common.UiState
@@ -11,6 +13,7 @@ import com.soleel.finanzas.data.preferences.app.MockAppPreferences
 import com.soleel.finanzas.feature.configuration.ConfigurationGraph
 import com.soleel.finanzas.feature.home.HomeGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -40,12 +43,17 @@ class LaunchViewModel @Inject constructor(
         // flow(block = { -> Se infiere el tipo a emitir por el catch segun el primer emit
         return flow<UiState<Any>>(
             block = {
+
+                delay(1_000) // Simula request
+
                 val config: Configuration? = appPreferences.getConfiguration().firstOrNull()
 
                 val destination = when {
                     config == null -> ConfigurationGraph
                     else -> HomeGraph
                 }
+
+//                throw RemoteException("error de prueba")
 
                 emit(UiState.Success<Any>(destination))
             }
@@ -54,5 +62,9 @@ class LaunchViewModel @Inject constructor(
                 emit(UiState.Failure(throwable))
             }
         )
+    }
+
+    fun retry() {
+        retryableFlowTrigger.retry()
     }
 }
