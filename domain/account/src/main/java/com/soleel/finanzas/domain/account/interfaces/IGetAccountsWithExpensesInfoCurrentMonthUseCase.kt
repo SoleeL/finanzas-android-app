@@ -1,7 +1,7 @@
 package com.soleel.finanzas.domain.account.interfaces
 
-import kotlinx.coroutines.flow.Flow
+import com.soleel.finanzas.domain.account.AccountWithExpensesInfoDto
 
 fun interface IGetAccountsWithExpensesInfoCurrentMonthUseCase {
-    operator fun invoke(): Flow<List<AccountWithExpensesInfo>>
+    suspend operator fun invoke(): List<AccountWithExpensesInfoDto>
 }

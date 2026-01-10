@@ -5,56 +5,40 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import androidx.room.Update
 import com.soleel.finanzas.core.database.entities.AccountEntity
-import com.soleel.finanzas.core.database.extras.AccountWithExpenseInfoEntity
 import kotlinx.coroutines.flow.Flow
+import java.util.UUID
 
 
 @Dao
 interface AccountDAO {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(accountEntity: AccountEntity)
+    @Insert
+    suspend fun insert(entity: AccountEntity)
+
+    @Query("SELECT COUNT(*) FROM account_table")
+    suspend fun getAccountsCount(): Int
+
+    @Query("SELECT COUNT(*) FROM account_table WHERE is_deleted = 1")
+    suspend fun getAccountsNotDeletedCount(): Int
 
     @Query("SELECT * FROM account_table")
-    fun getAllAccount(): Flow<List<AccountEntity>>
+    suspend fun getAccounts(): List<AccountEntity>
 
     @Query("SELECT * FROM account_table WHERE id = :id")
-    fun getAccountById(id: String): Flow<AccountEntity>
+    suspend fun getAccount(id: UUID): AccountEntity?
 
-//    @Transaction
-//    @Query("""
-//        SELECT
-//            account_table.*,
-//            SUM(CASE WHEN transaction_table.type = :incomeType THEN transaction_table.amount ELSE 0 END) as total_income,
-//            SUM(CASE WHEN transaction_table.type = :expenseType THEN transaction_table.amount ELSE 0 END) as total_expense,
-//            COUNT(*) as transactions_number
-//        FROM account_table
-//        LEFT JOIN transaction_table ON account_table.id = transaction_table.account_id
-//        WHERE account_table.id = :id
-//        GROUP BY account_table.id""")
-//    fun getAccountByIdWithTotalsAmount(
-//        incomeType: Int = TransactionTypeEnum.INCOME.id,
-//        expenseType: Int = TransactionTypeEnum.EXPENDITURE.id,
-//        id: String
-//    ): Flow<AccountWithTransactionInfoEntity>
+    @Query("SELECT * FROM account_table")
+    fun getAccountsFlow(): Flow<List<AccountEntity>>
 
-    @Transaction
-    @Query("""
-        SELECT
-            account_table.*,
-            COUNT(*) as expenses_number
-        FROM account_table
-        LEFT JOIN expense_table ON account_table.id = expense_table.account_id
-        GROUP BY account_table.id""")
-    fun getAccountsWithExpenseInfo(): Flow<List<AccountWithExpenseInfoEntity>>
+    @Query("SELECT * FROM account_table WHERE id = :id")
+    fun getAccountFlow(id: UUID): Flow<AccountEntity?>
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun update(accountEntity: AccountEntity)
+    suspend fun update(entity: AccountEntity)
 
     @Delete
-    suspend fun delete(accountEntity: AccountEntity)
+    suspend fun delete(entity: AccountEntity)
 
 }

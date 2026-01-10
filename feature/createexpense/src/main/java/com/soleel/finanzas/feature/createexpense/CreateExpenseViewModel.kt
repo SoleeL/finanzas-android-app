@@ -1,5 +1,6 @@
 package com.soleel.finanzas.feature.createexpense
 
+import android.accounts.Account
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,11 +11,10 @@ import com.soleel.finanzas.core.common.result.Result
 import com.soleel.finanzas.core.common.result.asResult
 import com.soleel.finanzas.core.common.retryflow.RetryableFlowTrigger
 import com.soleel.finanzas.core.common.retryflow.retryableFlow
-import com.soleel.finanzas.core.model.AccountWithExpensesInfo
-import com.soleel.finanzas.core.model.base.Account
 import com.soleel.finanzas.core.model.base.Item
 import com.soleel.finanzas.core.model.enums.ExpenseTypeEnum
-import com.soleel.finanzas.domain.account.IGetAccountsWithExpensesInfoCurrentMonthUseCase
+import com.soleel.finanzas.domain.account.AccountWithExpensesInfoDto
+import com.soleel.finanzas.domain.account.interfaces.IGetAccountsWithExpensesInfoCurrentMonthUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -44,7 +44,7 @@ sealed class CreateExpenseUiEvent {
 }
 
 sealed interface AccountsUiState {
-    data class Success(val accountsWithInfo: List<AccountWithExpensesInfo>) : AccountsUiState
+    data class Success(val accountsWithInfo: List<AccountWithExpensesInfoDto>) : AccountsUiState
     data object Error : AccountsUiState
     data object Loading : AccountsUiState
 }
@@ -76,7 +76,7 @@ open class CreateExpenseViewModel @Inject constructor(
             .map(transform = { this.getAccountsData(it) })
     }
 
-    private fun getAccountsData(accountsUiStateResult: Result<List<AccountWithExpensesInfo>>): AccountsUiState {
+    private fun getAccountsData(accountsUiStateResult: Result<List<AccountWithExpensesInfoDto>>): AccountsUiState {
         return when (accountsUiStateResult) {
             is Result.Loading -> AccountsUiState.Loading
             is Result.Success -> AccountsUiState.Success(accountsWithInfo = accountsUiStateResult.data)

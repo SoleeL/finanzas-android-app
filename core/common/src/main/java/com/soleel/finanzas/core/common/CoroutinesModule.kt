@@ -1,4 +1,4 @@
-package com.soleel.finanzas.data.expense.di
+package com.soleel.finanzas.core.common
 
 import dagger.Module
 import dagger.Provides

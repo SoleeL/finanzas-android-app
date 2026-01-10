@@ -12,6 +12,9 @@ dependencies {
     api(projects.core.common)
     api(projects.core.component)
     api(projects.core.ui)
+
     api(projects.data.account)
+    api(projects.data.expense)
+
     api(projects.domain.validation)
 }

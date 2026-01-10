@@ -1,19 +1,31 @@
 package com.soleel.finanzas.domain.transactions
 
+import com.soleel.finanzas.core.database.entities.AccountEntity
 import com.soleel.finanzas.core.model.enums.AccountTypeEnum
 import com.soleel.finanzas.core.model.enums.SynchronizationEnum
-import com.soleel.finanzas.core.model.base.Account
 import com.soleel.finanzas.core.model.base.Expense
-import com.soleel.finanzas.core.model.TransactionWithAccount
-import com.soleel.finanzas.core.model.TransactionsGroup
 import com.soleel.finanzas.data.account.interfaces.IAccountRepository
 import com.soleel.finanzas.data.expense.interfaces.IExpenseLocalDataSource
 import com.soleel.finanzas.domain.transactions.utils.toDayDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
+
+
+
+data class TransactionsGroup(
+    val localDate: LocalDate, // Fecha del dia
+    val transactionsWithAccount: List<TransactionWithAccount> // Todas las transacciones del dia
+)
+
+data class TransactionWithAccount(
+    val expense: Expense,
+    val account: AccountEntity
+)
+
 
 class GetAllTransactionsUseCase @Inject constructor(
     private val transactionRepository: IExpenseLocalDataSource,
@@ -26,7 +38,7 @@ class GetAllTransactionsUseCase @Inject constructor(
 }
 
 private fun Flow<List<Expense>>.mapToWithAccount(
-    accounts: Flow<List<Account>>
+    accounts: Flow<List<AccountEntity>>
 ): Flow<List<TransactionWithAccount>> {
     return combine(
         flow = this,
@@ -36,7 +48,7 @@ private fun Flow<List<Expense>>.mapToWithAccount(
                 transform = { transaction ->
                     val account = accounts.find(predicate = { it.id == transaction.accountId })
 
-                    val accountNotFind = Account(
+                    val accountNotFind = AccountEntity(
                         id = "",
                         type = AccountTypeEnum.CREDIT,
                         name = "null",

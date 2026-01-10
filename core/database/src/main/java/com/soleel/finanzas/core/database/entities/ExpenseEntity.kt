@@ -5,6 +5,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.soleel.finanzas.core.model.enums.ExpenseTypeEnum
+import java.time.LocalDateTime
+import java.util.UUID
 
 
 @Entity(
@@ -22,15 +25,24 @@ import androidx.room.PrimaryKey
     ]
 )
 data class ExpenseEntity(
-    @PrimaryKey @ColumnInfo(name = "id") val id: String,
-    @ColumnInfo(name = "type") var type: Int,
-    @ColumnInfo(name = "category") var category: Int,
-    @ColumnInfo(name = "name") var name: String,
-    @ColumnInfo(name = "date") var date: Long,
-    @ColumnInfo(name = "amount") var amount: Int,
-    @ColumnInfo(name = "account_id") var accountId: String,
-    @ColumnInfo(name = "created_at") var createdAt: Long,
-    @ColumnInfo(name = "updated_at") var updatedAt: Long,
-    @ColumnInfo(name = "is_deleted") var isDeleted: Boolean,
-    @ColumnInfo(name = "synchronization") var synchronization: Int,
+    @PrimaryKey @ColumnInfo(name = "id")
+    val id: UUID,
+
+    @ColumnInfo(name = "type")
+    val type: ExpenseTypeEnum,
+    @ColumnInfo(name = "name")
+    val name: String,
+    @ColumnInfo(name = "date")
+    val date: LocalDateTime,
+    @ColumnInfo(name = "amount")
+    val amount: Int,
+
+    @ColumnInfo(name = "account_id")
+    val accountId: UUID,
+    @ColumnInfo(name = "created_at")
+    val createdAt: LocalDateTime,
+    @ColumnInfo(name = "updated_at")
+    val updatedAt: LocalDateTime,
+    @ColumnInfo(name = "is_deleted")
+    val isDeleted: Boolean
 )

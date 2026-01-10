@@ -1,46 +1,52 @@
 package com.soleel.finanzas.data.account
 
+import com.soleel.finanzas.core.database.entities.AccountEntity
+import com.soleel.finanzas.core.model.base.AccountDto
+import com.soleel.finanzas.core.model.convertions.deviceToUtc
+import com.soleel.finanzas.core.model.convertions.utcToDevice
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.util.UUID
 
-//fun AccountEntity.toDto(): AccountDto {
-//    return AccountDto(
-//        id = this.id,
-//        type = AccountTypeEnum.fromId(id = this.type),
-//        name = this.name,
-//        createdAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(this.createdAt), ZoneId.systemDefault()),
-//        updatedAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(this.updatedAt), ZoneId.systemDefault()),
-//        isDeleted = this.isDeleted,
-//    )
-//}
-//
-//fun List<AccountEntity>.toDtoList(): List<AccountDto> {
-//    return this.map(transform = { it.toDto() })
-//}
 
-//fun AccountWithExpenseInfoEntity.toModel(): AccountDto {
-//    return AccountDto(
-//        id = this.accountEntity.id,
-//        type = AccountTypeEnum.fromId(id = this.accountEntity.type),
-//        name = this.accountEntity.name,
-//        transactionsNumber = this.expensesNumber,
-//        createdAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(this.accountEntity.createdAt), ZoneId.systemDefault()),
-//        updatedAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(this.accountEntity.updatedAt), ZoneId.systemDefault()),
-//        isDeleted = this.accountEntity.isDeleted,
-//
-//    )
-//}
-//
-//fun List<AccountWithExpenseInfoEntity>.toWithTotalAmountModelList(): List<AccountDto> {
-//    return this.map(transform = { it.toModel() })
-//}
+fun AccountDto.toEntity(): AccountEntity {
+    val nowUtc: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
 
-//fun AccountDto.toEntity(): AccountEntity {
-//    return AccountEntity(
-//        id = this.id,
-//        type = this.type.id,
-//        name = this.name,
-//        createdAt = System.currentTimeMillis(),
-//        updatedAt = System.currentTimeMillis(),
-//        isDeleted = this.isDeleted,
-//        synchronization = SynchronizationEnum.PENDING.id
-//    )
-//}
+    return AccountEntity(
+        id = this.id ?: UUID.randomUUID(),
+        type = this.type,
+        issue = this.issue,
+        fee = this.fee,
+        creditLimit = this.creditLimit,
+        interestRate = this.interestRate,
+        interestFreeInstallments = this.interestFreeInstallments,
+        billingDay = this.billingDay,
+        dueDay = this.dueDay,
+        name = this.name,
+        createdAt = this.createdAt?.let(block = { it.deviceToUtc() }) ?: nowUtc,
+        updatedAt = this.updatedAt?.let(block = { it.deviceToUtc() }) ?: nowUtc,
+        isDeleted = this.isDeleted,
+    )
+}
+
+fun AccountEntity.toDto(): AccountDto {
+    return AccountDto(
+        id = this.id,
+        type = this.type,
+        issue = this.issue,
+        fee = this.fee,
+        creditLimit = this.creditLimit,
+        interestRate = this.interestRate,
+        interestFreeInstallments = this.interestFreeInstallments,
+        billingDay = this.billingDay,
+        dueDay = this.dueDay,
+        name = this.name,
+        createdAt = this.createdAt.utcToDevice(),
+        updatedAt = this.updatedAt.utcToDevice(),
+        isDeleted = this.isDeleted,
+    )
+}
+
+fun List<AccountEntity>.toDtoList(): List<AccountDto> {
+    return this.map(transform = { it.toDto() })
+}

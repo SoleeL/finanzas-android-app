@@ -1,45 +1,55 @@
 package com.soleel.finanzas.domain.account
 
 
-import com.soleel.finanzas.core.database.entities.AccountEntity
-import com.soleel.finanzas.core.model.base.Expense
+import com.soleel.finanzas.core.model.base.AccountDto
+import com.soleel.finanzas.core.model.base.ExpenseDto
 import com.soleel.finanzas.data.account.interfaces.IAccountRepository
-import com.soleel.finanzas.data.expense.interfaces.IExpenseLocalDataSource
+import com.soleel.finanzas.data.expense.interfaces.IExpenseRepository
 import com.soleel.finanzas.domain.account.interfaces.IGetAccountsWithExpensesInfoCurrentMonthUseCase
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import javax.inject.Inject
 
 
+data class AccountWithExpensesInfoDto(
+    val account: AccountDto,
+    val amountExpenses: Int,
+    val lastExpenseDate: LocalDateTime?,
+)
+
 class GetAccountsWithExpensesInfoCurrentMonthUseCase @Inject constructor(
     private val accountRepository: IAccountRepository,
-    private val expenseRepository: IExpenseLocalDataSource,
+    private val expenseRepository: IExpenseRepository,
 ) : IGetAccountsWithExpensesInfoCurrentMonthUseCase {
-    // README: 1 minisegundo despues... y es el siguiente mes en la request
+
     private val localDateNow: LocalDate = LocalDate.now()
 
-    override operator fun invoke(): Flow<List<AccountWithExpensesInfo>> = accountRepository
-        .getAccounts().mapToWithExpensesInfoCurrentMonth(
-            expenseRepository.getExpensesBetweenDates(
+    override suspend operator fun invoke(): List<AccountWithExpensesInfoDto> {
+        return accountRepository.getAccounts().mapToWithExpensesInfoCurrentMonth(
+            expenses = expenseRepository.getExpenses(
                 startLocalDateTime = localDateNow.withDayOfMonth(1).atStartOfDay(),
-                endLocalDateTime = localDateNow.withDayOfMonth(localDateNow.lengthOfMonth()).atTime(LocalTime.MAX)
+                endLocalDateTime = localDateNow.withDayOfMonth(localDateNow.lengthOfMonth())
+                    .atTime(LocalTime.MAX)
             )
         )
+    }
 
-    private fun Flow<List<AccountEntity>>.mapToWithExpensesInfoCurrentMonth(
-        expenses: Flow<List<Expense>>,
-    ): Flow<List<AccountWithExpensesInfo>> {
-        return combine(this, expenses) { accounts, expensesList ->
-            accounts.map { account ->
-                val accountExpenses = expensesList.filter { it.accountId == account.id }
-                AccountWithExpensesInfo(
+    private fun List<AccountDto>.mapToWithExpensesInfoCurrentMonth(
+        expenses: List<ExpenseDto>,
+    ): List<AccountWithExpensesInfoDto> {
+        return this.map(
+            transform = { account: AccountDto ->
+                val accountExpenses: List<ExpenseDto> = expenses.filter(
+                    predicate = { it.accountId == account.id }
+                )
+                AccountWithExpensesInfoDto(
                     account = account,
                     amountExpenses = accountExpenses.sumOf { it.amount },
                     lastExpenseDate = accountExpenses.maxByOrNull { it.date }?.date
                 )
             }
-        }
+        )
     }
+
 }

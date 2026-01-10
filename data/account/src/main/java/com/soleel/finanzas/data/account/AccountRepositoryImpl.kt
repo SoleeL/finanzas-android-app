@@ -2,8 +2,11 @@ package com.soleel.finanzas.data.account
 
 import com.soleel.finanzas.core.database.daos.AccountDAO
 import com.soleel.finanzas.core.database.entities.AccountEntity
+import com.soleel.finanzas.core.model.base.AccountDto
 import com.soleel.finanzas.data.account.interfaces.IAccountRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import java.time.LocalDateTime
 import java.util.UUID
 import javax.inject.Inject
 
@@ -14,9 +17,16 @@ class AccountRepositoryImpl @Inject constructor(
 
     /* -------------------- CREATE ----------------------------------- */
 
-    override suspend fun createAccount(account: AccountEntity): UUID {
-        accountDAO.insert(entity = account)
-        return account.id
+    override suspend fun createAccount(account: AccountDto): UUID {
+        account.id = UUID.randomUUID()
+        val now: LocalDateTime = LocalDateTime.now()
+        account.createdAt = now
+        account.updatedAt = now
+
+        val accountEntity: AccountEntity = account.toEntity()
+
+        accountDAO.insert(entity = accountEntity)
+        return accountEntity.id
     }
 
     /* -------------------- READ ------------------------------------- */
@@ -29,29 +39,29 @@ class AccountRepositoryImpl @Inject constructor(
         return accountDAO.getAccountsNotDeletedCount()
     }
 
-    override suspend fun getAccounts(): List<AccountEntity> {
-        return accountDAO.getAccounts()
+    override suspend fun getAccounts(): List<AccountDto> {
+        return accountDAO.getAccounts().toDtoList()
     }
 
-    override suspend fun getAccount(accountId: UUID): AccountEntity? {
-        return accountDAO.getAccount(id = accountId)
+    override suspend fun getAccount(accountId: UUID): AccountDto? {
+        return accountDAO.getAccount(id = accountId)?.toDto()
     }
 
-    override fun getAccountsFlow(): Flow<List<AccountEntity>> {
-        return accountDAO.getAccountsFlow()
+    override fun getAccountsFlow(): Flow<List<AccountDto>> {
+        return accountDAO.getAccountsFlow().map(transform = { it.toDtoList() })
     }
 
-    override fun getAccountFlow(accountId: UUID): Flow<AccountEntity?> {
-        return accountDAO.getAccountFlow(id = accountId)
+    override fun getAccountFlow(accountId: UUID): Flow<AccountDto?> {
+        return accountDAO.getAccountFlow(id = accountId).map(transform = { it?.toDto() })
     }
 
     /* -------------------- UPDATE ----------------------------------- */
-    override suspend fun updateAccount(account: AccountEntity) {
-        accountDAO.update(entity = account)
+    override suspend fun updateAccount(account: AccountDto) {
+        accountDAO.update(entity = account.toEntity())
     }
 
     /* -------------------- DELETE ----------------------------------- */
-    override suspend fun deleteAccount(account: AccountEntity) {
-        accountDAO.delete(entity = account)
+    override suspend fun deleteAccount(account: AccountDto) {
+        accountDAO.delete(entity = account.toEntity())
     }
 }

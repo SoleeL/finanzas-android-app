@@ -1,6 +1,6 @@
 package com.soleel.finanzas.core.model.base
 
-import com.soleel.finanzas.core.model.enums.AccountTypeEnum
+import com.soleel.finanzas.core.model.enums.ExpenseTypeEnum
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -11,17 +11,13 @@ import java.util.UUID
 //  IMPORTANTE: Lamentablemente, se debe aceptar la existencia de estos valores nullables y validar
 //      su existena en la capa :domain y :feature
 //  IMPORTANTE: LocalDateTime como createdAt y updatedAt son fecha/hora que aplican la zona horaria del sistema
-data class AccountDto(
+data class ExpenseDto(
     var id: UUID? = null,
-    val type: AccountTypeEnum,
-    val issue: String,
-    val fee: Int,
-    val creditLimit: Int,
-    val interestRate: Float,
-    val interestFreeInstallments: List<Int>,
-    val billingDay: Int,
-    val dueDay: Int,
+    val type: ExpenseTypeEnum,
     val name: String,
+    val date: LocalDateTime,
+    val amount: Int,
+    val accountId: UUID,
     var createdAt: LocalDateTime? = null,
     var updatedAt: LocalDateTime? = null,
     val isDeleted: Boolean = false
