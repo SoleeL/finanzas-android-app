@@ -17,8 +17,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.soleel.finanzas.core.common.UiState
-import com.soleel.finanzas.feature.configuration.ConfigurationGraph
-import com.soleel.finanzas.feature.home.HomeGraph
 import com.soleel.finanzas.feature.launch.screens.FailureSupplyScreen
 import com.soleel.finanzas.feature.launch.screens.SuccessSupplyScreen
 import com.soleel.finanzas.feature.launch.screens.SupplyingScreen
@@ -31,11 +29,13 @@ object LaunchGraph
 
 fun NavGraphBuilder.launchNavigationGraph(
     navigateToConfigurationGraph: () -> Unit,
+    navigateToCreateAccountGraph: () -> Unit,
     navigateToHomeGraph: () -> Unit
 ) {
     composable<LaunchGraph> {
         LaunchScreen(
             navigateToConfigurationGraph = navigateToConfigurationGraph,
+            navigateToCreateAccountGraph = navigateToCreateAccountGraph,
             navigateToHomeGraph = navigateToHomeGraph
         )
     }
@@ -58,6 +58,7 @@ fun LaunchScreen(
     launchViewModel: LaunchViewModel = hiltViewModel(),
     navHostController: NavHostController = rememberNavController(),
     navigateToConfigurationGraph: () -> Unit,
+    navigateToCreateAccountGraph: () -> Unit,
     navigateToHomeGraph: () -> Unit
 ) {
 
@@ -81,18 +82,13 @@ fun LaunchScreen(
 
                 delay(1_000)
 
-                val destination: Any = (destinationUiState as UiState.Success<Any>).data
+                val navigateTo: LaunchUiNavigation =
+                    (destinationUiState as UiState.Success<LaunchUiNavigation>).data
 
-                when (destination) {
-                    is ConfigurationGraph -> {
-                        navigateToConfigurationGraph()
-                    }
-
-                    is HomeGraph -> {
-                        navigateToHomeGraph()
-                    }
-
-                    else -> TODO("NI IDEA SI ESTO PUEDE OCURRIR")
+                when (navigateTo) {
+                    LaunchUiNavigation.ToConfiguration -> navigateToConfigurationGraph()
+                    LaunchUiNavigation.ToCreateAccount -> navigateToCreateAccountGraph()
+                    LaunchUiNavigation.ToHome -> navigateToHomeGraph()
                 }
             }
 

@@ -15,5 +15,4 @@ dependencies {
     api(projects.data.account)
     api(projects.domain.account)
     api(projects.domain.formatdate)
-    api(projects.domain.visualtransformation)
 }

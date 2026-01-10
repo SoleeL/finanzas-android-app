@@ -1,86 +1,44 @@
 package com.soleel.finanzas.data.account
 
-import com.soleel.finanzas.core.model.enums.AccountTypeEnum
-import com.soleel.finanzas.core.model.enums.SynchronizationEnum
-import com.soleel.finanzas.core.model.base.Account
-import com.soleel.finanzas.data.account.interfaces.IAccountLocalDataSource
+import com.soleel.finanzas.core.database.entities.AccountEntity
+import com.soleel.finanzas.data.account.interfaces.IAccountRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
-import java.time.LocalDateTime
+import java.util.UUID
 
-class AccountRepositoryMock : IAccountLocalDataSource {
-    override fun getAccount(accountId: String): Flow<Account?> {
+class AccountRepositoryMock : IAccountRepository {
+    override suspend fun createAccount(account: AccountEntity): UUID {
         TODO("Not yet implemented")
     }
 
-    override fun getAccountWithForceUpdate(
-        accountId: String,
-        forceUpdate: Boolean
-    ): Account? {
+    override suspend fun getAccountsCount(): Int {
         TODO("Not yet implemented")
     }
 
-    override fun getAccounts(): Flow<List<Account>> {
-        return flowOf(
-            listOf(
-                Account(
-                    id = "1",
-                    type = AccountTypeEnum.CREDIT,
-                    name = "Account 1",
-                    totalAmount = 1000,
-                    createdAt = LocalDateTime.now(),
-                    updatedAt = LocalDateTime.now(),
-                    isDeleted = false,
-                    synchronization = SynchronizationEnum.PENDING
-                ),
-                Account(
-                    id = "2",
-                    type = AccountTypeEnum.DEBIT,
-                    name = "Account 2",
-                    totalAmount = 2000,
-                    createdAt = LocalDateTime.now(),
-                    updatedAt = LocalDateTime.now(),
-                    isDeleted = false,
-                    synchronization = SynchronizationEnum.PENDING
-                )
-            )
-        )
-    }
-
-    override fun getAccountsWithForceUpdate(forceUpdate: Boolean): List<Account> {
+    override suspend fun getAccountsNotDeletedCount(): Int {
         TODO("Not yet implemented")
     }
 
-    override fun getAccountWithTransactionInfo(accountId: String): Flow<Account?> {
+    override suspend fun getAccounts(): List<AccountEntity> {
         TODO("Not yet implemented")
     }
 
-    override fun getAccountsWithTransactionInfo(): Flow<List<Account>> {
+    override suspend fun getAccount(accountId: UUID): AccountEntity? {
         TODO("Not yet implemented")
     }
 
-    override suspend fun refreshAccounts() {
+    override fun getAccountsFlow(): Flow<List<AccountEntity>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun refreshAccount(accountId: String) {
+    override fun getAccountFlow(accountId: UUID): Flow<AccountEntity?> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun createAccount(name: String, amount: Int, type: AccountTypeEnum): String {
+    override suspend fun updateAccount(account: AccountEntity) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun updateAccount(
-        name: String,
-        createdAt: Long,
-        initialAmount: Int,
-        accountType: Int
-    ) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun deleteAccount(accountId: String) {
+    override suspend fun deleteAccount(account: AccountEntity) {
         TODO("Not yet implemented")
     }
 

@@ -17,6 +17,7 @@ class RoomConventionPlugin : Plugin<Project> {
                 add("implementation", versionCatalog().findLibrary("room-runtime").get())
                 add("implementation", versionCatalog().findLibrary("room-ktx").get())
                 add("ksp", versionCatalog().findLibrary("room-compiler").get())
+                add("implementation", versionCatalog().findLibrary("google-gson").get())
             }
         }
     }

@@ -36,11 +36,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.soleel.finanzas.core.model.enums.AccountTypeEnum
 import com.soleel.finanzas.core.common.eventmanager.SingleEventManager
 import com.soleel.finanzas.core.ui.R
-import com.soleel.finanzas.core.component.CancelAlertDialog
-import com.soleel.finanzas.core.component.CreateTopAppBar
-import com.soleel.finanzas.core.component.LargeDropdownMenu
 import com.soleel.finanzas.core.component.onSingleClick
-import com.soleel.finanzas.domain.transformation.visualtransformation.CurrencyVisualTransformation
+import com.soleel.finanzas.core.ui.visualtransaformations.CurrencyVisualTransformation
 import com.soleel.finanzas.domain.validation.validator.ValidatorAccountAmount
 import com.soleel.finanzas.domain.validation.validator.ValidatorName
 

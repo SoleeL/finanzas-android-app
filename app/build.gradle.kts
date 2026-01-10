@@ -15,15 +15,14 @@ dependencies {
 
     implementation(projects.data.preferences)
 
-    implementation(projects.feature.launch)
-    implementation(projects.feature.login)
     implementation(projects.feature.configuration)
-    implementation(projects.feature.home)
     implementation(projects.feature.createexpense)
+    implementation(projects.feature.createaccount)
+    implementation(projects.feature.home)
+    implementation(projects.feature.launch)
 
 //    implementation(projects.feature.add)
 //    implementation(projects.feature.accounts)
-//    implementation(projects.feature.createaccount)
 //    implementation(projects.feature.createtransaction)
 //    implementation(projects.feature.profile)
 //    implementation(projects.feature.stats)

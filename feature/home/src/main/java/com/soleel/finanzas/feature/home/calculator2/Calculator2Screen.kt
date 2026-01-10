@@ -64,8 +64,8 @@ import com.soleel.finanzas.core.ui.utils.LongDevicePreview
 import com.soleel.finanzas.core.ui.utils.ShortDevicePreview
 import com.soleel.finanzas.core.ui.utils.WithFakeSystemBars
 import com.soleel.finanzas.core.ui.utils.WithFakeTopAppBar
-import com.soleel.finanzas.domain.transformation.visualtransformation.CLPCurrencyVisualTransformation
-import com.soleel.finanzas.domain.transformation.visualtransformation.TwoDecimalTransformation
+import com.soleel.finanzas.core.ui.visualtransaformations.CLPCurrencyVisualTransformation
+import com.soleel.finanzas.core.ui.visualtransaformations.TwoDecimalTransformation
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -605,7 +605,7 @@ fun ItemInCart(
     onRemove: () -> Unit
 ) {
     val currencyVisualTransformation by remember(calculation = {
-        mutableStateOf(com.soleel.finanzas.domain.transformation.visualtransformation.CLPCurrencyVisualTransformation())
+        mutableStateOf(CLPCurrencyVisualTransformation())
     })
 
     // TODO: Cambiar esto por una transformacion visual

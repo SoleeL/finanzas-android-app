@@ -9,7 +9,7 @@ import com.soleel.finanzas.core.model.enums.AccountTypeEnum
 import com.soleel.finanzas.core.model.enums.TransactionCategoryEnum
 import com.soleel.finanzas.core.model.enums.TransactionTypeEnum
 import com.soleel.finanzas.core.common.eventmanager.SingleEventManager
-import com.soleel.finanzas.data.account.interfaces.IAccountLocalDataSource
+import com.soleel.finanzas.data.account.interfaces.IAccountRepository
 import com.soleel.finanzas.data.transaction.interfaces.IExpenseLocalDataSource
 import com.soleel.finanzas.domain.validation.validator.ValidatorAccountAmount
 import com.soleel.finanzas.domain.validation.validator.ValidatorAccountType
@@ -43,7 +43,7 @@ sealed class CreateAccountEventUi {
 
 @HiltViewModel
 class CreateAccountViewModel @Inject constructor(
-    private val accountRepository: IAccountLocalDataSource,
+    private val accountRepository: IAccountRepository,
     private val transactionRepository: IExpenseLocalDataSource,
     val singleEventManager: SingleEventManager
 ) : ViewModel() {

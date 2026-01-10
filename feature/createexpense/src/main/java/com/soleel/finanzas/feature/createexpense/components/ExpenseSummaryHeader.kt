@@ -24,7 +24,7 @@ import com.soleel.finanzas.core.model.enums.SynchronizationEnum
 import com.soleel.finanzas.core.ui.utils.LongDevicePreview
 import com.soleel.finanzas.core.ui.utils.WithFakeSystemBars
 import com.soleel.finanzas.core.ui.utils.WithFakeTopAppBar
-import com.soleel.finanzas.domain.transformation.visualtransformation.CLPCurrencyVisualTransformation
+import com.soleel.finanzas.core.ui.visualtransaformations.CLPCurrencyVisualTransformation
 import java.time.LocalDateTime
 import java.util.UUID
 

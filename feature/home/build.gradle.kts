@@ -9,7 +9,6 @@ android {
 }
 
 dependencies {
-    api(projects.core.ui)
-    api(projects.data.account)
-    api(projects.domain.visualtransformation)
+    implementation(projects.core.ui)
+    implementation(projects.data.account)
 }

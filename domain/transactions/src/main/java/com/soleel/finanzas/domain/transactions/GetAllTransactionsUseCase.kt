@@ -6,7 +6,7 @@ import com.soleel.finanzas.core.model.base.Account
 import com.soleel.finanzas.core.model.base.Expense
 import com.soleel.finanzas.core.model.TransactionWithAccount
 import com.soleel.finanzas.core.model.TransactionsGroup
-import com.soleel.finanzas.data.account.interfaces.IAccountLocalDataSource
+import com.soleel.finanzas.data.account.interfaces.IAccountRepository
 import com.soleel.finanzas.data.expense.interfaces.IExpenseLocalDataSource
 import com.soleel.finanzas.domain.transactions.utils.toDayDate
 import kotlinx.coroutines.flow.Flow
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 class GetAllTransactionsUseCase @Inject constructor(
     private val transactionRepository: IExpenseLocalDataSource,
-    private val accountRepository: IAccountLocalDataSource,
+    private val accountRepository: IAccountRepository,
 ) {
     // Listado de transacciones agrupadas por dia/fecha
     operator fun invoke(): Flow<List<TransactionsGroup>> = transactionRepository.getExpenses()
